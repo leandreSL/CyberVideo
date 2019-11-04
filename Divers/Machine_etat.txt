@@ -1,0 +1,36 @@
+comment implémenter la machine à état représenter dans UML_Vue.png :
+Chaque etat est une valeur dans un nouveau type enum qu'il faut créer
+Les transitions entre les états représente une lettre rentré par l'utilisateur en ligne de commande :
+	-liste de commande possible à définir pour chaque état :
+		- les commandes qui permettent de changer d'état
+		- les commandes qui permettent d'agir sur la machine
+
+par exemple : 
+quand l'utilisateur appuie sur "B" cela fait la transition "Back"
+quand l'utilisateur doit sélectionner un film dans la liste des films disponible, 
+on peut par exemple lui afficher à l'écran la liste des films avec a coté son indice, 
+si l'utilisateur rentre un nombre, 
+on regarde s'il correspond a un indice dans la liste 
+et on effectue l'action "sélectionner film dans la liste" ( appel d'une fonction de la classe automate ou autre)
+
+Dans le code à chaque changement d'état il faut aussi exécuter une certaine suite d'instruction :
+	par exemple quand on entre dans l'état acceuil : affichage de la liste des commandes possible + leur effet, affichage de la publicité :
+	ca donnerait :
+	PAGE D'ACCEUIL :
+	Cr - Créer compte
+	L - Louer Film
+	Co - Connexion à son compte
+	PUBLICITé : bla bla bla bla bla -10% bla bla bla 
+
+	pour l'état "Location non connecté" ca pourrait être :
+	LOCATION(non connecté) :
+	V - Valider choix
+	x=1 .. N - Sélectionne le film d'indice x
+	B - Back (retour à la page précédente)
+	Liste film :
+	0 - avatar
+	1 - Cristian Ene, biographie
+	2 - ...
+	..
+	N - lol
+	
