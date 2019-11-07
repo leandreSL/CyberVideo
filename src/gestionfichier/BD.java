@@ -1,7 +1,10 @@
 package gestionfichier;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,6 +26,31 @@ public class BD {
 	
 	private BD(){
 		
+	}
+	
+	private void supprimer(String chemin, String suppression) {
+		File fichierOriginal = new File(chemin);
+		File fichierTemp = new File(dossier + File.separator + "temp.txt");
+		try {
+			BufferedReader lecteur = new BufferedReader(new FileReader(fichierOriginal));
+			BufferedWriter redacteur = new BufferedWriter(new FileWriter(fichierTemp));
+
+			String ligne;
+
+			while((ligne = lecteur.readLine()) != null) {
+			    // trim newline when comparing with lineToRemove
+			    String trimmedLine = ligne.trim();
+			    if(trimmedLine.equals(suppression)) continue;
+			    redacteur.write(ligne + System.getProperty("line.separator"));
+			}
+			redacteur.close(); 
+			lecteur.close(); 
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		boolean successful = fichierTemp.renameTo(fichierOriginal);
 	}
 	
 	public void ajouterFilm(Film film) {
