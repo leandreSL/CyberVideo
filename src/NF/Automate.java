@@ -4,10 +4,8 @@ import java.util.List;
 
 public class Automate {
 	
-	List<Film> filmsMagasin;
 	List<Film> filmsDisponibles;
-	List<DVD> dvddisponibles; 
-	List<DVD> dvdtotal;
+	List<DVD> dvdDisponibles; 
 	
 	
 	//retourne la liste des films par genre ou tous les films si filtres = null
@@ -15,9 +13,6 @@ public class Automate {
 		
 		return null;
 	}
-	
-	
-	
 	
 	//ajoute un film à l'automate
 	void ajouterFilm(Film f) {
@@ -45,15 +40,6 @@ public class Automate {
 	
 	void retirerDVD(DVD dvd) {
 		
-	}
-	
-	//ajoute un film au magasin
-	void ajouterFilmMagasin(Film f) {
-			
-	}
-		
-	void supprimerFilmMagasin(Film f) {
-			
 	}
 	
 	
