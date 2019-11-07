@@ -4,18 +4,17 @@ import java.util.List;
 
 public class Film {
 	String Titre;
-	Genre genre;
+	List<Genre> genres;
 	String resume;
 	List<String> acteurs;
 	String realisateur;
 	int limiteAge;
 	String cheminAffiche;
 	
-	public Film(String titre, Genre genre, String resume, List<String> acteurs, String realisateur, int limiteAge,
+	public Film(String titre, List<Genre> genres, String resume, List<String> acteurs, String realisateur, int limiteAge,
 			String cheminAffiche) {
-		super();
 		Titre = titre;
-		this.genre = genre;
+		this.genres = genres;
 		this.resume = resume;
 		this.acteurs = acteurs;
 		this.realisateur = realisateur;
@@ -24,17 +23,34 @@ public class Film {
 	}
 	
 	
+	@Override
+	public String toString() {
+		String chaineGenre = "";
+		for(Genre i: genres) {
+			chaineGenre+=i+" ";
+		}
+		
+		String chaineActeurs = "";
+		for(Genre i: genres) {
+			chaineActeurs+=i+" ";
+		}
+		
+		return Titre + "|" + chaineGenre + "|" + resume + "|" + chaineActeurs
+				+ "|" + realisateur + "|" + limiteAge + "|" + cheminAffiche + "\n";
+	}
+
+
 	public String getTitre() {
 		return Titre;
 	}
 	public void setTitre(String titre) {
 		Titre = titre;
 	}
-	public Genre getGenre() {
-		return genre;
+	public List<Genre> getGenre() {
+		return genres;
 	}
-	public void setGenre(Genre genre) {
-		this.genre = genre;
+	public void setGenre(List<Genre> genre) {
+		this.genres = genre;
 	}
 	public String getResume() {
 		return resume;
