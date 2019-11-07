@@ -161,11 +161,14 @@ public class Machine {
 				//TODO:Affichage des actions possibles avec une fonction
 			}
 			break;
-			
+		
 		case RECHARGER_COMPTE:
 			switch(action) {
 			//traitement
 			case "b":
+				current_etat = State.INFO_COMPTE;
+				break;
+			case "V":
 				current_etat = State.INFO_COMPTE;
 				break;
 			default:
@@ -208,8 +211,33 @@ public class Machine {
 				//TODO:Affichage des actions possibles avec une fonction
 			}
 			break;
-		case RECH
-				
+		case RECHARGER_COMPTE_PANIER:
+			switch(action) {
+			//traitement
+			case "b":
+				current_etat = State.AFFICHAGE_PANIER;
+				break;
+			case "V":
+				current_etat = State.AFFICHAGE_PANIER;
+				break;
+			default:
+				//TODO:Affichage des actions possibles avec une fonction
+			}
+			break;
+		case RECOMMANDATION_FILM:
+			switch(action) {
+			//traitement
+			case "V":
+				current_etat = State.LOCATION_C;
+				break;
+			//TODO: gestion du film recommandé selectionné
+			default:
+				//TODO:Affichage des actions possibles avec une fonction
+			}
+			break;
+		case FIN_TRANSACTION_C:
+			current_etat = State.ACCEUIL_C;
+			
 			
 		}
 	}
