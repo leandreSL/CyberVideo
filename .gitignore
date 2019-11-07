@@ -1,5 +1,5 @@
 #ignore personal main
-src/testbd.java
+src/NF/testbd.java
 
 #ignore bin
 /bin/

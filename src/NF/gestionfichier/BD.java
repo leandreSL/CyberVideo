@@ -53,15 +53,15 @@ public class BD {
 		boolean successful = fichierTemp.renameTo(fichierOriginal);
 	}
 	
-	public void ajouterFilm(Film film) {
-		ajouter(cheminFilm, film.toString());
+	public void stockerFilm(Film film) {
+		stocker(cheminFilm, film.toString());
 	}
 	
-	public void ajouterDVD(DVD dvd) {
-		ajouter(cheminDVD, dvd.toString());
+	public void stockerDVD(DVD dvd) {
+		stocker(cheminDVD, dvd.toString());
 	}
 	
-	private void ajouter(String chemin, String ajout) {
+	private void stocker(String chemin, String ajout) {
 		 // Convert the string to a
 	    // byte array.
 	    System.out.println("test1");
