@@ -1,3 +1,6 @@
+#ignore personal main
+src/testbd.java
+
 #ignore bin
 /bin/
 
