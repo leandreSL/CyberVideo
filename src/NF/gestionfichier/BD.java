@@ -1,4 +1,4 @@
-package gestionfichier;
+package NF.gestionfichier;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
