@@ -25,17 +25,9 @@ public class Film {
 	
 	@Override
 	public String toString() {
-		String chaineGenre = "";
-		for(Genre i: genres) {
-			chaineGenre+=i+" ";
-		}
-		
-		String chaineActeurs = "";
-		for(Genre i: genres) {
-			chaineActeurs+=i+" ";
-		}
-		
-		return Titre + "|" + chaineGenre + "|" + resume + "|" + chaineActeurs
+		String chaineGenres = String.join("`", Genre.toStringArray(genres));
+		String chaineActeurs = String.join("`", acteurs);
+		return Titre + "|" + chaineGenres + "|" + resume + "|" + chaineActeurs
 				+ "|" + realisateur + "|" + limiteAge + "|" + cheminAffiche + "\n";
 	}
 

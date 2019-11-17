@@ -4,7 +4,7 @@ public class DVD {
 	int identifiantDVD;
 	String etat = "neuf"; //enum pour état
 	Film film;
-	StatutFilm statut = StatutFilm.EnMagasin;
+//	StatutFilm statut = StatutFilm.EnMagasin;
 	Integer recommandation = 0;
 	
 	public DVD(int identifiantDVD, Film film) {
@@ -25,13 +25,13 @@ public class DVD {
 		return film;
 	}
 	
-	public StatutFilm getStatut() {
-		return statut;
-	}
-
-	public void setStatut(StatutFilm statut) {
-		this.statut = statut;
-	}
+//	public StatutFilm getStatut() {
+//		return statut;
+//	}
+//
+//	public void setStatut(StatutFilm statut) {
+//		this.statut = statut;
+//	}
 
 	public Integer getRecommandation() {
 		return recommandation;
@@ -39,5 +39,9 @@ public class DVD {
 
 	public void setRecommandation(Integer recommandation) {
 		this.recommandation = recommandation;
+	}
+	
+	public String toString() {
+		return identifiantDVD+"|"+film.getTitre()+"\n";
 	}
 }
