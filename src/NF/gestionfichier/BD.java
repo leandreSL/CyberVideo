@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import NF.DVD;
 import NF.Film;
@@ -28,29 +29,19 @@ public class BD {
 		
 	}
 	
-	private void supprimer(String chemin, String suppression) {
-		File fichierOriginal = new File(chemin);
-		File fichierTemp = new File(dossier + File.separator + "temp.txt");
-		try {
-			BufferedReader lecteur = new BufferedReader(new FileReader(fichierOriginal));
-			BufferedWriter redacteur = new BufferedWriter(new FileWriter(fichierTemp));
-
-			String ligne;
-
-			while((ligne = lecteur.readLine()) != null) {
-			    // trim newline when comparing with lineToRemove
-			    String trimmedLine = ligne.trim();
-			    if(trimmedLine.equals(suppression)) continue;
-			    redacteur.write(ligne + System.getProperty("line.separator"));
-			}
-			redacteur.close(); 
-			lecteur.close(); 
-			
-		} catch (IOException e) {
-			e.printStackTrace();
+	public static BD getInstance() {
+		if(instance == null) {
+			instance = new BD();
 		}
-
-		boolean successful = fichierTemp.renameTo(fichierOriginal);
+		return instance;
+	}
+	
+	public void supprimerFilm(Film film){
+		supprimer(cheminFilm, film.getTitre(), 0);
+	}
+	
+	public void supprimerDVD(DVD dvd){
+		supprimer(cheminDVD, dvd.getIdentifiantDVD()+"", 0);
 	}
 	
 	public void stockerFilm(Film film) {
@@ -62,8 +53,6 @@ public class BD {
 	}
 	
 	private void stocker(String chemin, String ajout) {
-		 // Convert the string to a
-	    // byte array.
 	    System.out.println("test1");
 	    try(FileWriter fw = new FileWriter(chemin, true);
 	    	    BufferedWriter bw = new BufferedWriter(fw);
@@ -77,10 +66,36 @@ public class BD {
 		
 	}
 	
-	public static BD getInstance() {
-		if(instance == null) {
-			instance = new BD();
+	private void supprimer(String chemin, String idSuppression, int idindex) {
+		File fichierOriginal = new File(chemin);
+		File fichierTemp = new File(dossier + File.separator + "temp.txt");
+		try {
+			BufferedReader lecteur = new BufferedReader(new FileReader(fichierOriginal));
+			BufferedWriter redacteur = new BufferedWriter(new FileWriter(fichierTemp));
+
+			String ligne, trimmedLine, currentID;
+			while((ligne = lecteur.readLine()) != null) {
+			    // trim newline when comparing with lineToRemove
+			    trimmedLine = ligne.trim();
+			    String[] lineSplited = getLigneArray(trimmedLine);
+			    currentID = lineSplited[idindex];
+			    if(currentID.equals(idSuppression)) continue;
+			    redacteur.write(ligne + System.getProperty("line.separator"));
+			}
+			redacteur.close(); 
+			lecteur.close(); 
+			
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return instance;
+		fichierOriginal.delete();
+		boolean successful = fichierTemp.renameTo(fichierOriginal);
+		if(!successful) System.out.println("Renomage impossible");
+			
 	}
+	
+	private String[] getLigneArray(String ligne) {
+		return ligne.split("\\|");
+	}
+
 }

@@ -1,5 +1,5 @@
 #ignore personal main
-src/NF/testbd.java
+src/NF/gestionfichier/testbd.java
 
 #ignore bin
 /bin/
@@ -7,3 +7,7 @@ src/NF/testbd.java
 #ignore eclipse files
 .classpath
 .project
+
+#ignore database
+BDD/dvd
+BDD/film
