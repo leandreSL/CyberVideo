@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,21 +39,27 @@ public class BD {
 		return instance;
 	}
 	
-	public Film chercherFilm(String nom) {
-		String[] paramFilm = chercher(cheminFilm, nom, 0);
-		Film film = null;
-		if(paramFilm != null) {
-			film = new Film(
-					paramFilm[0],
-					Genre.toGenreArray(paramFilm[1].split("`")),
-					paramFilm[2],
-					Arrays.asList(paramFilm[3]), 
-					paramFilm[4],
-					Integer.parseInt(paramFilm[5]),
-					paramFilm[6]
-							);
+	public ArrayList<Film> chercherFilm(String nom) {
+		ArrayList<ArrayList<String>> paramFilm = chercher(cheminFilm, nom, 0);
+		ArrayList<Film> films = null;
+		for( int i = 0; i < paramFilm.size(); i++) {
+			films.add(new Film(
+					paramFilm.get(i).get(0),
+					Genre.toGenreArray(paramFilm.get(i).get(1).split("`")),
+					paramFilm.get(i).get(2),
+					Arrays.asList(paramFilm.get(i).get(3)), 
+					paramFilm.get(i).get(4),
+					Integer.parseInt(paramFilm.get(i).get(5)),
+					paramFilm.get(i).get(6)
+							));
 		}
-		return film;
+		return films;
+	}
+	
+	public Film[] chercherGenre(String genre){
+		ArrayList<ArrayList<String>> listeFilms = chercher(cheminFilm, genre, 1);
+		
+		
 	}
 	
 	public void supprimerFilm(Film film){
@@ -83,19 +90,22 @@ public class BD {
 		
 	}
 	
-	private String[] chercher(String chemin, String idcherche, int idindex) {
+	private ArrayList<ArrayList<String>> chercher(String chemin, String idcherche, int idindex) {
 		File fichierOriginal = new File(chemin);
 		try {
 			BufferedReader lecteur = new BufferedReader(new FileReader(fichierOriginal));
 
 			String ligne, currentID;
+			ArrayList<ArrayList<String>> liste = new ArrayList<ArrayList<String>>();
 			while((ligne = lecteur.readLine()) != null) {
-			    String[] lineSplited = getLigneArray(ligne.trim());
-			    currentID = lineSplited[idindex];
-			    if(currentID.equals(idcherche)) return lineSplited;
+			    ArrayList<String> lineSplited = getLigneArray(ligne.trim());
+			    currentID = lineSplited.get(idindex);
+			    if(currentID.contains(idcherche)) {
+			    	liste.add(lineSplited);
+			    }
 			}
 			lecteur.close(); 
-			
+			return liste;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -126,8 +136,8 @@ public class BD {
 		if(!successful) System.out.println("Renomage impossible");
 	}
 	
-	private String[] getLigneArray(String ligne) {
-		return ligne.split("\\|");
+	private ArrayList<String> getLigneArray(String ligne) {
+		return new ArrayList<String>(Arrays.asList(ligne.split("\\|")));
 	}
 
 }
