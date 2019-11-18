@@ -16,6 +16,9 @@ public class Automate {
 		bd = BD.getInstance();
 	}
 	
+	
+	
+	
 	//retourne la liste des films par genre ou tous les films si filtres = null
 	public List<Film> filtreGenreFilm(List<Genre> filtres) {
 		
@@ -25,28 +28,35 @@ public class Automate {
 		return filmsDeGenre;
 	}
 	
-	//ajoute un film à l'automate
+	
+	// !!! les types de paramètres peuvent changer
+	
+	//fonction technicien - ajoute un film à l'automate
 	void ajouterFilm(Film f) {
-		
+		bd.stockerFilm(f);
 	}
 	
+	//fonction technicien - supprime un film de l'automate
 	void supprimerFilm(Film f) {
-		//appel supprimerDVD
+		bd.supprimerFilm(f);
 	}
 	
-	//ajoute un dvd à l'automate
+	//fonction technicien - ajoute un dvd à l'automate
 	void ajouterDVD(DVD dvd) {
-		//ajoute à dvd total et dvd dispo
+		//condition: test si film du dvd dans bdd
+		bd.stockerDVD(dvd);
 	}
 	
-	//supprime un dvd de la liste
+	//fonction technicien - supprime un dvd de la liste
 	void supprimerDVD(DVD dvd) {
-				
+		bd.supprimerDVD(dvd);
 	}
 	
 	//fonction client
-	void rendreDVD(DVD dvd) {
-		//ajouter à dvd dispo
+	void rendreDVD(int idDVD) {
+		// !!! est qu'il y aura une fonction de bd modificationDVD?
+		DVD dvd = bd.chercherDVD(idDVD);
+		
 	}
 	
 	void retirerDVD(DVD dvd) {
