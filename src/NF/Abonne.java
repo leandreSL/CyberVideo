@@ -11,6 +11,4 @@ public class Abonne extends Emprunteur{
 		
 	}
 	
-	
-	
 }

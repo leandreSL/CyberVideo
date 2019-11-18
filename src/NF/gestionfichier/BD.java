@@ -62,6 +62,12 @@ public class BD {
 		
 	}
 	
+	//retourne une liste de 
+	public List<Film> chercherGenreFilm(List<Genre> filtres) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	public void supprimerFilm(Film film){
 		supprimer(cheminFilm, film.getTitre(), 0);
 	}
@@ -139,5 +145,7 @@ public class BD {
 	private ArrayList<String> getLigneArray(String ligne) {
 		return new ArrayList<String>(Arrays.asList(ligne.split("\\|")));
 	}
+
+
 
 }
