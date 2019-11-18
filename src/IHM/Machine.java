@@ -5,7 +5,7 @@ public class Machine {
 				INFO_COMPTE,RECHARGER_COMPTE,RECHARGER_COMPTE_PANIER,HISTORIQUE_EMPRUNT,LISTE_FILMS_LOUE,LOCATION_C,RECOMMANDATION_FILM,FIN_TRANSACTION_NC,
 				FIN_TRANSACTION_C}
 
-	State current_etat = State.ACCEUIL_NC;
+	public State current_etat = State.ACCEUIL_NC;
 	
 	
 	public void handle(String action) {
