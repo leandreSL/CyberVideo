@@ -1,22 +1,22 @@
 package NF;
 
 public class Emprunteur {
-	CarteBancaire cb;
+	long cb;
 	
 	void louerFilm() {
 		
 	}
 
-	public Emprunteur(CarteBancaire cb) {
+	public Emprunteur(long cb) {
 		super();
 		this.cb = cb;
 	}
 
-	public CarteBancaire getCb() {
+	public long getCb() {
 		return cb;
 	}
 
-	public void setCb(CarteBancaire cb) {
+	public void setCb(long cb) {
 		this.cb = cb;
 	}
 	
