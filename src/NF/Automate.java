@@ -11,12 +11,11 @@ public class Automate {
 	List<DVD> dvdDisponibles = new ArrayList<DVD>();
 	BD bd; 
 	
+	Abonne abonneActif;
 	
 	public Automate() {
 		bd = BD.getInstance();
 	}
-	
-	
 	
 	
 	//retourne la liste des films par genre ou tous les films si filtres = null
@@ -52,16 +51,54 @@ public class Automate {
 		bd.supprimerDVD(dvd);
 	}
 	
-	//fonction client
-	void rendreDVD(int idDVD) {
-		// !!! est qu'il y aura une fonction de bd modificationDVD?
-		DVD dvd = bd.chercherDVD(idDVD);
+	//fonction client - remettre le dvd dans l'automate
+	int rendreDVD(int idDVD) {
+		return bd.modifierDVD(idDVD, StatutFilm.EnAutomate);
 		
 	}
 	
-	void retirerDVD(DVD dvd) {
-		
+	
+	/*
+	 * FONCTIONS ABONNES
+	 * 
+	 * */
+	
+	int connexion(int carte) {
+		Abonne abonne = bd.chercherAbonne(carte);
+		if(abonne != null) {
+			abonneActif = abonne;
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 	
+	int deconnexion() {
+		if(abonneActif == null) {
+			return 0;
+		} else {
+			abonneActif = null;
+			return 1;
+		}
+	}
+	
+	int donnerListeFilmsLoues() {
+		if(abonneActif != null) {
+			return 0;
+		} else {
+			abonneActif = null;
+			return 1;
+		}
+	}
+	
+	
+	//fonction client - prendre le dvd
+	int retirerDVD(int idDVD) {
+		return bd.modifierDVD(idDVD, StatutFilm.EnAutomate);
+	}
+	
+	int afficherFilmLoues() {
+		
+	}
 	
 }
