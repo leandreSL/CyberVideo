@@ -24,7 +24,8 @@ public class Machine {
 				current_etat = State.CREATION_COMPTE;
 				break;
 			default:
-				//TODO:Affichage des actions possibles avec une fonction
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;
 				
 			}
 			break;
@@ -36,7 +37,8 @@ public class Machine {
 				break;
 			//TODO: gestion des infos utilisateur
 			default:
-				//TODO:Affichage des actions possibles avec une fonction
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;
 				
 			}
 			break;
@@ -51,7 +53,8 @@ public class Machine {
 				break;
 			//TODO:autres cas a rajouter (ex : selection film ...)
 			default:
-				//TODO:Affichage des actions possibles avec une fonction
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;
 				
 			}
 			break;
@@ -68,7 +71,8 @@ public class Machine {
 				current_etat = State.FIN_TRANSACTION_NC;
 				break;
 			default:
-				//TODO:Affichage des actions possibles avec une fonction
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;
 				
 			}
 			break;
@@ -83,7 +87,8 @@ public class Machine {
 				current_etat = State.ACCEUIL_NC;
 				break;
 			default:
-				//TODO:Affichage des actions possibles avec une fonction
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;
 			}
 			break;
 		case CONNEXION_RECAP:
@@ -97,7 +102,8 @@ public class Machine {
 				current_etat = State.AFFICHAGE_PANIER;
 				break;
 			default:
-				//TODO:Affichage des actions possibles avec une fonction
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;
 			}
 			break;
 		case CONNEXION:
@@ -112,8 +118,10 @@ public class Machine {
 				current_etat = State.ACCEUIL_C;
 				break;
 			default:
-				//TODO:Affichage des actions possibles avec une fonction
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;
 			}
+			break;
 		case ACCEUIL_C:
 			switch(action) {
 			//traitement
@@ -128,8 +136,10 @@ public class Machine {
 				current_etat = State.INFO_COMPTE;
 				break;
 			default:
-				//TODO:Affichage des actions possibles avec une fonction
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;
 			}
+			break;
 		case INFO_COMPTE:
 			switch(action) {
 			//traitement
@@ -147,7 +157,8 @@ public class Machine {
 				current_etat = State.RECHARGER_COMPTE;
 				break;
 			default:
-				//TODO:Affichage des actions possibles avec une fonction
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;
 			}
 			break;
 		case LISTE_FILMS_LOUE :
@@ -158,7 +169,8 @@ public class Machine {
 				current_etat = State.INFO_COMPTE;
 				break;
 			default:
-				//TODO:Affichage des actions possibles avec une fonction
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;
 			}
 			break;
 		
@@ -172,7 +184,8 @@ public class Machine {
 				current_etat = State.INFO_COMPTE;
 				break;
 			default:
-				//TODO:Affichage des actions possibles avec une fonction
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;
 			}
 			break;
 		case LOCATION_C:
@@ -190,7 +203,8 @@ public class Machine {
 				break;
 			//TODO: gestion selection dvd ou deselection
 			default:
-				//TODO:Affichage des actions possibles avec une fonction
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;
 			}
 			break;
 		case AFFICHAGE_PANIER:
@@ -208,7 +222,8 @@ public class Machine {
 				break;
 			//TODO: gestion suppression ou deselection
 			default:
-				//TODO:Affichage des actions possibles avec une fonction
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;
 			}
 			break;
 		case RECHARGER_COMPTE_PANIER:
@@ -221,7 +236,8 @@ public class Machine {
 				current_etat = State.AFFICHAGE_PANIER;
 				break;
 			default:
-				//TODO:Affichage des actions possibles avec une fonction
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;
 			}
 			break;
 		case RECOMMANDATION_FILM:
@@ -232,12 +248,13 @@ public class Machine {
 				break;
 			//TODO: gestion du film recommandé selectionné
 			default:
-				//TODO:Affichage des actions possibles avec une fonction
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;
 			}
 			break;
 		case FIN_TRANSACTION_C:
 			current_etat = State.ACCEUIL_C;
-			
+			break;
 			
 		}
 	}

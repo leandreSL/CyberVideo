@@ -1,11 +1,13 @@
 package IHM;
 
+import java.util.Scanner;
+
 import IHM.Machine.State;
 
 public class Interface {
 	Machine m;
-	public Interface(Machine machine) {
-		m = machine;
+	public Interface() {
+		m = new Machine();
 	}
 	
 	public void introPage() {
@@ -56,7 +58,12 @@ public class Interface {
 			break;
 		case CONNEXION:
 			System.out.println("Connexion : ");
-			//TODO : 
+			introPage();
+			System.out.println("Entrer votre numéro de carte");
+			System.out.println("b : Retour Arriere");
+			//TODO : fonction qui traite les données utilisateur
+			System.out.println("V : Valider le choix");
+			break;
 		case ACCEUIL_C:
 			//TODO : savoir qui est connecté
 			System.out.println("Acceuil (Connecte en tant que : TODO) : ");
@@ -65,6 +72,7 @@ public class Interface {
 			System.out.println("D : Deconnexion");
 			System.out.println("L : Location Film");
 			System.out.println("I : Informations Compte");
+			break;
 		case INFO_COMPTE:
 			System.out.println("Informations Compte (Connecte en tant que : TODO) : ");
 			//TODO : affichage des infos liées au compte
@@ -106,7 +114,11 @@ public class Interface {
 			//TODO : afficher le panier
 			break;
 		case RECHARGER_COMPTE_PANIER:
-			//TODO : exactement la même chose que recharger compte classique
+			System.out.println("Rechargement Compte (Connecte en tant que : TODO) : ");
+			introPage();
+			System.out.println("b : Retour Arriere");
+			//TODO : fonction qui traite le rechargement
+			System.out.println("V : Valider le choix");
 			break;
 		case RECOMMANDATION_FILM:
 			//TODO
@@ -114,7 +126,17 @@ public class Interface {
 		case FIN_TRANSACTION_C:
 			
 			//TODO
-			
+			break;
+		}
+	}
+	public void traitementSaisie() {
+		Scanner sc = new Scanner(System.in);
+		while(true) {
+			contenuPage();
+			System.out.println("--------------");
+			System.out.println("Saisir l'action :");
+			String str = sc.nextLine();
+			m.handle(str);
 		}
 	}
 }
