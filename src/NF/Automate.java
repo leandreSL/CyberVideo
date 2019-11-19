@@ -7,8 +7,8 @@ import NF.gestionfichier.BD;
 
 public class Automate {
 	
-	List<Film> filmsDisponibles = new ArrayList<Film>();
-	List<DVD> dvdDisponibles = new ArrayList<DVD>();
+	//List<Film> filmsDisponibles = new ArrayList<Film>();
+	//List<DVD> dvdDisponibles = new ArrayList<DVD>();
 	BD bd; 
 	
 	Abonne abonneActif;
@@ -57,8 +57,13 @@ public class Automate {
 		
 	}
 	
+	//fonction client - prendre le dvd
+		int retirerDVD(int idDVD) {
+			return bd.modifierDVD(idDVD, StatutFilm.EnAutomate);
+		}
 	
 	/*
+	 * 
 	 * FONCTIONS ABONNES
 	 * 
 	 * */
@@ -82,23 +87,57 @@ public class Automate {
 		}
 	}
 	
-	int donnerListeFilmsLoues() {
-		if(abonneActif != null) {
+	String donnerListeFilmsLoues() {
+		if(abonneActif == null) {
+			return "0";
+		} else {
+			String result = "";
+			List<Film> filmsLoues = bd.chercherFilmsLoues(abonneActif.carte);
+			for(Film f : filmsLoues) {
+				result += f.toString();
+			}
+			return result;
+		}
+	}
+	
+	String donnerHistoriqueEmpruntsAbonne() {
+		if(abonneActif == null) {
+			return "0";
+		} else {
+			String result = "";
+			List<Film> filmsLoues = bd.chercherFilmsempruntes(abonneActif.carte);
+			for(Film f : filmsLoues) {
+				result += f.toString();
+			}
+			return result;
+		}
+	}	
+	
+	int rechargerCarte(double argent) {
+		if(abonneActif == null) {
 			return 0;
 		} else {
-			abonneActif = null;
+			// !!!
+			int solde = abonneActif.getSolde()+argent;
+			bd.modifierSoldeAbonne(abonneActif.getCarte(), solde);
 			return 1;
 		}
 	}
 	
-	
-	//fonction client - prendre le dvd
-	int retirerDVD(int idDVD) {
-		return bd.modifierDVD(idDVD, StatutFilm.EnAutomate);
+	int supprimerCompte() {
+		if(abonneActif == null) {
+			return 0;
+		} else {
+			return bd.supprimerAbonne(abonneActif);
+		}
 	}
 	
-	int afficherFilmLoues() {
-		
+	String donnerInformationsAbonne(){
+		if(abonneActif == null) {
+			return "0";
+		} else {
+			
+			return abonneActif.toString();
+		}
 	}
-	
 }
