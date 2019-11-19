@@ -7,6 +7,10 @@ public class Machine {
 
 	public State current_etat = State.ACCEUIL_NC;
 	
+	public int verifCompte(String nom, String prenom, long CB) {
+		//TODO
+		return 0;
+	}
 	
 	public void handle(String action) {
 		switch(this.current_etat) {
@@ -33,6 +37,9 @@ public class Machine {
 			switch(action) {
 			//traitement
 			case "b":
+				current_etat = State.ACCEUIL_NC;
+				break;
+			case "V":
 				current_etat = State.ACCEUIL_NC;
 				break;
 			//TODO: gestion des infos utilisateur
@@ -258,5 +265,6 @@ public class Machine {
 			
 		}
 	}
+	
 
 }
