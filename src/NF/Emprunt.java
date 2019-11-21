@@ -7,23 +7,27 @@ import java.util.Date;
 public class Emprunt {
 	long cbEmprunteur;
 	int idAbonne;
-	Date date = new Date();
+	Date dateEmprunt = new Date();
 	Date dateRetour;
 	DVD dvd;
 	
 	
-	public Emprunt(long cbEmprunteur, int idAbonne, DVD dvd) {
-		super();
-		this.cbEmprunteur = cbEmprunteur;
+	public Emprunt(int idAbonne, DVD dvd, Date dateEmprunt) {
 		this.idAbonne = idAbonne;
-		this.dvd.identifiantDVD = dvd;
+		this.dvd = dvd;
+		this.dateEmprunt = dateEmprunt;
+	}
+	
+	public Emprunt(long cbEmprunteur, DVD dvd, Date dateEmprunt) {
+		this.cbEmprunteur = cbEmprunteur;
+		this.dvd = dvd;
+		this.dateEmprunt = dateEmprunt;
 	}
 
 	@Override
 	public String toString() {
-		String chaineRestrictions = String.join("`", Genre.toStringArray(restrictions));
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		String dateD = dateFormat.format(date);
+		String dateD = dateFormat.format(dateEmprunt);
 		String dateR = dateFormat.format(dateRetour);
 		return cbEmprunteur + "|" + idAbonne + "|" + dateD + "|" + dateR + "|" + dvd
 				+ "\n";
@@ -45,12 +49,12 @@ public class Emprunt {
 		this.idAbonne = idAbonne;
 	}
 
-	public Date getDate() {
-		return date;
+	public Date getDateEmprunt() {
+		return dateEmprunt;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setDateEmprunt(Date dateEmprunt) {
+		this.dateEmprunt = dateEmprunt;
 	}
 
 	public Date getDateRetour() {

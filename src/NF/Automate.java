@@ -1,7 +1,9 @@
 package NF;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import NF.gestionfichier.BD;
 
@@ -62,7 +64,9 @@ public class Automate {
 		bd.chercherRecommandations();
 	}
 	
-	//?TODO : toutes les fonctions pour bouger les dvd d'un statut à un autre
+	public String changerEtatDVD(int idDVD, String etat) {
+		return bd.modifierDVD(idDVD, StatutDVD.getByName(etat));
+	}
 	
 	
 	/*
@@ -72,39 +76,82 @@ public class Automate {
 	 * */	
 		
 	//remettre le dvd dans l'automate
-	int rendreDVD(int idDVD) {
-		return bd.modifierDVD(idDVD, StatutDVD.EnAutomate);
+	public String rendreDVD(int idDVD) {
+		Emprunt emprunt = bd.chercherEmprunt(idDVD);
+		long differenceTemps = (new Date()).getTime() - emprunt.getDateEmprunt().getTime();
+		long nbJours = TimeUnit.DAYS.convert(differenceTemps, TimeUnit.MILLISECONDS);
+		
+		double prix;
+		if(abonneActif == null) {
+			prix = 5*nbJours;
+			Emprunteur emprunteur = bd.chercherEmprunteur(emprunt.getCbEmprunteur());//peut-être pas utile changer de place transaction cb?
+			if(emprunteur.demanderTransactionCb(prix) == 0) {
+				return "erreur paiement";
+			} 
+			else {
+				bd.modifierDVD(idDVD, StatutDVD.EnAutomate);
+				bd.AjouterDateRetourEmprunt(idDVD, emprunt.getDateEmprunt(), new Date());
+				return "dvd rendu, "+prix+" euros ont été débités";
+			}	
+		}
+		else {
+			prix = 4*nbJours;
+			if(abonneActif.getSolde()-prix > 0) {
+				abonneActif.setSolde(abonneActif.getSolde()-prix);
+				bd.modifierSoldeAbonne(abonneActif.getCarte(),abonneActif.getSolde());
+				return "dvd rendu, "+prix+" euros ont été débités";
+			}
+			else {
+				return "pas assez d'argent sur la carte abonnée";
+			}
+		}
+		
+		
+		
 		
 	}
 	
 	//prendre le dvd
-	public int retirerDVD(int idDVD, long cb) {
-		if(abonneActif == null && bd.chercherNombreEmpruntsCBActuel(cb) < 1) {
+	public int ajouterAuPanier(int idDVD, long cb) {
+		if(abonneActif == null && (bd.chercherNombreEmpruntsCBActuel(cb) < 1 || panier.size() > 0)) {
 			return 0;//jsp si je mets une erreur détaillée comme "trop de dvds empruntés"
 		}
-		else if(abonneActif != null) {
-			DVD dvd = bd.chercherDVD(idDVD);
-			if(panier.size() >= 5) {
-				return 0;
-			}
-			else {
-				panier.add(dvd);
-				return 1;
-			}
+		else if(abonneActif != null && (bd.chercherNombreEmpruntsAbonneActuel(abonneActif.getCarte()) < 1 || panier.size() >= 3)) {
+			return 0;
 		} 
 		else {
-			return bd.modifierDVD(idDVD, StatutDVD.Enprunte);
+			DVD dvd = bd.chercherDVD(idDVD);
+			panier.add(dvd);
+			return 1;
 		}
 		
 	}
 	
-	//retourne la liste des films par genre ou tous les films si filtres = null
-	public List<Film> filtreGenreFilm(List<Genre> filtres) {
-		List<Film> filmsDeGenre = bd.chercherGenreFilm(filtres);
-		
-		return filmsDeGenre;
+	public int valider(long cb) {
+		//TODO : gestion des erreurs/annulation
+		for(DVD dvd: panier) {
+			bd.modifierDVD(dvd.getIdentifiantDVD(), StatutDVD.Emprunte);
+			if(abonneActif != null) {
+				bd.creerEmprunt(new Emprunt(abonneActif.getCarte(), dvd, new Date()));
+			} else {
+				bd.creerEmprunt(new Emprunt(cb, dvd, new Date()));
+			}
+		}
+		panier = new ArrayList<DVD>();
+		abonneActif = null;
+		return 1;
 	}
 	
+	
+	//retourne la liste des films par genre ou tous les films si filtres = null
+	public String filtreGenreFilm(List<Genre> filtres) {
+		List<Film> filmsDeGenre = bd.chercherGenreFilm(filtres);
+		String result="";
+		for(Film f:filmsDeGenre) {
+			result+=f.toString()+"\n";
+		}
+		return result;
+	}
 	
 	/*
 	 * 
@@ -157,11 +204,17 @@ public class Automate {
 		}
 	}	
 	
-	public int rechargerCarte(double argent) {
+	public int rechargerCarte(long cb, double montant) {
+		if(montant<10) {
+			return 0;
+		}
 		if(abonneActif == null) {
 			return 0;
 		} else {
-			int solde = abonneActif.getSolde()+argent;
+			if(abonneActif.demanderTransactionCb(montant) == 0) {
+				return 0;
+			}
+			double solde = abonneActif.getSolde()+montant;
 			bd.modifierSoldeAbonne(abonneActif.getCarte(), solde);
 			return 1;
 		}
@@ -193,10 +246,10 @@ public class Automate {
 	}
 
 	public String afficherPanier() {
-		//TODO
-	}
-	
-	public String valider() {
-		//TODO
+		String result = "";
+		for(DVD dvd : panier) {
+			result += dvd.getFilm().toString();
+		}
+		return result;
 	}
 }

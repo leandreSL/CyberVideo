@@ -1,11 +1,7 @@
 package NF;
 
 public class Emprunteur {
-	long cb;
-	
-	void louerFilm() {
-		
-	}
+	private long cb;
 
 	public Emprunteur(long cb) {
 		super();
@@ -20,6 +16,9 @@ public class Emprunteur {
 		this.cb = cb;
 	}
 	
+	public int demanderTransactionCb(double montant) {
+		return 1;
+	}
 	
 }
 
