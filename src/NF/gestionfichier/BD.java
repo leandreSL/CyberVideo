@@ -58,6 +58,7 @@ public class BD {
 	
 	public Film[] chercherGenre(String genre){
 		ArrayList<ArrayList<String>> listeFilms = chercher(cheminFilm, genre, 1);
+		return null;
 		
 		
 	}
