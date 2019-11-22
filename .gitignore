@@ -7,6 +7,7 @@ src/NF/gestionfichier/testsbd/
 #ignore eclipse files
 .classpath
 .project
+.settings
 
 #ignore database
 BDD/dvd

@@ -7,65 +7,23 @@ import java.util.concurrent.TimeUnit;
 
 import NF.gestionfichier.BD;
 
-public class Automate {
-	
-	//List<Film> filmsDisponibles = new ArrayList<Film>();
-	//List<DVD> dvdDisponibles = new ArrayList<DVD>();
+public class ModeleEmprunteur {
 	BD bd; 
 	
 	Abonne abonneActif;
-	private static Automate instance = null;
+	private static ModeleEmprunteur instance = null;
 	List<DVD> panier = new ArrayList<DVD>();
 	
 	
-	private Automate() {
+	private ModeleEmprunteur() {
 		bd = BD.getInstance();
 	}
 	
-	public static Automate getInstance() {
+	public static ModeleEmprunteur getInstance() {
 		if(instance == null) {
-			instance = new Automate();
+			instance = new ModeleEmprunteur();
 		}
 		return instance;
-	}
-	
-	
-	/*
-	 * 
-	 * FONCTIONS TECHNICIEN
-	 * 
-	 * */
-	
-	//ajoute un film Ã  l'automate
-	public int ajouterFilm(String titre, List<Genre> genres, String resume, List<String> acteurs, String realisateur, int limiteAge,
-			String cheminAffiche) {
-		Film f = new Film(titre, genres, resume, acteurs, realisateur,limiteAge, cheminAffiche);
-		return bd.stockerFilm(f);
-	}
-	
-	//supprime un film de l'automate
-	public int supprimerFilm(String titre) {
-		return bd.supprimerFilm(titre);
-	}
-	
-	//ajoute un dvd Ã  l'automate - par défaut, le DVD est ajouté au magasin
-	public int ajouterDVD(int identifiantDVD, Film film) {
-		//condition: test si film du dvd dans bdd?
-		return bd.stockerDVD(dvd);
-	}
-	
-	//supprime un dvd de la liste
-	public int supprimerDVD(DVD dvd) {
-		return bd.supprimerDVD(dvd);
-	}
-	
-
-	public String donnerRecommandations (){
-		bd.chercherRecommandations();
-	}
-	
-	public String changerEtatDVD(int idDVD, String etat) {
-		return bd.modifierDVD(idDVD, StatutDVD.getByName(etat));
 	}
 	
 	
@@ -89,7 +47,7 @@ public class Automate {
 				return "erreur paiement";
 			} 
 			else {
-				bd.modifierDVD(idDVD, StatutDVD.EnAutomate);
+				bd.modifierStatutDVD(idDVD, StatutDVD.EnAutomate);
 				bd.AjouterDateRetourEmprunt(idDVD, emprunt.getDateEmprunt(), new Date());
 				return "dvd rendu, "+prix+" euros ont été débités";
 			}	
@@ -113,10 +71,10 @@ public class Automate {
 	
 	//prendre le dvd
 	public int ajouterAuPanier(int idDVD, long cb) {
-		if(abonneActif == null && (bd.chercherNombreEmpruntsCBActuel(cb) < 1 || panier.size() > 0)) {
+		if(abonneActif == null && (bd.chercherNombreEmpruntsActuesCB(cb) < 1 || panier.size() > 0)) {
 			return 0;//jsp si je mets une erreur détaillée comme "trop de dvds empruntés"
 		}
-		else if(abonneActif != null && (bd.chercherNombreEmpruntsAbonneActuel(abonneActif.getCarte()) < 1 || panier.size() >= 3)) {
+		else if(abonneActif != null && (bd.chercherNombreEmpruntsActuelsAbonne(abonneActif.getCarte()) < 1 || panier.size() >= 3)) {
 			return 0;
 		} 
 		else {
@@ -130,7 +88,7 @@ public class Automate {
 	public int valider(long cb) {
 		//TODO : gestion des erreurs/annulation
 		for(DVD dvd: panier) {
-			bd.modifierDVD(dvd.getIdentifiantDVD(), StatutDVD.Emprunte);
+			bd.modifierStatutDVD(dvd.getIdentifiantDVD(), StatutDVD.Emprunte);
 			if(abonneActif != null) {
 				bd.creerEmprunt(new Emprunt(abonneActif.getCarte(), dvd, new Date()));
 			} else {
@@ -159,8 +117,8 @@ public class Automate {
 	 * 
 	 * */
 	
-	public int connexion(int carte) {
-		Abonne abonne = bd.chercherAbonne(carte);
+	public int connexion(int idCarte) {
+		Abonne abonne = bd.chercherAbonne(idCarte);
 		if(abonne != null) {
 			abonneActif = abonne;
 			return 1;
@@ -178,31 +136,19 @@ public class Automate {
 		}
 	}
 	
-	public String donnerListeFilmsLoues() {
+	public String donnerListeEmprunts() {
 		if(abonneActif == null) {
 			return "0";
 		} else {
 			String result = "";
-			List<Film> filmsLoues = bd.chercherFilmsLoues(abonneActif.getCarte());
-			for(Film f : filmsLoues) {
-				result += f.toString();
+			List<Emprunt> TotalEmprunt = bd.chercherEmprunts(abonneActif.getCarte());
+			for(Emprunt e : TotalEmprunt) {
+				result += e.toString();
 			}
 			return result;
 		}
 	}
-	
-	public String donnerHistoriqueEmpruntsAbonne() {
-		if(abonneActif == null) {
-			return "0";
-		} else {
-			String result = "";
-			List<Film> filmsLoues = bd.chercherFilmsempruntes(abonneActif.getCarte());
-			for(Film f : filmsLoues) {
-				result += f.toString();
-			}
-			return result;
-		}
-	}	
+		
 	
 	public int rechargerCarte(long cb, double montant) {
 		if(montant<10) {
@@ -220,9 +166,10 @@ public class Automate {
 		}
 	}
 	
+	//TODO move to technicien
 	public int supprimerCompte() {
 		if(abonneActif != null) {
-			if(bd.supprimerAbonne(abonneActif) == 1) {
+			if(bd.supprimerAbonne(abonneActif.getCarte()) == 1) {
 				return deconnexion();
 			}
 		}

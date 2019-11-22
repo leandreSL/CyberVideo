@@ -10,6 +10,7 @@ public class Film {
 	String realisateur;
 	int limiteAge;
 	String cheminAffiche;
+	int recommandation;
 	
 	public Film(String titre, List<Genre> genres, String resume, List<String> acteurs, String realisateur, int limiteAge,
 			String cheminAffiche) {
@@ -20,9 +21,20 @@ public class Film {
 		this.realisateur = realisateur;
 		this.limiteAge = limiteAge;
 		this.cheminAffiche = cheminAffiche;
+		this.recommandation = 0;
 	}
 	
 	
+	public int getRecommandation() {
+		return recommandation;
+	}
+
+
+	public void setRecommandation(int recommandation) {
+		this.recommandation = recommandation;
+	}
+
+
 	@Override
 	public String toString() {
 		String chaineGenres = String.join("`", Genre.toStringArray(genres));

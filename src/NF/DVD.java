@@ -2,14 +2,18 @@ package NF;
 
 public class DVD {
 	int identifiantDVD;
-	String etat = "neuf"; //enum pour état
+	String etat; //enum pour état
 	Film film;
-	StatutFilm statut = StatutFilm.EnMagasin;
-	Integer recommandation = 0;
+	StatutDVD statut;
+	Integer recommandation;
 	
 	public DVD(int identifiantDVD, Film film) {
 		this.identifiantDVD = identifiantDVD;
 		this.film = film;
+		this.statut = StatutDVD.EnMagasin;
+		this.etat = "neuf";
+		this.recommandation = 0;
+		
 	}
 	
 	public String getEtat() {
@@ -25,11 +29,11 @@ public class DVD {
 		return film;
 	}
 	
-	public StatutFilm getStatut() {
+	public StatutDVD getStatut() {
 		return statut;
 	}
 
-	public void setStatut(StatutFilm statut) {
+	public void setStatut(StatutDVD statut) {
 		this.statut = statut;
 	}
 
