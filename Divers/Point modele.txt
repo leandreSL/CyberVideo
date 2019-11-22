@@ -1,0 +1,10 @@
+Ce que l'on veut :
+finir d'implémenter les fonctions dont nous avons besoin dans la partie IHM 
+pour se faire : il faut définir les besoins en terme de fonction a appelé + paramètre dans les états ou il faut appeler du code
+dans chaque fonction on regade dans le détail les méthodes de telle ou telle classe a qui on a besoin de faire appel + les attributs (si on y accède pas par un getter ou quoi)
+
+-> on saura avec précision ce qu'on veut , et comment implémenter les fonctions dans nos classes du modèle 
+
+de quoi on a besoin : beaucoup de choses 
+on fait le point en regardant la classe INTERFACE et MACHINE de la partie IHM et on décortique au maximum, si pas le temps de tout voir ensemble , documenter la partie ihm a fond pour spécifier de quoi on a besoin
+pour que la personne qui se chargera d'écrire les fonctions "bas niveaux" associé sache quoi faire 
