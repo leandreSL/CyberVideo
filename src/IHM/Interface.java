@@ -1,11 +1,15 @@
 package IHM;
 
 import java.util.Scanner;
-
 import IHM.Machine.State;
+import NF.Abonne;
+import NF.DVD;
 
 public class Interface {
 	Machine m;
+	
+	
+	
 	public Interface() {
 		m = new Machine();
 	}
@@ -20,7 +24,16 @@ public class Interface {
 		System.out.println("--------------");
 		System.out.println("Saisir l'action :");
 	}
-
+	
+	public void affichageConnexion() {
+		System.out.println("Connexion : ");
+		introPage();
+		System.out.println("Entrer votre numéro de carte : ");
+		Scanner inp = new Scanner(System.in);
+		int num_carte_abo = inp.nextInt();
+		//System.out.println("b : Retour Arriere");
+	}
+	
 	public void contenuPage() {
 		switch(m.current_etat) {
 		case ACCEUIL_NC:
@@ -45,6 +58,7 @@ public class Interface {
 			long cb = Long.valueOf(in.nextLine());
 			if (m.verifCompte(nom, prenom, cb) == 0) {
 				System.out.println("Votre compte a bien été créer, vous recevrez votre carte à l'acceuil de votre magasin");
+				// Need : fonction qui ajoute un abonné à la base de donnée
 			}else {
 				System.out.println("Il y a eu un problème dans la création de votre compte");
 				System.out.println("b : Retour Arriere");
@@ -61,11 +75,14 @@ public class Interface {
 			System.out.println("b : Retour Arriere");
 			System.out.println("V : Valider le choix");
 			outroPage();
-			//TODO : fonction d'affichage de liste DVD
+			//TODO : fonction d'affichage de liste DVD :
+			// Need : fonction BDD qui renvoie une ArrayList de Films qu'on va parcourir et afficher les infos liés a chaque film (fct toString de Film)
+			
 			break;
 		case RECAP_LOCATION_NC:
 			System.out.println("Recapitulatif Location (Non Connectee) : ");
 			introPage();
+			// TODO : variable Film qui contient le film choisi à l'étape précédente, affichage des infos du film
 			System.out.println("b : Retour Arriere");
 			System.out.println("V : Valider");
 			System.out.println("Co : Connexion");
@@ -78,19 +95,28 @@ public class Interface {
 			System.out.println("CB : Finalisation de la transaction");
 			outroPage();
 			//TODO : fonction de saisie de la CB
+			//TODO : mise a jour de la bdd avec la location du film selectionné (donc 1 dvd en moins etc)
+			// Need : fonction de maj pour mettre a jour la liste des dvds dispo
 			break;
+			
+		//POUR LUES 2 CAS DE CONNEXION :
+			// need : fonction qui cherche dans la bdd un abonne par rapport à son num carte et renvoie une instance d'abonne
+			// ensuite faire : abonne_courant = *nomFonctionGetAbonne(num_carte)*
 		case CONNEXION_RECAP:
 			//TODO : même affichage que connexion
+			// Variable du film selectionné en etant non connecté à enregistrer
+			introPage();
+			affichageConnexion();
+			outroPage();
 			break;
 		case CONNEXION:
-			System.out.println("Connexion : ");
 			introPage();
-			System.out.println("Entrer votre numéro de carte");
-			System.out.println("b : Retour Arriere");
+			affichageConnexion();
 			outroPage();
 			break;
 		case ACCEUIL_C:
 			//TODO : savoir qui est connecté
+			// variable gloabal abonnee a mettre a jour lors de la connexion
 			introPage();
 			//TODO : afficher la pub etc...
 			System.out.println("D : Deconnexion");
@@ -99,9 +125,10 @@ public class Interface {
 			outroPage();
 			break;
 		case INFO_COMPTE:
-			System.out.println("Informations Compte (Connecte en tant que : TODO) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.abonne_courant.getNomAbonne() + " ) : ");
 			introPage();
-			//TODO : affichage des infos liées au compte
+			System.out.println(m.abonne_courant);
+			System.out.println("");
 			System.out.println("S : Demande supression compte");
 			System.out.println("H : Afficher Historique des emprunts");
 			System.out.println("Li : Liste des filsm loués");
@@ -110,51 +137,63 @@ public class Interface {
 			outroPage();
 			break;
 		case LISTE_FILMS_LOUE :
-			System.out.println("Liste des films loués (Connecte en tant que : TODO) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.abonne_courant.getNomAbonne() + " ) : ");
 			introPage();
 			System.out.println("b : Retour Arriere");
 			outroPage();
 			//TODO : affichage de la liste des films loués
+			// need : fonction qui prend en paramètre un abonné et qui renvoie sa liste de films loues
 			break;
 		case HISTORIQUE_EMPRUNT:
-			System.out.println("Historique des emprunts (Connecte en tant que : TODO) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.abonne_courant.getNomAbonne() + " ) : ");
 			introPage();
 			System.out.println("b : Retour Arriere");
 			outroPage();
 			//TODO : affichage de l'historique des emprunts
+			// need : fonction qui prend en paramètre un abonné et qui renvoie sa liste de films empruntés
 			break;
 		
 		case RECHARGER_COMPTE:
-			System.out.println("Rechargement Compte (Connecte en tant que : TODO) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.abonne_courant.getNomAbonne() + " ) : ");
 			introPage();
 			System.out.println("b : Retour Arriere");
 			//TODO : fonction qui traite le rechargement
+			// need : fonction qui prend en paramètre une abonne et un int (rechargement) et qui met a jour le solde du compte (renvoie 0 ou 1 selon l'exec)
 			System.out.println("V : Valider le choix");
 			outroPage();
 			break;
 		case LOCATION_C:
-			System.out.println("Location (Connecte en tant que : TODO) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.abonne_courant.getNomAbonne() + " ) : ");
 			introPage();
 			System.out.println("b : Retour Arriere");
 			System.out.println("Re : Recommandation");
-			//TODO : VOIR TODO location NC + traiter les recommandations
+			//TODO : VOIR TODO location NC et need
+			if (m.panier.size() < 3) {
+				//TODO add dans le panier le film selectionné
+			}else {
+				System.out.println(" Le panier est plein, veuillez supprimer un article ou valider le panier");
+			}
+			//TODO : peut-etre faire en sorte de supprimer un article du panier
 			System.out.println("V : Valider le choix");
 			outroPage();
 			break;
 		case AFFICHAGE_PANIER:
-			System.out.println("Affichage Panier (Connecte en tant que : TODO) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.abonne_courant.getNomAbonne() + " ) : ");
 			introPage();
+			for (DVD dvd : m.panier) {
+				System.out.println(dvd.getFilm());
+			}
 			System.out.println("b : Retour Arriere");
 			System.out.println("Rec : Recharger compte");
 			System.out.println("V : Valider le choix");
 			outroPage();
-			//TODO : afficher le panier
 			break;
 		case RECHARGER_COMPTE_PANIER:
-			System.out.println("Rechargement Compte (Connecte en tant que : TODO) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.abonne_courant.getNomAbonne() + " ) : ");
 			introPage();
 			System.out.println("b : Retour Arriere");
 			//TODO : fonction qui traite le rechargement
+			// Voir TODO rechargement
 			System.out.println("V : Valider le choix");
 			outroPage();
 			break;
