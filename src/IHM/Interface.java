@@ -29,6 +29,7 @@ public class Interface {
 			//TODO : afficher la pub etc...
 			System.out.println("Co : Connexion");
 			System.out.println("L : Location Film");
+			System.out.println("R : Rendu Film");
 			System.out.println("Cr : Creation Compte");
 			outroPage();
 			break;
@@ -49,7 +50,7 @@ public class Interface {
 				System.out.println("b : Retour Arriere");
 				break;
 			}
-			System.out.println("");
+			System.out.println("");	
 			System.out.println("b : Retour Arriere");
 			System.out.println("V : Valider");
 			outroPage();
@@ -86,13 +87,10 @@ public class Interface {
 			introPage();
 			System.out.println("Entrer votre numéro de carte");
 			System.out.println("b : Retour Arriere");
-			//TODO : fonction qui traite les données utilisateur
-			System.out.println("V : Valider le choix");
 			outroPage();
 			break;
 		case ACCEUIL_C:
 			//TODO : savoir qui est connecté
-			System.out.println("Acceuil (Connecte en tant que : TODO) : ");
 			introPage();
 			//TODO : afficher la pub etc...
 			System.out.println("D : Deconnexion");
@@ -102,7 +100,14 @@ public class Interface {
 			break;
 		case INFO_COMPTE:
 			System.out.println("Informations Compte (Connecte en tant que : TODO) : ");
+			introPage();
 			//TODO : affichage des infos liées au compte
+			System.out.println("S : Demande supression compte");
+			System.out.println("H : Afficher Historique des emprunts");
+			System.out.println("Li : Liste des filsm loués");
+			System.out.println("Rec : Recharger Compte");
+			System.out.println("Ren : Rendre un DVD");
+			outroPage();
 			break;
 		case LISTE_FILMS_LOUE :
 			System.out.println("Liste des films loués (Connecte en tant que : TODO) : ");
@@ -140,7 +145,7 @@ public class Interface {
 			System.out.println("Affichage Panier (Connecte en tant que : TODO) : ");
 			introPage();
 			System.out.println("b : Retour Arriere");
-			System.out.println("R : Recharger compte");
+			System.out.println("Rec : Recharger compte");
 			System.out.println("V : Valider le choix");
 			outroPage();
 			//TODO : afficher le panier
@@ -159,6 +164,49 @@ public class Interface {
 		case FIN_TRANSACTION_C:
 			
 			//TODO
+			break;
+		case AUTHENTIFICATION_RENDU	:
+			System.out.println("Authentification pour le rendu : ");
+			introPage();
+			System.out.println("b : Retour Arriere");
+			System.out.println("Numéro carte bancaire/ Carte abonné : S'authentifier");
+			outroPage();
+			break;
+		case RECAP_RENDU_C:
+			System.out.println("Rendu DVD (Connecte en tant que : TODO) : ");
+			introPage();
+			/* afficher liste des DVD emprunté (id | titre | date emprunt | prix actuel a payer) */
+			System.out.println("b : Retour Arriere");
+			System.out.println("Id DVD : Rendre le DVD correspondant");
+			outroPage();
+			break;
+		case RECAP_RENDU_NC:
+			System.out.println("Rendu DVD (Non connecte): ");
+			introPage();
+			/* afficher le DVD emprunté (id | titre | date emprunt | prix actuel a payer) */
+			System.out.println("b : Retour Arriere");
+			System.out.println("Id DVD : Rendre le DVD correspondant");
+			outroPage();
+			break;
+		case ACCEUIL_TECH:
+			System.out.println("Acceuil Technicien: ");
+			introPage();
+			System.out.println("D : Deconnexion");
+			System.out.println("Maj : Mettre a jour les DVD dans l'automate");
+			System.out.println("Re : Voir les recommandations");
+			outroPage();
+			break;
+		case MAJ_DVD_AUTOMATE:
+			System.out.println("Mise a jour DVD automate ");
+			introPage();
+			//aled lélé
+			outroPage();
+			break;
+		case LISTE_RECOMANDATION:
+			System.out.println("Liste des recommandations ");
+			introPage();
+			System.out.println("Ok : Retour acceuil");
+			outroPage();
 			break;
 		}
 	}
