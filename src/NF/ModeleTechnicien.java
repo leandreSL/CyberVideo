@@ -37,6 +37,7 @@ public class ModeleTechnicien {
 	
 	//ajoute un dvd Ã  l'automate - par défaut, le DVD est ajouté au magasin
 	public void ajouterDVD(int identifiantDVD, Film film) {
+		DVD dvd = new DVD(identifiantDVD, film);
 		if(!bd.stockerDVD(dvd))
 			throw(new Exception("Erreur base de donnée"));
 		return;
@@ -50,16 +51,11 @@ public class ModeleTechnicien {
 	}
 	
 
-	public String donnerListeRecommandations (){
-		String result = "";
-		for(String recommandation: bd.chercherEnsembleRecommandations())
-			result += recommandation + "\n";
-		return result;		
-	}
+	
 	
 	public void changerEtatDVD(int idDVD, String etat) {
-		if(bd.modifierStatutDVD(idDVD, StatutDVD.getByName(etat)))
-			throw(new Exception());
+		if(!bd.modifierStatutDVD(idDVD, StatutDVD.getByName(etat)))
+			throw(new Exception("Erreur base de donnée"));
 		return;
 	}
 	
@@ -76,7 +72,37 @@ public class ModeleTechnicien {
 			result += f.toString() + "\n";
 		return result;		
 	}
+
+	public String donnerListeAbonnes() {
+		String result = "";
+		for(Abonne a : bd.chercherEnsembleAbonnes())
+			result += a.toString() + "\n";
+		return result;
+	}
 	
-	abonne chercherEnsembleAbonne()
+	public String donnerListeRecommandations (){
+		String result = "";
+		for(String recommandation: bd.chercherEnsembleRecommandations())
+			result += recommandation + "\n";
+		return result;		
+	}
+	
+	
+	public int donnerTempsEmpruntMoyen() {
+		return bd.chercherTempsEmpruntMoyen();
+	}
+	
+	public int donnerNombreEmprunt() {
+		return bd.chercherNombreEmprunt();
+	} 
+	
+	
+	public void supprimerCompte(int idCarte) {
+		if(!bd.supprimerAbonne(idCarte)) {
+			throw(new Exception("Erreur base de donnée"));
+		}
+		
+		return;
+	}
 
 }

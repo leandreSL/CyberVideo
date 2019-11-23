@@ -32,23 +32,26 @@ public class ModeleEmprunteur {
 	 * FONCTIONS NON ABONNES
 	 * 
 	 * */	
-		
+	
+	//TODO gestion retard/gele carte
+	//TODO gestion etat(à voir en dernier)
 	//remettre le dvd dans l'automate
 	public String rendreDVD(int idDVD) {
-		Emprunt emprunt = bd.chercherEmprunt(idDVD);
+		Emprunt emprunt = bd.chercherEmpruntActuel(idDVD);
 		long differenceTemps = (new Date()).getTime() - emprunt.getDateEmprunt().getTime();
 		long nbJours = TimeUnit.DAYS.convert(differenceTemps, TimeUnit.MILLISECONDS);
 		
 		double prix;
 		if(abonneActif == null) {
 			prix = 5*nbJours;
-			Emprunteur emprunteur = bd.chercherEmprunteur(emprunt.getCbEmprunteur());//peut-être pas utile changer de place transaction cb?
-			if(emprunteur.demanderTransactionCb(prix) == 0) {
-				return "erreur paiement";
+			if(!demanderTransactionCb(emprunt.getCbEmprunteur(),prix)) {
+				throw(new Exception("Erreur transaction cb"));
 			} 
 			else {
-				bd.modifierStatutDVD(idDVD, StatutDVD.EnAutomate);
-				bd.AjouterDateRetourEmprunt(idDVD, emprunt.getDateEmprunt(), new Date());
+				if(!bd.modifierStatutDVD(idDVD, StatutDVD.EnAutomate) || 
+						!bd.AjouterDateRetourEmprunt(idDVD, emprunt.getDateEmprunt(), new Date())) {
+					throw(new Exception("Erreur base de donnée"));
+				}
 				return "dvd rendu, "+prix+" euros ont été débités";
 			}	
 		}
@@ -56,48 +59,67 @@ public class ModeleEmprunteur {
 			prix = 4*nbJours;
 			if(abonneActif.getSolde()-prix > 0) {
 				abonneActif.setSolde(abonneActif.getSolde()-prix);
-				bd.modifierSoldeAbonne(abonneActif.getCarte(),abonneActif.getSolde());
+				if(!bd.modifierSoldeAbonne(abonneActif.getCarteAbonne(),abonneActif.getSolde())) {
+					throw(new Exception("Erreur base de donnée"));
+				}
 				return "dvd rendu, "+prix+" euros ont été débités";
 			}
 			else {
-				return "pas assez d'argent sur la carte abonnée";
+				throw(new Exception("pas assez d'argent sur la carte abonnée"));
 			}
-		}
-		
-		
-		
-		
+		}		
 	}
 	
+	//TODO
 	//prendre le dvd
-	public int ajouterAuPanier(int idDVD, long cb) {
-		if(abonneActif == null && (bd.chercherNombreEmpruntsActuesCB(cb) < 1 || panier.size() > 0)) {
-			return 0;//jsp si je mets une erreur détaillée comme "trop de dvds empruntés"
+	public void ajouterAuPanier(String titre, long cb) {
+		int nbEmpruntMax;
+		int nbEmpruntActuels;
+		
+		if(abonneActif == null) { 
+			nbEmpruntMax = 1;
+			nbEmpruntActuels = bd.chercherNombreEmpruntsActuelsCB(cb);
 		}
-		else if(abonneActif != null && (bd.chercherNombreEmpruntsActuelsAbonne(abonneActif.getCarte()) < 1 || panier.size() >= 3)) {
-			return 0;
-		} 
-		else {
-			DVD dvd = bd.chercherDVD(idDVD);
-			panier.add(dvd);
-			return 1;
+		else{
+			nbEmpruntMax = 3;
+			nbEmpruntActuels = bd.chercherNombreEmpruntsActuelsAbonne(abonneActif.getCarteAbonne());
 		}
+		
+		
+		
+		
+		if(panier.size() >=  nbEmpruntMax) {
+			throw(new Exception("Votre panier est plein"));
+		}
+		if((panier.size() + nbEmpruntActuels) >= nbEmpruntMax) {
+			throw(new Exception("Vous avez trop de DVDs non rendus avec cette carte"));
+		}
+		
+		DVD dvd = bd.chercherDVD(titre);
+		panier.add(dvd);
+		return;
+		
 		
 	}
 	
-	public int valider(long cb) {
-		//TODO : gestion des erreurs/annulation
+	public void valider(long cb) {
+		Emprunt e;
 		for(DVD dvd: panier) {
-			bd.modifierStatutDVD(dvd.getIdentifiantDVD(), StatutDVD.Emprunte);
+			if(!bd.modifierStatutDVD(dvd.getIdentifiantDVD(), StatutDVD.Emprunte)) {
+				throw(new Exception("Erreur base de donnée"));
+			}
 			if(abonneActif != null) {
-				bd.creerEmprunt(new Emprunt(abonneActif.getCarte(), dvd, new Date()));
+				e = new Emprunt(abonneActif.getCarteAbonne(), dvd, new Date());
 			} else {
-				bd.creerEmprunt(new Emprunt(cb, dvd, new Date()));
+				e = new Emprunt(cb, dvd, new Date());
+			}
+			if(!bd.creerEmprunt(e)) {
+				throw(new Exception("Erreur base de donnée"));
 			}
 		}
 		panier = new ArrayList<DVD>();
 		abonneActif = null;
-		return 1;
+		return;
 	}
 	
 	
@@ -117,31 +139,42 @@ public class ModeleEmprunteur {
 	 * 
 	 * */
 	
-	public int connexion(int idCarte) {
+	public void creationCompte(String nomAbonne, String prenomAbonne, List<Genre> restrictions, double solde, long carteBleue) throws Exception{
+		if(solde < 15) {
+			throw(new Exception("Vous devez mettre au moins 15 Euros sur la carte à sa création"));
+		}
+		Abonne a = new Abonne(nomAbonne, prenomAbonne, restrictions, solde, carteBleue);
+		if(!bd.chercherAbonne(a))
+			throw(new Exception("Erreur base de donnée"));
+		return;
+	}
+	
+	
+	public void connexion(int idCarte) {
 		Abonne abonne = bd.chercherAbonne(idCarte);
 		if(abonne != null) {
 			abonneActif = abonne;
-			return 1;
+			return;
 		} else {
-			return 0;
+			throw(new Exception("Vous êtes déjà connectés"));
 		}
 	}
 	
-	public int deconnexion() {
+	public void deconnexion() throws Exception {
 		if(abonneActif == null) {
-			return 0;
+			throw(new Exception("Erreur base de donnée"));
 		} else {
 			abonneActif = null;
-			return 1;
+			return;
 		}
 	}
 	
 	public String donnerListeEmprunts() {
 		if(abonneActif == null) {
-			return "0";
+			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
 		} else {
 			String result = "";
-			List<Emprunt> TotalEmprunt = bd.chercherEmprunts(abonneActif.getCarte());
+			List<Emprunt> TotalEmprunt = bd.chercherEmprunts(abonneActif.getCarteAbonne());
 			for(Emprunt e : TotalEmprunt) {
 				result += e.toString();
 			}
@@ -150,46 +183,38 @@ public class ModeleEmprunteur {
 	}
 		
 	
-	public int rechargerCarte(long cb, double montant) {
-		if(montant<10) {
-			return 0;
-		}
+	public void rechargerCarte(long cb, double montant) {
 		if(abonneActif == null) {
-			return 0;
+			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
+		} else if(montant<10) {
+			throw(new Exception("Vous devez reharger votre carte avec plus de 10 Euros"));
 		} else {
-			if(abonneActif.demanderTransactionCb(montant) == 0) {
-				return 0;
+			if(!demanderTransactionCb(cb, montant)) {
+				throw(new Exception("Erreur transaction cb"));
 			}
 			double solde = abonneActif.getSolde()+montant;
-			bd.modifierSoldeAbonne(abonneActif.getCarte(), solde);
-			return 1;
-		}
-	}
-	
-	//TODO move to technicien
-	public int supprimerCompte() {
-		if(abonneActif != null) {
-			if(bd.supprimerAbonne(abonneActif.getCarte()) == 1) {
-				return deconnexion();
+			if(!bd.modifierSoldeAbonne(abonneActif.getCarteAbonne(), solde)){
+				throw(new Exception("Erreur base de donnée"));
 			}
+			return;
 		}
-		return 0;
 	}
-	
-	public String donnerInformationsAbonne(){
+
+	public String donnerInformationsAbonne() throws Exception{
 		if(abonneActif == null) {
-			return "0";
+			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
 		} else {		
 			return abonneActif.toString();
 		}
 	}
 
-	public int recommanderFilm(String titre) {
+	public void recommanderFilm(String titre) {
 		if(abonneActif == null) {
-			return 0;
-		} else {		
-			return bd.recommanderFilm(titre);
+			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
+		} else if(!bd.recommanderFilm(titre)){
+			throw(new Exception("Erreur base de donnée"));
 		}
+		return;
 	}
 
 	public String afficherPanier() {
@@ -198,5 +223,13 @@ public class ModeleEmprunteur {
 			result += dvd.getFilm().toString();
 		}
 		return result;
+	}
+	
+	
+	//TODO creation compte abonne
+	
+	
+	private boolean demanderTransactionCb(long cb, double montant) {
+		return true;
 	}
 }
