@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import NF.Abonne;
 import NF.DVD;
+
 public class Machine {
 	enum State {ACCEUIL_NC,CREATION_COMPTE,LOCATION_NC,RECAP_LOCATION_NC,CONNEXION_RECAP,AFFICHAGE_PANIER,CONNEXION,ACCEUIL_C,
 				INFO_COMPTE,RECHARGER_COMPTE,RECHARGER_COMPTE_PANIER,HISTORIQUE_EMPRUNT,LISTE_FILMS_LOUE,LOCATION_C,RECOMMANDATION_FILM,FIN_TRANSACTION_NC,
@@ -12,7 +13,7 @@ public class Machine {
 	public State current_etat = State.ACCEUIL_NC;
 	Abonne abonne_courant;
 	public ArrayList<DVD> panier = new ArrayList<DVD>();
-	
+
 	public int verifCompte(String nom, String prenom, long CB) {
 		//TODO
 		return 0;
@@ -33,7 +34,7 @@ public class Machine {
 			case "Cr":
 				current_etat = State.CREATION_COMPTE;
 				break;
-			case "R":
+			case "Ren":
 				current_etat = State.AUTHENTIFICATION_RENDU;
 				break;
 			default:
@@ -48,12 +49,12 @@ public class Machine {
 			case "b":
 				current_etat = State.ACCEUIL_NC;
 				break;
-			case "V":
-				current_etat = State.ACCEUIL_NC;
-				break;
-			//TODO: gestion des infos utilisateur
 			default:
-				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				//on demande dans l'ordre : nom | prenom | cb | et toute les infos necessaire a la creation du compte abonné, pour pas se faire chier on verifie juste les champs correspondant a une "clé" (s'il y en a)
+				//si tout les champs ont été renseigné et sont correct (on doit etre en mesure de savoir ou on en est dans le remplissage des champs):
+				//System.out.println("Compte créé avec succès, veuillez récupérer votre carte auprès du gérant de votre magasin");
+				//current_etat = State.ACCEUIL_NC;
+				//System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
 				break;
 				
 			}
@@ -65,9 +66,14 @@ public class Machine {
 				current_etat = State.ACCEUIL_NC;
 				break;
 			case "V":
+				//si aucun film séléctionné on met une erreur et on reste dans le meme etat
 				current_etat = State.RECAP_LOCATION_NC;
 				break;
 			//TODO:autres cas a rajouter (ex : selection film ...)
+				//en partant du principe qu'ici on a comme affichage : 1 - nom film | genre | .. | .. 
+				// tout les choix possible sont les "nombre" affiché devant le film
+				//lorsque l'utilisateur rentre un nombre, on met une variable "film selectionné" à la valeur choisie, si la valeur choisie est le meme que le fim deja selectionné, on met film selectionné a 0
+				//si numero rentré ne correspond pas a un DVD qui est affiché on met une erreur
 			default:
 				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
 				break;
@@ -99,7 +105,8 @@ public class Machine {
 				current_etat = State.RECAP_LOCATION_NC;
 				break;
 			case "CB":
-				//TODO:traitement de la CB
+				//TODO:traitement de la CB : est ce que cette CB est deja associé a un emprunt ?
+				//affichage : la transaction a bien été enregistré ?
 				current_etat = State.ACCEUIL_NC;
 				break;
 			default:
@@ -113,12 +120,14 @@ public class Machine {
 			case "b":
 				current_etat = State.RECAP_LOCATION_NC;
 				break;
-			case "V":
-				//TODO:traitement de la connexion
-				current_etat = State.AFFICHAGE_PANIER;
-				break;
 			default:
-				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				if (/* la chaine rentré est un id de carte abonné (différent de celui du technicien)*/) {
+					System.out.println("ID rentré correct, connexion ...");
+					current_etat= State.AFFICHAGE_PANIER;
+				}
+				else {
+					System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles ou rentrer un ID correct");
+				}
 				break;
 			}
 			break;
@@ -136,6 +145,7 @@ public class Machine {
 					}
 					else {
 						current_etat = State.ACCEUIL_C;
+						// il faut un attribut qui dit qui est connecté
 					}
 				}
 				else {
@@ -148,16 +158,18 @@ public class Machine {
 			switch(action) {
 			//traitement
 			case "D":
+				//on met la variable qui représente la personne actuellement connecté a NULL / 0
 				current_etat = State.ACCEUIL_NC;
 				break;
 			case "L":
-				//TODO:traitement de la CB
+				//TODO:traitement de la CB (  est ce que ce commentaire est le résidus d'un copier coller ? )
 				current_etat = State.LOCATION_C;
 				break;
 			case "I":
 				current_etat = State.INFO_COMPTE;
 				break;
 			case "Ren":
+				// s'il n'y a aucun emprunt sur ce compte abboné on emepche le passage a l'etat suivant ou juste on passe et ca sera vide a l'affichage dans la recap du rendu et il devra obligatoirement faire back ?
 				current_etat= State.RECAP_RENDU_C;
 				break;
 			default:
@@ -169,7 +181,7 @@ public class Machine {
 			switch(action) {
 			//traitement
 			case "S":
-				//traitement suppression
+				//traitement suppression : on ecrit dasn un truc que le gerant peut voir l'id du compte, et c'est le technicien qui peut appeler la fonction "supressionCompte" depuis son interface ?
 				current_etat = State.ACCEUIL_NC;
 				break;
 			case "H":
@@ -189,7 +201,7 @@ public class Machine {
 				break;
 			}
 			break;
-		case LISTE_FILMS_LOUE :
+		case LISTE_FILMS_LOUE :// meme traitement que HISTORIQUE_EMPRUNT
 		case HISTORIQUE_EMPRUNT:
 			switch(action) {
 			//traitement
@@ -208,17 +220,17 @@ public class Machine {
 			case "b":
 				current_etat = State.INFO_COMPTE;
 				break;
-			case "V":
+			/*case "V":
 				current_etat = State.INFO_COMPTE;
-				break;
+				break;*/
 			default:
+				//on fait rentrer une chaine de caractere composé de nombre uniquement (a tester sur la chaine rentré par l'utilisateur), puis si c'est une somme > 10 (ou 5, voir SRS), on crédite le compte de cette somme depuis la cb renseigné dans les infos du comptes de la personne connecté ( on fait une sorte de "demande de verification" a la banque ou osef ?)
 				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
 				break;
 			}
 			break;
 		case LOCATION_C:
 			switch(action) {
-			//traitement
 			case "b":
 				current_etat = State.ACCEUIL_C;
 				break;
@@ -229,8 +241,13 @@ public class Machine {
 			case "V":
 				current_etat = State.AFFICHAGE_PANIER;
 				break;
-			//TODO: gestion selection dvd ou deselection
 			default:
+				//TODO:autres cas a rajouter (ex : selection film ...)
+				//en partant du principe qu'ici on a comme affichage : 1 - nom film | genre | .. | .. 
+				// tout les choix possible sont les "nombre" affiché devant le film
+				//lorsque l'utilisateur rentre un nombre, on met une variable "film selectionné" à la valeur choisie, si la valeur choisie est le meme que le fim deja selectionné, on met film selectionné a 0
+				//si numero rentré ne correspond pas a un DVD qui est affiché on met une erreur
+				// c'est un abonné donc il peut séléctionné un certains nombre de films, on fait en fonction du nombre qu'il peut encore prendre ou on le tej a la fin de la transaction s'il en a choisit trop ?
 				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
 				break;
 			}
@@ -248,7 +265,7 @@ public class Machine {
 				current_etat = State.FIN_TRANSACTION_C;
 				//TODO : verification du nombre de loc et restriction
 				break;
-			//TODO: gestion suppression ou deselection
+			//TODO: gestion suppression ou deselection pour enlever un element du panier
 			default:
 				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
 				break;
@@ -260,10 +277,11 @@ public class Machine {
 			case "b":
 				current_etat = State.AFFICHAGE_PANIER;
 				break;
-			case "V":
+			/*case "V":
 				current_etat = State.AFFICHAGE_PANIER;
-				break;
+				break;*/
 			default:
+				//on fait rentrer une chaine de caractere composé de nombre uniquement (a tester sur la chaine rentré par l'utilisateur), puis si c'est une somme > 10 (ou 5, voir SRS), on crédite le compte de cette somme depuis la cb renseigné dans les infos du comptes de la personne connecté ( on fait une sorte de "demande de verification" a la banque ou osef ?)
 				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
 				break;
 			}
@@ -272,15 +290,17 @@ public class Machine {
 			switch(action) {
 			//traitement
 			case "V":
+				// traitement s'il y a un film selectionné ou pas, si oui on recommande le film sinon erreur
 				current_etat = State.LOCATION_C;
 				break;
-			//TODO: gestion du film recommandé selectionné
+			//TODO: gestion du film recommandé selectionné ( meme fonctionnement que pour la location d'un film : on affiche la liste des films qui sont pas dans l'automate en DVD, et l'utilisateur rentre un nombre pour selectionné et appuie sur v pour valider
 			default:
 				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
 				break;
 			}
 			break;
 		case FIN_TRANSACTION_C:
+			//affichage pour dire que c'est finit puis retour a l'acceuil ?
 			current_etat = State.ACCEUIL_C;
 			break;
 			
@@ -291,9 +311,11 @@ public class Machine {
 			else {
 				if (/*chaine rentré correspond a une carte abonné*/) {
 					current_etat=State.RECAP_RENDU_C;
+					//mise a jour de l'abonné connecté sur la machine
 				}
 				else if (/*chaine rentré correspond a un cb avec un emprunt*/) {
 					current_etat=State.RECAP_RENDU_NC;
+					//mise a jour de la variable "non abonné entrain de rendre" -> besoin pour chercher emprunt correspondant
 				}
 				else {
 					System.out.println("Rendu impossible, aucun emprunts enregistré sur cette carte, ou erreur lors de la saisie pour s'identifier");
