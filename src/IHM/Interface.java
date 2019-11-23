@@ -31,7 +31,8 @@ public class Interface {
 		System.out.println("Entrer votre numéro de carte : ");
 		Scanner inp = new Scanner(System.in);
 		int num_carte_abo = inp.nextInt();
-		//System.out.println("b : Retour Arriere");
+		
+		System.out.println("V : Valider");
 	}
 	
 	public void contenuPage() {
@@ -56,16 +57,7 @@ public class Interface {
 			String prenom = in.nextLine();
 			System.out.println("Rentrer votre numéro de CB : ");
 			long cb = Long.valueOf(in.nextLine());
-			if (m.verifCompte(nom, prenom, cb) == 0) {
-				System.out.println("Votre compte a bien été créer, vous recevrez votre carte à l'acceuil de votre magasin");
-				// Need : fonction qui ajoute un abonné à la base de donnée
-			}else {
-				System.out.println("Il y a eu un problème dans la création de votre compte");
-				System.out.println("b : Retour Arriere");
-				break;
-			}
-			System.out.println("");	
-			System.out.println("b : Retour Arriere");
+			System.out.println(m.verifCompte(nom, prenom, cb)); //verification si il y a deja un abonne avec les meme infos, verif aussi du solde qui n'est pour l'instant pas gérer 
 			System.out.println("V : Valider");
 			outroPage();
 			break;
@@ -82,6 +74,7 @@ public class Interface {
 		case RECAP_LOCATION_NC:
 			System.out.println("Recapitulatif Location (Non Connectee) : ");
 			introPage();
+			m.modele_abo.afficherDVDNC();
 			// TODO : variable Film qui contient le film choisi à l'étape précédente, affichage des infos du film
 			System.out.println("b : Retour Arriere");
 			System.out.println("V : Valider");
@@ -125,10 +118,15 @@ public class Interface {
 			outroPage();
 			break;
 		case INFO_COMPTE:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.abonne_courant.getNomAbonne() + " ) : ");
-			introPage();
-			System.out.println(m.abonne_courant);
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.abonneActif.getNomAbonne() + " ) : ");
 			System.out.println("");
+			try {
+				System.out.println(m.modele_abo.donnerInformationsAbonne());
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+			System.out.println("");
+			introPage();
 			System.out.println("S : Demande supression compte");
 			System.out.println("H : Afficher Historique des emprunts");
 			System.out.println("Li : Liste des filsm loués");
@@ -137,7 +135,8 @@ public class Interface {
 			outroPage();
 			break;
 		case LISTE_FILMS_LOUE :
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.abonne_courant.getNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.abonneActif.getNomAbonne() + " ) : ");
+			//MANQUE FONCTION POUR AVOIR LES EMPRUNTS
 			introPage();
 			System.out.println("b : Retour Arriere");
 			outroPage();
@@ -145,16 +144,16 @@ public class Interface {
 			// need : fonction qui prend en paramètre un abonné et qui renvoie sa liste de films loues
 			break;
 		case HISTORIQUE_EMPRUNT:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.abonne_courant.getNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.abonneActif.getNomAbonne() + " ) : ");
+			System.out.println("");
+			System.out.println(m.modele_abo.donnerListeEmprunts());
 			introPage();
 			System.out.println("b : Retour Arriere");
 			outroPage();
-			//TODO : affichage de l'historique des emprunts
-			// need : fonction qui prend en paramètre un abonné et qui renvoie sa liste de films empruntés
 			break;
 		
 		case RECHARGER_COMPTE:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.abonne_courant.getNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.abonneActif.getNomAbonne() + " ) : ");
 			introPage();
 			System.out.println("b : Retour Arriere");
 			//TODO : fonction qui traite le rechargement
@@ -163,34 +162,57 @@ public class Interface {
 			outroPage();
 			break;
 		case LOCATION_C:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.abonne_courant.getNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.abonneActif.getNomAbonne() + " ) : ");
 			introPage();
 			System.out.println("b : Retour Arriere");
 			System.out.println("Re : Recommandation");
 			//TODO : VOIR TODO location NC et need
-			if (m.panier.size() < 3) {
-				//TODO add dans le panier le film selectionné
-			}else {
-				System.out.println(" Le panier est plein, veuillez supprimer un article ou valider le panier");
-			}
 			//TODO : peut-etre faire en sorte de supprimer un article du panier
 			System.out.println("V : Valider le choix");
 			outroPage();
 			break;
 		case AFFICHAGE_PANIER:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.abonne_courant.getNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.abonneActif.getNomAbonne() + " ) : ");
+			System.out.println("");
+			System.out.println(m.modele_abo.afficherPanier());
 			introPage();
-			for (DVD dvd : m.panier) {
-				System.out.println(dvd.getFilm());
-			}
 			System.out.println("b : Retour Arriere");
 			System.out.println("Rec : Recharger compte");
 			System.out.println("V : Valider le choix");
 			outroPage();
 			break;
 		case RECHARGER_COMPTE_PANIER:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.abonne_courant.getNomAbonne() + " ) : ");
+			System.out.println("Rechargement Compte (Connecte en tant que : "+ m.modele_abo.abonneActif.getNomAbonne() + " ) : ");
+			System.out.println("");
+			System.out.println("Veuillez rentrer votre CB : ");
+			Scanner input = new Scanner(System.in);
+			long cb_r;
+			try {
+				cb_r = Long.valueOf(input.nextLine());
+			}catch (NumberFormatException e) {
+				System.out.println("Veuillez rentrer un numéro de carte valide");
+				break;
+			}
+			System.out.println("Montant à recharger (supérieur ou égal à 10€) : ");
+			int montant=0;
+			try {
+				montant = input.nextInt();
+			}catch (NumberFormatException e) {
+				System.out.println("Veuillez rentrer un montant valide");
+				break;
+			}
+			if (montant < 10) {
+				System.out.println("Veuillez rentrer un montant supérieur  ou égal à 10€");
+				break;
+			}
+			try {
+				m.modele_abo.rechargerCarte(cb_r, montant);
+			}catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+			//A REVOIR PETIT PB AVEC VALIDER ET TOUT
 			introPage();
+			
 			System.out.println("b : Retour Arriere");
 			//TODO : fonction qui traite le rechargement
 			// Voir TODO rechargement

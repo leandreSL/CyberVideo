@@ -10,8 +10,11 @@ import NF.gestionfichier.BD;
 public class ModeleEmprunteur {
 	BD bd; 
 	
-	Abonne abonneActif;
+	public Abonne abonneActif;
 	private static ModeleEmprunteur instance = null;
+	
+	DVD emprunt_NC;
+	
 	List<DVD> panier = new ArrayList<DVD>();
 	
 	
@@ -34,7 +37,7 @@ public class ModeleEmprunteur {
 	 * */	
 	
 	//TODO gestion retard/gele carte
-	//TODO gestion etat(à voir en dernier)
+	//TODO gestion etat(ï¿½ voir en dernier)
 	//remettre le dvd dans l'automate
 	public String rendreDVD(int idDVD) {
 		Emprunt emprunt = bd.chercherEmpruntActuel(idDVD);
@@ -50,9 +53,9 @@ public class ModeleEmprunteur {
 			else {
 				if(!bd.modifierStatutDVD(idDVD, StatutDVD.EnAutomate) || 
 						!bd.AjouterDateRetourEmprunt(idDVD, emprunt.getDateEmprunt(), new Date())) {
-					throw(new Exception("Erreur base de donnée"));
+					throw(new Exception("Erreur base de donnï¿½e"));
 				}
-				return "dvd rendu, "+prix+" euros ont été débités";
+				return "dvd rendu, "+prix+" euros ont ï¿½tï¿½ dï¿½bitï¿½s";
 			}	
 		}
 		else {
@@ -60,12 +63,12 @@ public class ModeleEmprunteur {
 			if(abonneActif.getSolde()-prix > 0) {
 				abonneActif.setSolde(abonneActif.getSolde()-prix);
 				if(!bd.modifierSoldeAbonne(abonneActif.getCarteAbonne(),abonneActif.getSolde())) {
-					throw(new Exception("Erreur base de donnée"));
+					throw(new Exception("Erreur base de donnï¿½e"));
 				}
-				return "dvd rendu, "+prix+" euros ont été débités";
+				return "dvd rendu, "+prix+" euros ont ï¿½tï¿½ dï¿½bitï¿½s";
 			}
 			else {
-				throw(new Exception("pas assez d'argent sur la carte abonnée"));
+				throw(new Exception("pas assez d'argent sur la carte abonnï¿½e"));
 			}
 		}		
 	}
@@ -102,11 +105,21 @@ public class ModeleEmprunteur {
 		
 	}
 	
+	//fonction temporaire pour permettre de selectionner un dvd et de tester ensuite si la cb a dÃ©ja Ã©tÃ© utilisÃ©e
+	public void ajouterDVDNC(String titre){
+		DVD dvd = bd.chercherDVD(titre);
+		emprunt_NC = dvd;
+	}
+	
+	public String afficherDVDNC() {
+		return emprunt_NC.toString();
+	}
+	
 	public void valider(long cb) {
 		Emprunt e;
 		for(DVD dvd: panier) {
 			if(!bd.modifierStatutDVD(dvd.getIdentifiantDVD(), StatutDVD.Emprunte)) {
-				throw(new Exception("Erreur base de donnée"));
+				throw(new Exception("Erreur base de donnï¿½e"));
 			}
 			if(abonneActif != null) {
 				e = new Emprunt(abonneActif.getCarteAbonne(), dvd, new Date());
@@ -114,7 +127,7 @@ public class ModeleEmprunteur {
 				e = new Emprunt(cb, dvd, new Date());
 			}
 			if(!bd.creerEmprunt(e)) {
-				throw(new Exception("Erreur base de donnée"));
+				throw(new Exception("Erreur base de donnï¿½e"));
 			}
 		}
 		panier = new ArrayList<DVD>();
@@ -141,11 +154,11 @@ public class ModeleEmprunteur {
 	
 	public void creationCompte(String nomAbonne, String prenomAbonne, List<Genre> restrictions, double solde, long carteBleue) throws Exception{
 		if(solde < 15) {
-			throw(new Exception("Vous devez mettre au moins 15 Euros sur la carte à sa création"));
+			throw(new Exception("Vous devez mettre au moins 15 Euros sur la carte ï¿½ sa crï¿½ation"));
 		}
 		Abonne a = new Abonne(nomAbonne, prenomAbonne, restrictions, solde, carteBleue);
 		if(!bd.chercherAbonne(a))
-			throw(new Exception("Erreur base de donnée"));
+			throw(new Exception("Erreur base de donnï¿½e"));
 		return;
 	}
 	
@@ -156,13 +169,13 @@ public class ModeleEmprunteur {
 			abonneActif = abonne;
 			return;
 		} else {
-			throw(new Exception("Vous êtes déjà connectés"));
+			throw(new Exception("Vous ï¿½tes dï¿½jï¿½ connectï¿½s"));
 		}
 	}
 	
 	public void deconnexion() throws Exception {
 		if(abonneActif == null) {
-			throw(new Exception("Erreur base de donnée"));
+			throw(new Exception("Erreur base de donnï¿½e"));
 		} else {
 			abonneActif = null;
 			return;
@@ -194,7 +207,7 @@ public class ModeleEmprunteur {
 			}
 			double solde = abonneActif.getSolde()+montant;
 			if(!bd.modifierSoldeAbonne(abonneActif.getCarteAbonne(), solde)){
-				throw(new Exception("Erreur base de donnée"));
+				throw(new Exception("Erreur base de donnï¿½e"));
 			}
 			return;
 		}
@@ -212,7 +225,7 @@ public class ModeleEmprunteur {
 		if(abonneActif == null) {
 			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
 		} else if(!bd.recommanderFilm(titre)){
-			throw(new Exception("Erreur base de donnée"));
+			throw(new Exception("Erreur base de donnï¿½e"));
 		}
 		return;
 	}

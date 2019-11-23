@@ -2,8 +2,9 @@ package IHM;
 
 import java.util.ArrayList;
 
-import NF.Abonne;
-import NF.DVD;
+
+import NF.ModeleEmprunteur;
+import NF.ModeleTechnicien;
 
 public class Machine {
 	enum State {ACCEUIL_NC,CREATION_COMPTE,LOCATION_NC,RECAP_LOCATION_NC,CONNEXION_RECAP,AFFICHAGE_PANIER,CONNEXION,ACCEUIL_C,
@@ -11,12 +12,18 @@ public class Machine {
 				FIN_TRANSACTION_C,AUTHENTIFICATION_RENDU,RECAP_RENDU_NC,RECAP_RENDU_C,ACCEUIL_TECH,MAJ_DVD_AUTOMATE,LISTE_RECOMANDATION}
 
 	public State current_etat = State.ACCEUIL_NC;
-	Abonne abonne_courant;
-	public ArrayList<DVD> panier = new ArrayList<DVD>();
+	
+	public ModeleEmprunteur modele_abo = ModeleEmprunteur.getInstance();
+	public ModeleTechnicien modele_tech = ModeleTechnicien.getInstance();
 
-	public int verifCompte(String nom, String prenom, long CB) {
-		//TODO
-		return 0;
+	public String verifCompte(String nom, String prenom, long CB){
+		try {
+			//TODO : gestion des restrictions
+			modele_abo.creationCompte(nom, prenom, null, 15, CB);
+		}catch (Exception e) {
+			return e.getMessage();
+		}
+		return "Création de compte réussie";
 	}
 	
 	public void handle(String action) {
@@ -67,6 +74,7 @@ public class Machine {
 				break;
 			case "V":
 				//si aucun film séléctionné on met une erreur et on reste dans le meme etat
+				modele_abo.ajouterDVDNC(titre);
 				current_etat = State.RECAP_LOCATION_NC;
 				break;
 			//TODO:autres cas a rajouter (ex : selection film ...)
@@ -121,12 +129,19 @@ public class Machine {
 				current_etat = State.RECAP_LOCATION_NC;
 				break;
 			default:
-				if (/* la chaine rentré est un id de carte abonné (différent de celui du technicien)*/) {
-					System.out.println("ID rentré correct, connexion ...");
-					current_etat= State.AFFICHAGE_PANIER;
-				}
-				else {
+				int id_abo;
+				try {
+					id_abo = Integer.parseInt(action);
+				}catch (NumberFormatException e) {
 					System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles ou rentrer un ID correct");
+					break;
+				}
+				try {
+					modele_abo.connexion(id_abo);
+					current_etat= State.AFFICHAGE_PANIER;
+				}catch (Exception e) {
+					System.out.println(e.getMessage());
+					break;
 				}
 				break;
 			}
@@ -138,18 +153,24 @@ public class Machine {
 				current_etat = State.ACCEUIL_NC;
 				break;
 			default:
-				if (/* la chaine rentré est un id de carte abonné*/) {
-					System.out.println("ID rentré correct, connexion ...");
-					if (/*id rentré  est 1*/) {
+				int id_abo;
+				try {
+					id_abo = Integer.parseInt(action);
+				}catch (NumberFormatException e) {
+					System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles ou rentrer un ID correct");
+					break;
+				}
+				try {
+					modele_abo.connexion(id_abo);
+					if (id_abo != 1) {
+						current_etat = State.ACCEUIL_C;
+					}else {
 						current_etat= State.ACCEUIL_TECH;
 					}
-					else {
-						current_etat = State.ACCEUIL_C;
-						// il faut un attribut qui dit qui est connecté
-					}
-				}
-				else {
-					System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles ou rentrer un ID correct");
+					
+				}catch (Exception e) {
+					System.out.println(e.getMessage());
+					break;
 				}
 				break;
 			}
@@ -220,9 +241,10 @@ public class Machine {
 			case "b":
 				current_etat = State.INFO_COMPTE;
 				break;
-			/*case "V":
+			//la je pense que c'est bien d'avoir une validation après qu'il ait rentré le solde
+			case "V":
 				current_etat = State.INFO_COMPTE;
-				break;*/
+				break;
 			default:
 				//on fait rentrer une chaine de caractere composé de nombre uniquement (a tester sur la chaine rentré par l'utilisateur), puis si c'est une somme > 10 (ou 5, voir SRS), on crédite le compte de cette somme depuis la cb renseigné dans les infos du comptes de la personne connecté ( on fait une sorte de "demande de verification" a la banque ou osef ?)
 				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
