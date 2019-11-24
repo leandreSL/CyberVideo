@@ -94,7 +94,7 @@ public class Emprunt {
 		if(dateRetour != null) {
 			dateR = dateFormat.format(dateRetour); 
 		} else {
-			dateR = "encore emprunté";
+			dateR = "encore empruntÃ©";
 		}
 		return cbEmprunteur + " " + idAbonne + " " + dateD + " " + dateR + " " + dvd.getIdentifiantDVD();
 	}

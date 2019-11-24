@@ -73,8 +73,7 @@ public class Abonne{
 	@Override
 	public String toString() {
 		String chaineRestrictions = String.join("`", Genre.toStringArray(restrictions));
-		return nomAbonne + "|" + prenomAbonne + "|" + chaineRestrictions
-				+ "|" + solde +"|"+ carteAbonne + "|" + carteBleue + "|" + "\n";
+		return nomAbonne + "|" + prenomAbonne + "|" + chaineRestrictions + "|" + solde + "|" + carteAbonne + "|" + carteBleue + "\n";
 	}
 
 	public String print() {
