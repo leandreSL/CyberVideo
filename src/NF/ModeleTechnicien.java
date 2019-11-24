@@ -37,6 +37,7 @@ public class ModeleTechnicien {
 	
 	//ajoute un dvd Ã  l'automate - par défaut, le DVD est ajouté au magasin
 	public void ajouterDVD(int identifiantDVD, Film film) {
+		DVD dvd = new DVD(identifiantDVD, film);
 		if(!bd.stockerDVD(dvd))
 			throw(new Exception("Erreur base de donnée"));
 		return;
@@ -50,6 +51,35 @@ public class ModeleTechnicien {
 	}
 	
 
+	
+	
+	public void changerEtatDVD(int idDVD, String etat) {
+		if(!bd.modifierStatutDVD(idDVD, StatutDVD.getByName(etat)))
+			throw(new Exception("Erreur base de donnée"));
+		return;
+	}
+	
+	public String donnerListeDVDs() {
+		String result = "numéro DVD, état, film, statut, recommandation\n";
+		for(DVD dvd : bd.chercherEnsembleDVDs())
+			result += dvd.toString() + "\n";
+		return result;		
+	}
+	
+	public String donnerListeFilms() {
+		String result = "titre, résumé, genres, acteurs, réalisateur, limite d'age\n";
+		for(Film f : bd.chercherEnsembleFilms())
+			result += f.toString() + "\n";
+		return result;		
+	}
+
+	public String donnerListeAbonnes() {
+		String result = "nom, prénom, restrictions, solde, numero d'abonné, numéro de carte bleue\n";
+		for(Abonne a : bd.chercherEnsembleAbonnes())
+			result += a.toString() + "\n";
+		return result;
+	}
+	
 	public String donnerListeRecommandations (){
 		String result = "";
 		for(String recommandation: bd.chercherEnsembleRecommandations())
@@ -57,26 +87,22 @@ public class ModeleTechnicien {
 		return result;		
 	}
 	
-	public void changerEtatDVD(int idDVD, String etat) {
-		if(bd.modifierStatutDVD(idDVD, StatutDVD.getByName(etat)))
-			throw(new Exception());
+	
+	public int donnerTempsEmpruntMoyen() {
+		return bd.chercherTempsEmpruntMoyen();
+	}
+	
+	public int donnerNombreEmprunt() {
+		return bd.chercherNombreEmprunt();
+	} 
+	
+	
+	public void supprimerCompte(int idCarte) {
+		if(!bd.supprimerAbonne(idCarte)) {
+			throw(new Exception("Erreur base de donnée"));
+		}
+		
 		return;
 	}
-	
-	public String donnerListeDVDs() {
-		String result = "";
-		for(DVD dvd : bd.chercherEnsembleDVDs())
-			result += dvd.toString() + "\n";
-		return result;		
-	}
-	
-	public String donnerListeFilms() {
-		String result = "";
-		for(Film f : bd.chercherEnsembleFilms())
-			result += f.toString() + "\n";
-		return result;		
-	}
-	
-	abonne chercherEnsembleAbonne()
 
 }

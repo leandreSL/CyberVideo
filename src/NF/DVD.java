@@ -16,6 +16,17 @@ public class DVD {
 		
 	}
 	
+	public DVD(int identifiantDVD, String etat, Film film, StatutDVD statut, Integer recommandation) {
+		super();
+		this.identifiantDVD = identifiantDVD;
+		this.etat = etat;
+		this.film = film;
+		this.statut = statut;
+		this.recommandation = recommandation;
+	}
+
+
+
 	public String getEtat() {
 		return etat;
 	}
@@ -45,7 +56,13 @@ public class DVD {
 		this.recommandation = recommandation;
 	}
 	
+	
 	public String toString() {
-		return identifiantDVD+"|"+film.getTitre()+"\n";
+		return identifiantDVD+"|"+film.getTitre()+"|"+etat+"|"+statut.getNom()+"|"+etat+"|"+recommandation+"\n";
+	}
+
+	public String print() {
+		return identifiantDVD + " " + etat + " " + film.getTitre() + " " + statut
+				+ " " + recommandation;	
 	}
 }

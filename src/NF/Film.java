@@ -35,15 +35,6 @@ public class Film {
 	}
 
 
-	@Override
-	public String toString() {
-		String chaineGenres = String.join("`", Genre.toStringArray(genres));
-		String chaineActeurs = String.join("`", acteurs);
-		return Titre + "|" + chaineGenres + "|" + resume + "|" + chaineActeurs
-				+ "|" + realisateur + "|" + limiteAge + "|" + cheminAffiche + "\n";
-	}
-
-
 	public String getTitre() {
 		return Titre;
 	}
@@ -85,5 +76,21 @@ public class Film {
 	}
 	public void setCheminAffiche(String cheminAffiche) {
 		this.cheminAffiche = cheminAffiche;
+	}
+	
+	
+	@Override
+	public String toString() {
+		String chaineGenres = String.join("`", Genre.toStringArray(genres));
+		String chaineActeurs = String.join("`", acteurs);
+		return Titre + "|" + chaineGenres + "|" + resume + "|" + chaineActeurs
+				+ "|" + realisateur + "|" + limiteAge + "|" + cheminAffiche + "\n";
+	}
+	
+	public String print() {
+		String chaineGenres = String.join("|", Genre.toStringArray(genres));
+		String chaineActeurs = String.join("|", acteurs);
+		return Titre + " " + resume + " " + chaineGenres + " " + chaineActeurs
+				+ " " + realisateur + " " + limiteAge;
 	}
 }

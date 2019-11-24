@@ -24,4 +24,13 @@ public class Recommandation {
 	public void setNbRecommandations(int nbRecommandations) {
 		this.nbRecommandations = nbRecommandations;
 	}
+
+	@Override
+	public String toString() {
+		return film + "|" + nbRecommandations + "\n";
+	}
+	
+	public String print() {
+		return film + " " + nbRecommandations;
+	}
 }

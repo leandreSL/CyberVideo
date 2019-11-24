@@ -23,14 +23,13 @@ public class Emprunt {
 		this.dvd = dvd;
 		this.dateEmprunt = dateEmprunt;
 	}
-
-	@Override
-	public String toString() {
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		String dateD = dateFormat.format(dateEmprunt);
-		String dateR = dateFormat.format(dateRetour);
-		return cbEmprunteur + "|" + idAbonne + "|" + dateD + "|" + dateR + "|" + dvd
-				+ "\n";
+	
+	public Emprunt(long cbEmprunteur, int idAbonne, Date dateEmprunt, Date dateRetour, DVD dvd) {
+		this.cbEmprunteur = cbEmprunteur;
+		this.idAbonne = idAbonne;
+		this.dateEmprunt = dateEmprunt;
+		this.dateRetour = dateRetour;
+		this.dvd = dvd;
 	}
 
 	public long getCbEmprunteur() {
@@ -73,7 +72,30 @@ public class Emprunt {
 		this.dvd = dvd;
 	}
 	
+	@Override
+	public String toString() {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		String dateD = dateFormat.format(dateEmprunt);
+		String dateR;
+		if(dateRetour != null) {
+			dateR = dateFormat.format(dateRetour); 
+		} else {
+			dateR = "";
+		}
+		return cbEmprunteur + "|" + idAbonne + "|" + dateD + "|" + dateR + "|" + dvd.getIdentifiantDVD() + "\n";
+	}
 	
-	
+	public String print() {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		String dateD = dateFormat.format(dateEmprunt);
+		String dateR;
+		if(dateRetour != null) {
+			dateR = dateFormat.format(dateRetour); 
+		} else {
+			dateR = "encore emprnté";
+		}
+		return cbEmprunteur + " " + idAbonne + " " + dateD + " " + dateR + " " + dvd.getIdentifiantDVD();
+	}
 }
+
 
