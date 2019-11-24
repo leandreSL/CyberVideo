@@ -97,6 +97,18 @@ public class BD {
 		return films;
 	}
 	
+	public List<Film> chercherFilmsDisponible(){
+		List<List<String>> paramFilm = chercherPlusieurs(cheminFilm, "", champFILMtitre);
+		List<Film> films = new ArrayList<Film>();
+		for( int i = 0; i < paramFilm.size(); i++) {
+			List<String> sfilm = paramFilm.get(i);
+			if( chercherDVD(sfilm.get(champFILMtitre)) != null ) {
+				films.add( strToFilm(sfilm));
+			}
+		}
+		return films;
+	}
+	
 	public List<Film> chercherFilmParGenre(List<Genre> filtres) {
 		List<Film> films = new ArrayList<Film>();
 		List<List<String>> listeFilms = chercherPlusieurs(cheminFilm, filtres.get(0).getNom(), champFILMgenre);
