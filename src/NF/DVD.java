@@ -66,4 +66,47 @@ public class DVD {
 		return identifiantDVD + " " + etat + " " + film.getTitre() + " " + statut
 				+ " " + recommandation;	
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((etat == null) ? 0 : etat.hashCode());
+		result = prime * result + ((film == null) ? 0 : film.hashCode());
+		result = prime * result + identifiantDVD;
+		result = prime * result + ((recommandation == null) ? 0 : recommandation.hashCode());
+		result = prime * result + ((statut == null) ? 0 : statut.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DVD other = (DVD) obj;
+		if (etat == null) {
+			if (other.etat != null)
+				return false;
+		} else if (!etat.equals(other.etat))
+			return false;
+		if (film == null) {
+			if (other.film != null)
+				return false;
+		} else if (!film.equals(other.film))
+			return false;
+		if (identifiantDVD != other.identifiantDVD)
+			return false;
+		if (recommandation == null) {
+			if (other.recommandation != null)
+				return false;
+		} else if (!recommandation.equals(other.recommandation))
+			return false;
+		if (statut != other.statut)
+			return false;
+		return true;
+	}
 }

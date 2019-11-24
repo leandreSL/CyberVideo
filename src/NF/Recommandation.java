@@ -33,4 +33,32 @@ public class Recommandation {
 	public String print() {
 		return film + " " + nbRecommandations;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((film == null) ? 0 : film.hashCode());
+		result = prime * result + nbRecommandations;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Recommandation other = (Recommandation) obj;
+		if (film == null) {
+			if (other.film != null)
+				return false;
+		} else if (!film.equals(other.film))
+			return false;
+		if (nbRecommandations != other.nbRecommandations)
+			return false;
+		return true;
+	}
 }

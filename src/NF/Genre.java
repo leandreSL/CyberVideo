@@ -6,9 +6,9 @@ import java.util.List;
 public enum Genre {
 	ACTION("action"),
 	ANIME("anime"),
-	DOCUMENTAIRE("Documentaire"),
-	FANTASTIQUE("Fantastique"),
-	HORREUR("Horreur"),
+	DOCUMENTAIRE("documentaire"),
+	FANTASTIQUE("fantastique"),
+	HORREUR("horreur"),
 //	Humoristique,
 //	Peplum,
 //	Policier,
@@ -29,9 +29,9 @@ public enum Genre {
 		switch(nom) {
 			case "action": return Genre.ACTION;
 			case "anime": return Genre.ANIME;
-			case "Documentaire": return Genre.DOCUMENTAIRE;
-			case "Fantastique": return Genre.FANTASTIQUE;
-			case "Horreur": return Genre.HORREUR;
+			case "documentaire": return Genre.DOCUMENTAIRE;
+			case "fantastique": return Genre.FANTASTIQUE;
+			case "horreur": return Genre.HORREUR;
 			case "western": return Genre.WESTERN;
 		}
 		return null;
