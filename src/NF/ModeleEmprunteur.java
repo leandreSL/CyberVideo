@@ -9,7 +9,6 @@ import NF.gestionfichier.BD;
 
 public class ModeleEmprunteur extends Modele{	
 	private Abonne abonneActif;
-	private DVD emprunt_NC;
 	private List<DVD> panier = new ArrayList<DVD>();
 	
 	protected ModeleEmprunteur() {
@@ -94,16 +93,33 @@ public class ModeleEmprunteur extends Modele{
 		
 		
 	}
-	
-	//fonction temporaire pour permettre de selectionner un dvd et de tester ensuite si la cb a déja été utilisée
-	public void ajouterDVDNC(String titre){
-		DVD dvd = bd.chercherDVD(titre);
-		emprunt_NC = dvd;
+	public void ajouterAuPanier(int idDVD, long cb) throws Exception {
+		int nbEmpruntMax;
+		int nbEmpruntActuels;
+		
+		if(abonneActif == null) { 
+			nbEmpruntMax = 1;
+			nbEmpruntActuels = bd.chercherNombreEmpruntsActuelsCB(cb);
+		}
+		else{
+			nbEmpruntMax = 3;
+			nbEmpruntActuels = bd.chercherNombreEmpruntsActuelsAbonne(abonneActif.getCarteAbonne());
+		}
+
+		if(panier.size() >=  nbEmpruntMax) {
+			throw(new Exception("Votre panier est plein"));
+		}
+		if((panier.size() + nbEmpruntActuels) >= nbEmpruntMax) {
+			throw(new Exception("Vous avez trop de DVDs non rendus avec cette carte"));
+		}
+		
+		DVD dvd = bd.chercherDVD(idDVD);
+		panier.add(dvd);
+		return;
+		
+		
 	}
 	
-	public String afficherDVDNC() {
-		return emprunt_NC.print();
-	}
 	
 	public void valider(long cb) throws Exception {
 		Emprunt e;
@@ -230,7 +246,10 @@ public class ModeleEmprunteur extends Modele{
 	
 	public String donnerNomAbonne() {	
 		return abonneActif.getNomAbonne();
-		
+	}
+	
+	public long donnerCBAbonne() {
+		return abonneActif.getCarteBleue();
 	}
 
 	public void recommanderFilm(String titre) throws Exception {
@@ -240,6 +259,10 @@ public class ModeleEmprunteur extends Modele{
 			throw(new Exception("Erreur base de donn�e"));
 		}
 		return;
+	}
+	
+	public void viderPanier() {
+		panier.clear();
 	}
 
 	public List<Film> afficherPanier() {

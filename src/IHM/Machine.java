@@ -2,7 +2,7 @@ package IHM;
 
 import java.util.ArrayList;
 
-
+import NF.Abonne;
 import NF.ModeleEmprunteur;
 import NF.ModeleTechnicien;
 
@@ -16,15 +16,20 @@ public class Machine {
 	public ModeleEmprunteur modele_abo = ModeleEmprunteur.getInstance();
 	public ModeleTechnicien modele_tech = ModeleTechnicien.getInstance();
 
-	public String verifCompte(String nom, String prenom, long CB){
+	public String verifCompte(String nom, String prenom,double solde, long CB){
 		try {
 			//TODO : gestion des restrictions
-			modele_abo.creationCompte(nom, prenom, null, 15, CB);
+			Abonne a = new Abonne(nom,prenom,null,solde,CB);
+			modele_abo.creationCompte(a);
 		}catch (Exception e) {
 			return e.getMessage();
 		}
 		return "Création de compte réussie";
 	}
+	
+	
+	
+	
 	
 	public void handle(String action) {
 		switch(this.current_etat) {
@@ -70,11 +75,10 @@ public class Machine {
 			switch(action) {
 			//traitement
 			case "b":
+				modele_abo.viderPanier();
 				current_etat = State.ACCEUIL_NC;
 				break;
 			case "V":
-				//si aucun film séléctionné on met une erreur et on reste dans le meme etat
-				modele_abo.ajouterDVDNC(titre);
 				current_etat = State.RECAP_LOCATION_NC;
 				break;
 			//TODO:autres cas a rajouter (ex : selection film ...)
@@ -217,7 +221,7 @@ public class Machine {
 			case "Ren":
 				//current_etat = State.RECAP_RENDU_C;
 				current_etat = State.RENDU;
-				break;break;
+				break;
 			default:
 				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
 				break;
@@ -245,26 +249,11 @@ public class Machine {
 				break;
 			//la je pense que c'est bien d'avoir une validation après qu'il ait rentré le solde
 			case "V":
-                try {
-                    modele_abo.rechargerCarte(long cb, new Double (solde));
-                    System.out.println("Rechargement de votre carte avec "+ toString(solde) + " € avec succès");
-                    current_etat = State.INFO_COMPTE;
-                }
-                catch (Exception e ) {
-                    System.out.println(e.getMessage());
-                }
+				current_etat = State.INFO_COMPTE;
+                System.out.println("Rechargement de votre carte effectué, votre nouveau solde est de : " + modele_abo.donnerSoldeAbonne());
 				break;
 			default:
-            //on fait rentrer une chaine de caractere composé de nombre uniquement (a tester sur la chaine rentré par l'utilisateur),
-            //puis si c'est une somme > 10 (ou 5, voir SRS), on crédite le compte de cette somme depuis la cb renseigné dans les infos du comptes de la personne connecté ( on fait une sorte de "demande de verification" a la banque ou osef ?)
-                
-				try {
-					solde = Integer.parseInt(action);
-				}catch (NumberFormatException e) {
-					System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles ou rentrer un solde correct");
-					break;
-				}
-				//System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
 				break;
 			}
 			break;
@@ -311,37 +300,17 @@ public class Machine {
 			}
 			break;
 		case RECHARGER_COMPTE_PANIER:
-            int solde=0;
-            long cb=0;
 			switch(action) {
 			//traitement
 			case "b":
 				current_etat = State.AFFICHAGE_PANIER;
 				break;
 			case "V":
-                try {
-                    modele_abo.rechargerCarte(long cb, new Double (solde));
-                    System.out.println("Rechargement de votre carte avec "+ toString(solde) + " € avec succès");
-                    current_etat = State.FIN_TRANSACTION_C;
-                }
-                catch (Exception e ) {
-                    System.out.println(e.getMessage());
-                    //s'il y a une erreur on remet solde et cb a 0 pour forcer a re rentrer deux nouvelles 
-                    solde=0;
-                    cb=0;
-                }
-				break;
+                current_etat = State.FIN_TRANSACTION_C;
+                System.out.println("Rechargement de votre carte effectué, votre nouveau solde est de : " + modele_abo.donnerSoldeAbonne());
+   				break;
 			default:
-            //on fait rentrer une chaine de caractere composé de nombre uniquement (a tester sur la chaine rentré par l'utilisateur),
-            //puis si c'est une somme > 10 (ou 5, voir SRS), on crédite le compte de cette somme depuis la cb renseigné dans les infos du comptes de la personne connecté ( on fait une sorte de "demande de verification" a la banque ou osef ?)
-                
-				try {
-					solde = Integer.parseInt(action);
-				}catch (NumberFormatException e) {
-					System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles ou rentrer un solde correct");
-					break;
-				}
-				//System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
 				break;
 			}
 			break;
@@ -415,11 +384,12 @@ public class Machine {
 			}
 			break;*/
         case RENDU :
+        	double prix;
 			if (action=="b")
 				current_etat=State.ACCEUIL_NC;
 			else {
 				try {
-					String rendu_dvd= modele_abo.rendreDVD(Integer.parseInt(action));
+					prix = modele_abo.rendreDVD(Integer.parseInt(action));
 				}
 				catch (Exception e) {
 					if (e.getMessage() == "pas assez d'argent sur la carte abonne"){
@@ -430,7 +400,7 @@ public class Machine {
                         System.out.println(e.getMessage());
                     break;
 				}
-				System.out.println(rendu_dvd);
+				System.out.println("Votre compte à été débité de : " + Double.toString(prix));
 				current_etat=State.ACCEUIL_NC;
 			}
 			break;
