@@ -48,7 +48,9 @@ class ModeleTechnicienTest {
 		Film f2 = new Film("mission impossible", g2, "lorem ipsum", a2, "de palma", 0, "");
 		listeFilm.add(f1);
 		listeFilm.add(f2);
-		//listeDVD
+		
+		
+		 
 	}
 
 	@Test
@@ -96,8 +98,7 @@ class ModeleTechnicienTest {
 		}
 	}
 
-	@Test
-	
+	@Test	
 	void testAjouterDVD() {
 		fail("Not yet implemented");
 	}
