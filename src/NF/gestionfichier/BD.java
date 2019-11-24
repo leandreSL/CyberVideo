@@ -9,13 +9,18 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import NF.Abonne;
 import NF.DVD;
@@ -122,9 +127,17 @@ public class BD {
 	public List<Recommandation> chercherRecommandations(){
 		return null;
 	}
-	@Deprecated
+	
 	public boolean recommanderFilm(String titre) {
-		return true;
+		boolean succes = false;
+		Film f = chercherFilmParNom(titre);
+		if( f!=null ) {
+			f.setRecommandation(f.getRecommandation()+1);
+			if( supprimerFilm(titre) && stockerFilm(f)) {
+				succes = true;
+			}
+		}
+		return succes;
 	}
 
 	
@@ -205,11 +218,11 @@ public class BD {
 	
 	//retourne le nombre de dvd actuellement empruntés pour une carte bleue
 	public int chercherNombreEmpruntsActuelsCB(long idCB){
-		return chercherPlusieurs(cheminEmprunt, idCB+"", champEMPRUNTcb).size();
+		return (int)chercherPlusieurs(cheminEmprunt, idCB+"", champEMPRUNTcb).stream().filter(e -> e.get(champEMPRUNTdateR).equals("")).count();
 	}
 	
 	public int chercherNombreEmpruntsActuelsAbonne(int idCarte) {
-		return chercherPlusieurs(cheminEmprunt, idCarte+"", champEMPRUNTidabo).size();
+		return (int)chercherPlusieurs(cheminEmprunt, idCarte+"", champEMPRUNTidabo).stream().filter(e -> e.get(champEMPRUNTdateR).equals("")).count();
 	}
 	//retourne tous les emprunts effectués par l'abonné
 	public List<Emprunt> chercherEmpruntsAbonne(int idCarte) {
@@ -222,14 +235,26 @@ public class BD {
 		return emprunts;
 	}
 	 //retourne le nombre de jours moyen des emprunts sur 1 an
-	@Deprecated
 	public int chercherTempsEmpruntMoyen() {
-		return 0;
+		LocalDate anneeDerniere = LocalDate.now().minusYears(1);
+	    DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd/MM/uuuu");
+	    
+		List<List<String>> emprunts = chercherPlusieurs(cheminEmprunt, "", champEMPRUNTdateD).stream()
+				.filter(e -> !e.get(champEMPRUNTdateR).equals("") && 
+						LocalDate.parse(e.get(champEMPRUNTdateD), formatters).isAfter(anneeDerniere) )
+				.collect(Collectors.toList());
+		long temps = 0;
+		LocalDate dateD, dateR;
+		for( List<String> emprunt : emprunts) {
+			dateD = LocalDate.parse(emprunt.get(champEMPRUNTdateD), formatters);
+			dateR = LocalDate.parse(emprunt.get(champEMPRUNTdateR), formatters);
+			temps += Duration.between(dateD.atStartOfDay(), dateR.atStartOfDay()).toDays();
+		}
+		return (int)(temps/emprunts.size());
 	}
 	//retourne le nombre d’emprunt de la machine (total ou une moyenne?)
-	@Deprecated
 	public int chercherNombreEmprunt() {
-		return 0;
+		return compter(cheminEmprunt);
 	}
 
 	// - Fonctions Abonne
@@ -275,6 +300,20 @@ public class BD {
 	    		return false;
 	    	}
 		return true;
+	}
+	
+	private int compter(String chemin) {
+		File fichierOriginal = new File(chemin);
+		int compte = 0;
+		try {
+			BufferedReader lecteur = new BufferedReader(new FileReader(fichierOriginal));
+			while((lecteur.readLine()) != null)
+				compte++;
+			lecteur.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return compte;
 	}
 	
 	private List<String> chercherUnique(String chemin, String idcherche, int idindex) {
