@@ -7,7 +7,7 @@ import NF.DVD;
 
 public class Interface {
 	Machine m;
-	
+	Scanner sc = new Scanner(System.in);
 	
 	
 	public Interface() {
@@ -29,8 +29,7 @@ public class Interface {
 		System.out.println("Connexion : ");
 		introPage();
 		System.out.println("Entrer votre numéro de carte : ");
-		Scanner inp = new Scanner(System.in);
-		int num_carte_abo = inp.nextInt();
+		int num_carte_abo = sc.nextInt();
 		
 		System.out.println("V : Valider");
 	}
@@ -50,13 +49,12 @@ public class Interface {
 		case CREATION_COMPTE:
 			System.out.println("Creation Compte : ");
 			System.out.println("--------------");
-			Scanner in = new Scanner(System.in);
 			System.out.println("Rentrer votre nom : ");
-			String nom = in.nextLine();
+			String nom = sc.nextLine();
 			System.out.println("Rentrer votre prenom : ");
-			String prenom = in.nextLine();
+			String prenom = sc.nextLine();
 			System.out.println("Rentrer votre numéro de CB : ");
-			long cb = Long.valueOf(in.nextLine());
+			long cb = Long.valueOf(sc.nextLine());
 			System.out.println(m.verifCompte(nom, prenom, cb)); //verification si il y a deja un abonne avec les meme infos, verif aussi du solde qui n'est pour l'instant pas gérer 
 			System.out.println("V : Valider");
 			outroPage();
@@ -187,7 +185,7 @@ public class Interface {
 			System.out.println("");
 			long cb_r;
 			try {
-				cb_r = Long.valueOf(input.nextLine());
+				cb_r = Long.valueOf(sc.nextLine());
 			}catch (NumberFormatException e) {
 				System.out.println("Veuillez rentrer un numéro de carte valide");
 				break;
@@ -195,7 +193,7 @@ public class Interface {
 			System.out.println("Montant à recharger (supérieur ou égal à 10€) : ");
 			int montant=0;
 			try {
-				montant = input.nextInt();
+				montant = sc.nextInt();
 			}catch (NumberFormatException e) {
 				System.out.println("Veuillez rentrer un montant valide");
 				break;
@@ -209,13 +207,10 @@ public class Interface {
 				m.modele_abo.rechargerCarte(cb_r, montant);
 			}catch (Exception e) {
 				System.out.println(e.getMessage());
-			}*/
-			//A REVOIR PETIT PB AVEC VALIDER ET TOUT
+			}
 			introPage();
-			System.out.println(" rentrez un numéro de cb, puis le solde que vous désirez mettre sur votre compte, ensuite validez avec la commande ci dessous");
+			//System.out.println(" rentrez un numéro de cb, puis le solde que vous désirez mettre sur votre compte, ensuite validez avec la commande ci dessous");
 			System.out.println("b : Retour Arriere");
-			//TODO : fonction qui traite le rechargement
-			// Voir TODO rechargement
 			System.out.println("V : Valider le choix");
 			outroPage();
 			break;
@@ -281,8 +276,8 @@ public class Interface {
 			System.out.println("Liste des recommandations ");
 			introPage();
 			System.out.println("Ok : Retour acceuil");
-			System.out.println("temps emprunts moyen : " + toString(m.modele_tech.donnerTempsEmpruntMoyen()));
-			System.out.println("nombre emprunts: " + toString(m.modele_tech.donnerNombreEmprunt()));
+			System.out.println("temps emprunts moyen : " + Integer.toString(m.modele_tech.donnerTempsEmpruntMoyen()));
+			System.out.println("nombre emprunts: " + Integer.toString(m.modele_tech.donnerNombreEmprunt()));
 			outroPage();
 			break;
 		case SUPP_COMPTE:
@@ -296,7 +291,6 @@ public class Interface {
 		}
 	}
 	public void traitementSaisie() {
-		Scanner sc = new Scanner(System.in);
 		while(true) {
 			contenuPage();
 			

@@ -118,7 +118,7 @@ public class ModeleEmprunteur extends Modele{
 	//retourne la liste des films par genre ou tous les films si filtres = null
 	public String filtreGenreFilm(List<Genre> filtres) {
 		List<Film> filmsDeGenre = bd.chercherGenreFilm(filtres);
-		String result= "titre, résumé, genres, acteurs, réalisateur, limite d'age\n";
+		String result= "titre, rï¿½sumï¿½, genres, acteurs, rï¿½alisateur, limite d'age\n";
 		for(Film f:filmsDeGenre) {
 			result+=f.print()+"\n";
 		}
@@ -142,7 +142,7 @@ public class ModeleEmprunteur extends Modele{
 	}
 	
 	
-	public void connexion(int idCarte) {
+	public void connexion(int idCarte) throws Exception {
 		Abonne abonne = bd.chercherAbonne(idCarte);
 		if(abonne != null) {
 			abonneActif = abonne;
@@ -165,7 +165,7 @@ public class ModeleEmprunteur extends Modele{
 		if(abonneActif == null) {
 			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
 		} else {
-			String result = "carte bleue emprunteur, numéro d'abonné, date début emprunt, date fin emprunt, identifiant dvd\n";
+			String result = "carte bleue emprunteur, numï¿½ro d'abonnï¿½, date dï¿½but emprunt, date fin emprunt, identifiant dvd\n";
 			List<Emprunt> TotalEmprunt = bd.chercherEmprunts(abonneActif.getCarteAbonne());
 			for(Emprunt e : TotalEmprunt) {
 				result += e.print();
@@ -175,7 +175,7 @@ public class ModeleEmprunteur extends Modele{
 	}
 		
 	
-	public void rechargerCarte(long cb, double montant) {
+	public void rechargerCarte(long cb, double montant) throws Exception {
 		if(abonneActif == null) {
 			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
 		} else if(montant<10) {
@@ -196,12 +196,20 @@ public class ModeleEmprunteur extends Modele{
 		if(abonneActif == null) {
 			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
 		} else {		
-			String result = "nom, prénom, restrictions, solde, numero d'abonné, numéro de carte bleue\n";
+			String result = "nom, prï¿½nom, restrictions, solde, numero d'abonnï¿½, numï¿½ro de carte bleue\n";
 			return result+abonneActif.print();
 		}
 	}
+	
+	public String donnerSoldeAbonne() throws Exception{
+		if(abonneActif == null) {
+			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
+		} else {		
+			return Double.toString(abonneActif.getSolde());
+		}
+	}
 
-	public void recommanderFilm(String titre) {
+	public void recommanderFilm(String titre) throws Exception {
 		if(abonneActif == null) {
 			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
 		} else if(!bd.recommanderFilm(titre)){
@@ -211,7 +219,7 @@ public class ModeleEmprunteur extends Modele{
 	}
 
 	public String afficherPanier() {
-		String result = "titre, résumé, genres, acteurs, réalisateur, limite d'age\n";
+		String result = "titre, rï¿½sumï¿½, genres, acteurs, rï¿½alisateur, limite d'age\n";
 		for(DVD dvd : panier) {
 			result += dvd.getFilm().print();
 		}
