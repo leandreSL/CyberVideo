@@ -348,7 +348,7 @@ public class BD {
 				sfilm.get(champFILMtitre),
 				Genre.toGenreArray(sfilm.get(champFILMgenre).split("`")),
 				sfilm.get(champFILMresume),
-				Arrays.asList(sfilm.get(champFILMacteur)), 
+				Arrays.asList(sfilm.get(champFILMacteur).split("`")), 
 				sfilm.get(champFILMreal),
 				Integer.parseInt(sfilm.get(champFILMlimage)),
 				sfilm.get(champFILMaffiche)
