@@ -93,4 +93,70 @@ public class Film {
 		return Titre + " " + resume + " " + chaineGenres + " " + chaineActeurs
 				+ " " + realisateur + " " + limiteAge;
 	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((Titre == null) ? 0 : Titre.hashCode());
+		result = prime * result + ((acteurs == null) ? 0 : acteurs.hashCode());
+		result = prime * result + ((cheminAffiche == null) ? 0 : cheminAffiche.hashCode());
+		result = prime * result + ((genres == null) ? 0 : genres.hashCode());
+		result = prime * result + limiteAge;
+		result = prime * result + ((realisateur == null) ? 0 : realisateur.hashCode());
+		result = prime * result + recommandation;
+		result = prime * result + ((resume == null) ? 0 : resume.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Film other = (Film) obj;
+		if (Titre == null) {
+			if (other.Titre != null)
+				return false;
+		} else if (!Titre.equals(other.Titre))
+			return false;
+		if (acteurs == null) {
+			if (other.acteurs != null)
+				return false;
+		} else if (!acteurs.equals(other.acteurs))
+			return false;
+		System.out.println("test");
+
+		if (cheminAffiche == null) {
+			if (other.cheminAffiche != null)
+				return false;
+		} else if (!cheminAffiche.equals(other.cheminAffiche))
+			return false;
+		if (genres == null) {
+			System.out.println("test");
+			if (other.genres != null)
+				return false;
+		} else if (!genres.equals(other.genres))
+			return false;
+		if (limiteAge != other.limiteAge)
+			return false;
+		if (realisateur == null) {
+			if (other.realisateur != null)
+				return false;
+		} else if (!realisateur.equals(other.realisateur))
+			return false;
+		if (recommandation != other.recommandation)
+			return false;
+		if (resume == null) {
+			if (other.resume != null)
+				return false;
+		} else if (!resume.equals(other.resume))
+			return false;
+		return true;
+	}
 }

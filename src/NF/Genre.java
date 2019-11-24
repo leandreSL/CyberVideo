@@ -6,13 +6,13 @@ import java.util.List;
 public enum Genre {
 	ACTION("action"),
 	ANIME("anime"),
-	DOCUMENTAIRE("Documentaire"),
-	FANTASTIQUE("Fantastique"),
-	HORREUR("Horreur"),
-	HUMOURISTIQUE("Humoristique"),
-	PEPLUM("Peplum"),
-	POLICIER("Policier"),
-	SENSATION("Sensation"),
+	DOCUMENTAIRE("documentaire"),
+	FANTASTIQUE("fantastique"),
+	HORREUR("horreur"),
+	HUMOURISTIQUE("humoristique"),
+	PEPLUM("peplum"),
+	POLICIER("policier"),
+	SENSATION("sensation"),
 	WESTERN("western");
 	
 	private String nom;
@@ -29,13 +29,13 @@ public enum Genre {
 		switch(nom) {
 			case "action": return Genre.ACTION;
 			case "anime": return Genre.ANIME;
-			case "Documentaire": return Genre.DOCUMENTAIRE;
-			case "Fantastique": return Genre.FANTASTIQUE;
-			case "Horreur": return Genre.HORREUR;
-			case "Humoristique": return Genre.HUMOURISTIQUE;
-			case "Peplum": return Genre.PEPLUM;
-			case "Policier": return Genre.POLICIER;
-			case "Sensation": return Genre.SENSATION;
+			case "documentaire": return Genre.DOCUMENTAIRE;
+			case "fantastique": return Genre.FANTASTIQUE;
+			case "horreur": return Genre.HORREUR;
+			case "humoristique": return Genre.HUMOURISTIQUE;
+			case "peplum": return Genre.PEPLUM;
+			case "policier": return Genre.POLICIER;
+			case "sensation": return Genre.SENSATION;
 			case "western": return Genre.WESTERN;
 		}
 		return null;

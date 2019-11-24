@@ -59,8 +59,6 @@ public class Abonne{
 		return solde;
 	}
 
-
-
 	public void setSolde(double solde) {
 		this.solde = solde;
 	}
@@ -91,6 +89,54 @@ public class Abonne{
 		String chaineRestrictions = String.join("|", Genre.toStringArray(restrictions));;
 		return nomAbonne + " " + prenomAbonne + " " + chaineRestrictions
 				+ " " + solde + " " + carteAbonne + " " + carteBleue;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + carteAbonne;
+		result = prime * result + (int) (carteBleue ^ (carteBleue >>> 32));
+		result = prime * result + ((nomAbonne == null) ? 0 : nomAbonne.hashCode());
+		result = prime * result + ((prenomAbonne == null) ? 0 : prenomAbonne.hashCode());
+		result = prime * result + ((restrictions == null) ? 0 : restrictions.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(solde);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Abonne other = (Abonne) obj;
+		if (carteAbonne != other.carteAbonne)
+			return false;
+		if (carteBleue != other.carteBleue)
+			return false;
+		if (nomAbonne == null) {
+			if (other.nomAbonne != null)
+				return false;
+		} else if (!nomAbonne.equals(other.nomAbonne))
+			return false;
+		if (prenomAbonne == null) {
+			if (other.prenomAbonne != null)
+				return false;
+		} else if (!prenomAbonne.equals(other.prenomAbonne))
+			return false;
+		if (restrictions == null) {
+			if (other.restrictions != null)
+				return false;
+		} else if (!restrictions.equals(other.restrictions))
+			return false;
+		if (Double.doubleToLongBits(solde) != Double.doubleToLongBits(other.solde))
+			return false;
+		return true;
 	}	
 }
 
