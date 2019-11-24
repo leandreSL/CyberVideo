@@ -25,7 +25,7 @@ public class ModeleTechnicien extends Modele{
 	
 	
 	public void supprimerFilm(String titre) throws Exception {
-		if(bd.supprimerFilm(titre)) 
+		if(!bd.supprimerFilm(titre)) 
 			throw(new Exception("Erreur base de donn�e"));
 		return;
 	}
