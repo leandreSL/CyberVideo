@@ -112,7 +112,7 @@ public class ModeleEmprunteur {
 	}
 	
 	public String afficherDVDNC() {
-		return emprunt_NC.toString();
+		return emprunt_NC.print();
 	}
 	
 	public void valider(long cb) {
@@ -139,9 +139,9 @@ public class ModeleEmprunteur {
 	//retourne la liste des films par genre ou tous les films si filtres = null
 	public String filtreGenreFilm(List<Genre> filtres) {
 		List<Film> filmsDeGenre = bd.chercherGenreFilm(filtres);
-		String result="";
+		String result= "titre, résumé, genres, acteurs, réalisateur, limite d'age\n";
 		for(Film f:filmsDeGenre) {
-			result+=f.toString()+"\n";
+			result+=f.print()+"\n";
 		}
 		return result;
 	}
@@ -186,10 +186,10 @@ public class ModeleEmprunteur {
 		if(abonneActif == null) {
 			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
 		} else {
-			String result = "";
+			String result = "carte bleue emprunteur, numéro d'abonné, date début emprunt, date fin emprunt, identifiant dvd\n";
 			List<Emprunt> TotalEmprunt = bd.chercherEmprunts(abonneActif.getCarteAbonne());
 			for(Emprunt e : TotalEmprunt) {
-				result += e.toString();
+				result += e.print();
 			}
 			return result;
 		}
@@ -217,7 +217,8 @@ public class ModeleEmprunteur {
 		if(abonneActif == null) {
 			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
 		} else {		
-			return abonneActif.toString();
+			String result = "nom, prénom, restrictions, solde, numero d'abonné, numéro de carte bleue\n";
+			return result+abonneActif.print();
 		}
 	}
 
@@ -231,9 +232,9 @@ public class ModeleEmprunteur {
 	}
 
 	public String afficherPanier() {
-		String result = "";
+		String result = "titre, résumé, genres, acteurs, réalisateur, limite d'age\n";
 		for(DVD dvd : panier) {
-			result += dvd.getFilm().toString();
+			result += dvd.getFilm().print();
 		}
 		return result;
 	}

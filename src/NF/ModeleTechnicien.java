@@ -60,21 +60,21 @@ public class ModeleTechnicien {
 	}
 	
 	public String donnerListeDVDs() {
-		String result = "";
+		String result = "numéro DVD, état, film, statut, recommandation\n";
 		for(DVD dvd : bd.chercherEnsembleDVDs())
 			result += dvd.toString() + "\n";
 		return result;		
 	}
 	
 	public String donnerListeFilms() {
-		String result = "";
+		String result = "titre, résumé, genres, acteurs, réalisateur, limite d'age\n";
 		for(Film f : bd.chercherEnsembleFilms())
 			result += f.toString() + "\n";
 		return result;		
 	}
 
 	public String donnerListeAbonnes() {
-		String result = "";
+		String result = "nom, prénom, restrictions, solde, numero d'abonné, numéro de carte bleue\n";
 		for(Abonne a : bd.chercherEnsembleAbonnes())
 			result += a.toString() + "\n";
 		return result;
