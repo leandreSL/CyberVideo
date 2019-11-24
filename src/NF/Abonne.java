@@ -1,6 +1,7 @@
 package NF;
 
 import java.util.List;
+import java.util.Random;
 
 public class Abonne{
 	private String nomAbonne;
@@ -26,11 +27,9 @@ public class Abonne{
 		this.restrictions = restrictions;
 		this.solde = solde;
 		this.carteBleue = carteBleue;
-		this.carteAbonne = -1;
-
+		this.carteAbonne = new Random().nextInt(Integer.MAX_VALUE);
 	}
-
-
+	
 
 	public String getNomAbonne() {
 		return nomAbonne;

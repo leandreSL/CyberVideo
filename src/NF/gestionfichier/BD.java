@@ -118,11 +118,11 @@ public class BD {
 	public boolean stockerFilm(Film film) {
 		return stocker(cheminFilm, film.toString());
 	}
-	
+	@Deprecated
 	public List<Recommandation> chercherRecommandations(){
 		return null;
 	}
-	
+	@Deprecated
 	public boolean recommanderFilm(String titre) {
 		return true;
 	}
@@ -205,11 +205,11 @@ public class BD {
 	
 	//retourne le nombre de dvd actuellement empruntés pour une carte bleue
 	public int chercherNombreEmpruntsActuelsCB(long idCB){
-		return chercherPlusieurs(cheminEmprunt, idCB+"", 0).size();
+		return chercherPlusieurs(cheminEmprunt, idCB+"", champEMPRUNTcb).size();
 	}
 	
 	public int chercherNombreEmpruntsActuelsAbonne(int idCarte) {
-		return chercherPlusieurs(cheminEmprunt, idCarte+"", 1).size();
+		return chercherPlusieurs(cheminEmprunt, idCarte+"", champEMPRUNTidabo).size();
 	}
 	//retourne tous les emprunts effectués par l'abonné
 	public List<Emprunt> chercherEmpruntsAbonne(int idCarte) {
@@ -222,10 +222,12 @@ public class BD {
 		return emprunts;
 	}
 	 //retourne le nombre de jours moyen des emprunts sur 1 an
+	@Deprecated
 	public int chercherTempsEmpruntMoyen() {
 		return 0;
 	}
 	//retourne le nombre d’emprunt de la machine (total ou une moyenne?)
+	@Deprecated
 	public int chercherNombreEmprunt() {
 		return 0;
 	}
@@ -234,11 +236,6 @@ public class BD {
 	 
 	// il faut déterminer le numéro de carte dans la fonction
 	public boolean CreerAbonne(Abonne a) {
-		if(a.getCarteAbonne() == -1) {
-			Random rand = new Random();
-			int id = rand.nextInt(2000000);
-			a.setCarteAbonne(id);
-		}
 		return stocker(cheminAbo, a.toString());
 	}
 	public boolean modifierSoldeAbonne(int idCarte, double solde) {
@@ -254,7 +251,7 @@ public class BD {
 	}
 	
 	public List<Abonne> chercherEnsembleAbonnes() {
-		List<List<String>> paramAbo = chercherPlusieurs(cheminAbo, "", 0);
+		List<List<String>> paramAbo = chercherPlusieurs(cheminAbo, "", champABOidcarte);
 		List<Abonne> abonnes = new ArrayList<Abonne>();
 		for( int i = 0; i < paramAbo.size(); i++) {
 			List<String> abo = paramAbo.get(i);
