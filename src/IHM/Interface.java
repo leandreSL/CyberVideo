@@ -1,9 +1,12 @@
 package IHM;
 
+import java.util.List;
 import java.util.Scanner;
+
 import IHM.Machine.State;
 import NF.Abonne;
 import NF.DVD;
+import NF.Film;
 
 public class Interface {
 	Machine m;
@@ -34,7 +37,33 @@ public class Interface {
 		System.out.println("V : Valider");
 	}
 	
+	public void afficherPanier() {
+		List<Film> films = m.modele_abo.afficherPanier();
+		for (Film f : films) {
+			System.out.println(f);
+		}
+	}
+	
+	public void affichageFilmsDispos() {
+		List<Film> films = m.modele_abo.filmDispos();
+		int i=0;
+		for (Film f : films ) {
+			System.out.println(Integer.toString(i) + " : " + f);
+		}
+	}
+	
+	public boolean isInteger( String input ) {
+	    try {
+	        Integer.parseInt( input );
+	        return true;
+	    }
+	    catch( NumberFormatException e ) {
+	        return false;
+	    }
+	}
+	
 	public void contenuPage() {
+		long cb_loc_nc = 0;
 		switch(m.current_etat) {
 		case ACCEUIL_NC:
 			System.out.println("Acceuil (Non Connecte) : ");
@@ -54,14 +83,62 @@ public class Interface {
 			System.out.println("Rentrer votre prenom : ");
 			String prenom = sc.nextLine();
 			System.out.println("Rentrer votre numéro de CB : ");
-			long cb = Long.valueOf(sc.nextLine());
-			System.out.println(m.verifCompte(nom, prenom, cb)); //verification si il y a deja un abonne avec les meme infos, verif aussi du solde qui n'est pour l'instant pas gérer 
+			long cb;
+			try {
+				cb = Long.valueOf(sc.nextLine());
+			}catch (NumberFormatException e) {
+				System.out.println("Veuillez rentrer un numéro de CB correct");
+				System.out.println("b : Retour Arriere");
+				break;
+			}
+			System.out.println("Nouveau solde de votre compte (minimum 15€ lors de l'inscription) : ");
+			double solde;
+			try {
+				solde = Double.valueOf(sc.nextLine());
+			}catch (NumberFormatException e) {
+				System.out.println("Veuillez rentrer un solde correct");
+				System.out.println("b : Retour Arriere");
+				break;
+			}
+			
+			System.out.println(m.verifCompte(nom, prenom,solde, cb)); //verification si il y a deja un abonne avec les meme infos, verif aussi du solde qui n'est pour l'instant pas gérer 
 			System.out.println("V : Valider");
 			outroPage();
 			break;
 		case LOCATION_NC:
 			System.out.println("Location (Non Connectee) : ");
+			System.out.println("Rentrer votre numéro de CB (rien ne sera débité avant la validation du panier) : ");
+			
+			try {
+				cb_loc_nc = Long.valueOf(sc.nextLine());
+			}catch (NumberFormatException e) {
+				System.out.println("Veuillez rentrer un numéro de CB correct");
+				System.out.println("b : Retour Arriere");
+				break;
+			}
+			affichageFilmsDispos();
+			System.out.println("Rentrer le numéro du film ou son titre : ");
+			String film_choisi_nc = sc.nextLine();
+			if (isInteger(film_choisi_nc)) {
+				int idDVD = Integer.valueOf(film_choisi_nc);
+				try {
+					m.modele_abo.ajouterAuPanier(idDVD, cb_loc_nc);
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+					break;
+				}
+			}else {
+				try {
+					m.modele_abo.ajouterAuPanier(film_choisi_nc, cb_loc_nc);
+				} catch (Exception e) {
+					
+					System.out.println(e.getMessage());
+					System.out.println("b : Retour Arriere");
+					break;
+				}
+			}
 			introPage();
+			
 			System.out.println("b : Retour Arriere");
 			System.out.println("V : Valider le choix");
 			outroPage();
@@ -72,7 +149,7 @@ public class Interface {
 		case RECAP_LOCATION_NC:
 			System.out.println("Recapitulatif Location (Non Connectee) : ");
 			introPage();
-			m.modele_abo.afficherDVDNC();
+			afficherPanier();
 			// TODO : variable Film qui contient le film choisi à l'étape précédente, affichage des infos du film
 			System.out.println("b : Retour Arriere");
 			System.out.println("V : Valider");
@@ -81,9 +158,15 @@ public class Interface {
 			break;
 		case FIN_TRANSACTION_NC:
 			System.out.println("Transacton (Non Connectee) : ");
+			try {
+				m.modele_abo.valider(cb_loc_nc);
+			}catch (Exception e) {
+				System.out.println(e.getMessage());
+				System.out.println("b : Retour Arriere");
+				break;
+			}
 			introPage();
-			System.out.println("b : Retour Arriere");
-			System.out.println("CB : Finalisation de la transaction");
+			System.out.println("V : Revenir à l'acceuil");
 			outroPage();
 			//TODO : fonction de saisie de la CB
 			//TODO : mise a jour de la bdd avec la location du film selectionné (donc 1 dvd en moins etc)
@@ -144,7 +227,11 @@ public class Interface {
 		case HISTORIQUE_EMPRUNT:
 			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
 			System.out.println("");
-			System.out.println(m.modele_abo.donnerListeEmprunts());
+			try {
+				System.out.println(m.modele_abo.donnerListeEmprunts());
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
 			introPage();
 			System.out.println("b : Retour Arriere");
 			outroPage();
@@ -152,36 +239,6 @@ public class Interface {
 		
 		case RECHARGER_COMPTE:
 			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
-			introPage();
-			System.out.println("b : Retour Arriere");
-			//TODO : fonction qui traite le rechargement
-			// need : fonction qui prend en paramètre une abonne et un int (rechargement) et qui met a jour le solde du compte (renvoie 0 ou 1 selon l'exec)
-			// fais dans machine (dis moi si ca te va )
-            System.out.println("V : Valider le choix");
-			outroPage();
-			break;
-		case LOCATION_C:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
-			introPage();
-			System.out.println("b : Retour Arriere");
-			System.out.println("Re : Recommandation");
-			//TODO : VOIR TODO location NC et need
-			//TODO : peut-etre faire en sorte de supprimer un article du panier
-			System.out.println("V : Valider le choix");
-			outroPage();
-			break;
-		case AFFICHAGE_PANIER:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
-			System.out.println("");
-			System.out.println(m.modele_abo.afficherPanier());
-			introPage();
-			System.out.println("b : Retour Arriere");
-			System.out.println("Rec : Recharger compte");
-			System.out.println("V : Valider le choix");
-			outroPage();
-			break;
-		case RECHARGER_COMPTE_PANIER:
-			System.out.println("Rechargement Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
 			System.out.println("");
 			long cb_r;
 			try {
@@ -202,6 +259,78 @@ public class Interface {
 				m.modele_abo.rechargerCarte(cb_r, montant);
 			}catch (Exception e) {
 				System.out.println(e.getMessage());
+				break;
+			}
+			introPage();
+			System.out.println("b : Retour Arriere");
+			//TODO : fonction qui traite le rechargement
+			// need : fonction qui prend en paramètre une abonne et un int (rechargement) et qui met a jour le solde du compte (renvoie 0 ou 1 selon l'exec)
+			// fais dans machine (dis moi si ca te va )
+            System.out.println("V : Valider le choix");
+			outroPage();
+			break;
+		case LOCATION_C:
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
+			affichageFilmsDispos();
+			
+			System.out.println("Rentrer le numéro du film ou son titre : ");
+			String film_choisi = sc.nextLine();
+			if (isInteger(film_choisi)) {
+				int idDVD = Integer.valueOf(film_choisi);
+				try {
+					m.modele_abo.ajouterAuPanier(idDVD, m.modele_abo.donnerCBAbonne());
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+					break;
+				}
+			}else {
+				try {
+					m.modele_abo.ajouterAuPanier(film_choisi, m.modele_abo.donnerCBAbonne());
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+					break;
+				}
+			}
+			//TODO : VOIR TODO location NC et need
+			//TODO : peut-etre faire en sorte de supprimer un article du panier
+			introPage();
+			System.out.println("V : Valider le choix");
+			System.out.println("b : Retour Arriere");
+			System.out.println("Re : Recommandation");
+			outroPage();
+			break;
+		case AFFICHAGE_PANIER:
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
+			System.out.println("");
+			afficherPanier();
+			introPage();
+			System.out.println("b : Retour Arriere");
+			System.out.println("Rec : Recharger compte");
+			System.out.println("V : Valider le choix");
+			outroPage();
+			break;
+		case RECHARGER_COMPTE_PANIER:
+			System.out.println("Rechargement Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
+			System.out.println("");
+			long cb_rc;
+			try {
+				cb_r = Long.valueOf(sc.nextLine());
+			}catch (NumberFormatException e) {
+				System.out.println("Veuillez rentrer un numéro de carte valide");
+				break;
+			}
+			System.out.println("Montant à recharger (supérieur ou égal à 10€) : ");
+			int montant_rc=0;
+			try {
+				montant = sc.nextInt();
+			}catch (NumberFormatException e) {
+				System.out.println("Veuillez rentrer un montant valide");
+				break;
+			}
+			try {
+				m.modele_abo.rechargerCarte(cb_r, montant_rc);
+			}catch (Exception e) {
+				System.out.println(e.getMessage());
 			}
 			introPage();
 			System.out.println("V : Valider le choix");
@@ -211,9 +340,20 @@ public class Interface {
 			//TODO
 			break;
 		case FIN_TRANSACTION_C:
+			System.out.println("Transacton (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
+			try {
+				m.modele_abo.valider(m.modele_abo.donnerCBAbonne());
+			}catch (Exception e) {
+				System.out.println(e.getMessage());
+				System.out.println("b : Retour Arriere");
+				break;
+			}
+			introPage();
+			System.out.println("V : Revenir à l'acceuil");
+			outroPage();
 			
-			//TODO
 			break;
+
 		/*case AUTHENTIFICATION_RENDU	:
 			System.out.println("Authentification pour le rendu : ");
 			introPage();
@@ -256,6 +396,7 @@ public class Interface {
 			System.out.println("Mise a jour DVD automate ");
 			introPage();
 			//aled lélé
+			//c cho
 			outroPage();
 			break;
 		case LISTE_RECOMANDATION:
@@ -280,6 +421,14 @@ public class Interface {
             System.out.println("Ok : Retour acceuil");
 			System.out.println("id Compte : supression de ce compte");
 			outroPage();
+			break;
+		case AUTHENTIFICATION_RENDU:
+			break;
+		case RECAP_RENDU_C:
+			break;
+		case RECAP_RENDU_NC:
+			break;
+		default:
 			break;
 		}
 	}
