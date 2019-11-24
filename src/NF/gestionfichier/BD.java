@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import NF.Abonne;
@@ -205,6 +206,11 @@ public class BD {
 	 
 	// il faut déterminer le numéro de carte dans la fonction
 	public boolean CreerAbonne(Abonne a) {
+		if(a.getCarteAbonne() == -1) {
+			Random rand = new Random();
+			int id = rand.nextInt(2000000);
+			a.setCarteAbonne(id);
+		}
 		return stocker(cheminAbo, a.toString());
 	}
 	public boolean modifierSoldeAbonne(int idCarte, double solde) {
