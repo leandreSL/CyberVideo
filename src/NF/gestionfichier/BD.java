@@ -156,8 +156,7 @@ public class BD {
 		List<Emprunt> emprunts = new ArrayList<Emprunt>();
 		for( int i = 0; i < paramEmprunt.size(); i++) {
 			List<String> emprunt = paramEmprunt.get(i);
-			emprunts.add( new Emprunt(Integer.parseInt(emprunt.get(0)), chercherDVD(Integer.parseInt(emprunt.get(1))),
-					parseDate(emprunt.get(2))) );
+			emprunts.add( strToEmprunt(emprunt) );
 		}
 		return emprunts;
 	}
@@ -182,8 +181,7 @@ public class BD {
 	}
 	public Abonne chercherAbonne(int idCarte) {
 		List<String> sAbo = chercherUnique(cheminAbo, idCarte+"", 0);
-		return new Abonne(Long.parseLong(sAbo.get(1)), sAbo.get(2), sAbo.get(3), Genre.toGenreArray(sAbo.get(5).split("`")),
-				Double.parseDouble(sAbo.get(5)), Integer.parseInt(sAbo.get(0)));
+		return strToAbo(sAbo);
 	}
 	public boolean supprimerAbonne(int idCarte) {
 		return supprimer(cheminAbo, idCarte+"", 0);
@@ -194,8 +192,7 @@ public class BD {
 		List<Abonne> abonnes = new ArrayList<Abonne>();
 		for( int i = 0; i < paramAbo.size(); i++) {
 			List<String> abo = paramAbo.get(i);
-			abonnes.add( new Abonne(Long.parseLong(abo.get(1)), abo.get(2), abo.get(3), Genre.toGenreArray(abo.get(5).split("`")),
-					Double.parseDouble(abo.get(5)), Integer.parseInt(abo.get(0))) );
+			abonnes.add( strToAbo(abo) );
 		}
 		return abonnes;
 	}
@@ -295,13 +292,24 @@ public class BD {
 						);
 	}
 	
+	private Emprunt strToEmprunt(List<String> sEmp) {
+		return new Emprunt(Long.parseLong(sEmp.get(0)), Integer.parseInt(sEmp.get(1)),
+				parseDate(sEmp.get(2)), parseDate(sEmp.get(3)), chercherDVD(Integer.parseInt(sEmp.get(4))));
+	}
+	
+	private Abonne strToAbo(List<String> sAbo) {
+		return new Abonne(sAbo.get(0), sAbo.get(1),
+				Genre.toGenreArray(sAbo.get(2).split("`")),
+				Double.parseDouble(sAbo.get(3)), Integer.parseInt(sAbo.get(4)), Long.parseLong(sAbo.get(5)));
+	}
+	
 	private List<String> getLigneArray(String ligne) {
 		return new ArrayList<String>(Arrays.asList(ligne.split("\\|")));
 	}
 	
 	private static Date parseDate(String date) {
 	     try {
-	         return new SimpleDateFormat("yyyy-MM-dd").parse(date);
+	         return new SimpleDateFormat("dd/MM/yyyy").parse(date);
 	     } catch (ParseException e) {
 	         return null;
 	     }
