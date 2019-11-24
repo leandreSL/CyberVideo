@@ -20,6 +20,18 @@ public class Abonne{
 		this.carteBleue = carteBleue;
 	}
 
+	public Abonne(String nomAbonne, String prenomAbonne, List<Genre> restrictions, double solde, long carteBleue) {
+		this.nomAbonne = nomAbonne;
+		this.prenomAbonne = prenomAbonne;
+		this.restrictions = restrictions;
+		this.solde = solde;
+		this.carteBleue = carteBleue;
+		this.carteAbonne = -1;
+
+	}
+
+
+
 	public String getNomAbonne() {
 		return nomAbonne;
 	}

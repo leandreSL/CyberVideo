@@ -14,6 +14,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 import NF.Abonne;
 import NF.DVD;
@@ -80,8 +83,8 @@ public class BD {
 		return films;
 	}
 	
-	public boolean supprimerFilm(Film film){
-		return supprimer(cheminFilm, film.getTitre(), 0);
+	public boolean supprimerFilm(String titre){
+		return supprimer(cheminFilm, titre, 0);
 	}
 	
 	public boolean stockerFilm(Film film) {
@@ -103,17 +106,34 @@ public class BD {
 		return stocker(cheminDVD, dvd.toString());
 	}
 	
-	public boolean supprimerDVD(DVD dvd){
-		return supprimer(cheminDVD, dvd.getIdentifiantDVD()+"", 0);
+	public boolean supprimerDVD(int idDVD){
+		return supprimer(cheminDVD, idDVD+"", 0);
 	}	
 	
-	public boolean modifierStatutDVD(DVD dvd, StatutDVD emprunte) {
-		return supprimerDVD(dvd) && stockerDVD(dvd);
+	public boolean modifierStatutDVD(int idDVD, StatutDVD emprunte) {
+		boolean succes= false;
+		DVD dvd = null;
+		if( (dvd = chercherDVD(idDVD)) != null ) {
+			dvd.setStatut(emprunte);
+			if( supprimerDVD(idDVD) && stockerDVD(dvd))
+				succes = true;
+		}
+		return succes;
 	}
 	
 	public DVD chercherDVD(int idDVD) {
 		List<String> dvd = chercherUnique(cheminDVD, idDVD+"", 0);
-		return dvd==null?null:new DVD(idDVD, chercherFilmParNom(dvd.get(1)));
+		return dvd==null?null:strToDVD(dvd);
+	}
+	
+	public DVD chercherDVD(String titre) {
+		List<List<String>> dvds = chercherPlusieurs(cheminDVD, titre, 1);
+		Optional<List<String>> dvdLibre = dvds.stream().filter( s -> s.get(2).equals(StatutDVD.EnAutomate.getNom())).findFirst();
+		if(dvdLibre.isPresent()) {
+			return strToDVD(dvdLibre.get());
+		}else {
+			return null;
+		}
 	}
 	
 	public List<DVD> chercherEnsembleDVDs(){
@@ -121,7 +141,7 @@ public class BD {
 		List<DVD> DVDs = new ArrayList<DVD>();
 		for( int i = 0; i < paramDVD.size(); i++) {
 			List<String> dvd = paramDVD.get(i);
-			DVDs.add( new DVD(Integer.parseInt(dvd.get(0)), chercherFilmParNom(dvd.get(1))) );
+			DVDs.add( strToDVD(dvd) );
 		}
 		return DVDs;
 	}
@@ -133,13 +153,26 @@ public class BD {
 	}
 	
 	//retourne l'emprunt pour le dvd avec la date la plus récente
-	public Emprunt chercherEmpruntActuel(int IDVD){
-		return null;
+	public Emprunt chercherEmpruntActuel(int idDVD){
+		List<List<String>> emprunts = chercherPlusieurs(cheminEmprunt, idDVD+"", 4);
+		Optional<List<String>> sansRetour = emprunts.stream().filter( s -> s.get(3).equals("")).findFirst();
+		if(sansRetour.isPresent()) {
+			return strToEmprunt(sansRetour.get());
+		}else {
+			return null;
+		}
 	}
 	
 	//actualise l'emprunt en rajoutant la date de retour du dvd
-	public boolean AjouterDateRetourEmprunt(Emprunt e, Date dateRetour) {
-		return supprimer(cheminEmprunt, e.getDvd().getIdentifiantDVD()+"", 0) && creerEmprunt(e);
+	public boolean AjouterDateRetourEmprunt(int idDVD, Date dateEmprunt, Date dateRetour) {
+		boolean succes= false;
+		Emprunt e = null;
+		if( (e = chercherEmpruntActuel(idDVD)) != null ) {
+			e.setDateRetour(dateRetour);
+			if( supprimer(cheminEmprunt, idDVD+"", 0) && creerEmprunt(e))
+				succes = true;
+		}
+		return succes;
 	}
 	
 	//retourne le nombre de dvd actuellement empruntés pour une carte bleue
@@ -173,6 +206,11 @@ public class BD {
 	 
 	// il faut déterminer le numéro de carte dans la fonction
 	public boolean CreerAbonne(Abonne a) {
+		if(a.getCarteAbonne() == -1) {
+			Random rand = new Random();
+			int id = rand.nextInt(2000000);
+			a.setCarteAbonne(id);
+		}
 		return stocker(cheminAbo, a.toString());
 	}
 	public boolean modifierSoldeAbonne(int idCarte, double solde) {
@@ -290,6 +328,11 @@ public class BD {
 				Integer.parseInt(sfilm.get(5)),
 				sfilm.get(6)
 						);
+	}
+	
+	private DVD strToDVD(List<String> dvd) {
+		return new DVD(Integer.parseInt(dvd.get(0)), dvd.get(1), chercherFilmParNom(dvd.get(2)),
+				StatutDVD.getByName(dvd.get(3)), Integer.parseInt(dvd.get(4)));
 	}
 	
 	private Emprunt strToEmprunt(List<String> sEmp) {

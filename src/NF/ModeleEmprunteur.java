@@ -12,6 +12,16 @@ public class ModeleEmprunteur extends Modele{
 	private DVD emprunt_NC;
 	private List<DVD> panier = new ArrayList<DVD>();
 	
+	protected ModeleEmprunteur() {
+		super();
+	}
+	
+	public static ModeleEmprunteur getInstance() {
+		if(instance == null) {
+			instance = new ModeleEmprunteur();
+		}
+		return (ModeleEmprunteur) instance;
+	}
 	
 	/*
 	 * 
@@ -22,7 +32,7 @@ public class ModeleEmprunteur extends Modele{
 	//TODO gestion retard/gele carte
 	//TODO gestion etat(� voir en dernier)
 	//remettre le dvd dans l'automate
-	public String rendreDVD(int idDVD) {
+	public double rendreDVD(int idDVD) throws Exception {
 		Emprunt emprunt = bd.chercherEmpruntActuel(idDVD);
 		long differenceTemps = (new Date()).getTime() - emprunt.getDateEmprunt().getTime();
 		long nbJours = TimeUnit.DAYS.convert(differenceTemps, TimeUnit.MILLISECONDS);
@@ -38,7 +48,8 @@ public class ModeleEmprunteur extends Modele{
 						!bd.AjouterDateRetourEmprunt(idDVD, emprunt.getDateEmprunt(), new Date())) {
 					throw(new Exception("Erreur base de donn�e"));
 				}
-				return "dvd rendu, "+prix+" euros ont �t� d�bit�s";
+				return prix;
+				//return "dvd rendu, "+prix+" euros ont �t� d�bit�s";
 			}	
 		}
 		else {
@@ -48,7 +59,7 @@ public class ModeleEmprunteur extends Modele{
 				if(!bd.modifierSoldeAbonne(abonneActif.getCarteAbonne(),abonneActif.getSolde())) {
 					throw(new Exception("Erreur base de donn�e"));
 				}
-				return "dvd rendu, "+prix+" euros ont �t� d�bit�s";
+				return prix;
 			}
 			else {
 				throw(new Exception("pas assez d'argent sur la carte abonn�e"));
@@ -57,7 +68,7 @@ public class ModeleEmprunteur extends Modele{
 	}
 	
 	//prendre le dvd
-	public void ajouterAuPanier(String titre, long cb) {
+	public void ajouterAuPanier(String titre, long cb) throws Exception {
 		int nbEmpruntMax;
 		int nbEmpruntActuels;
 		
@@ -94,7 +105,7 @@ public class ModeleEmprunteur extends Modele{
 		return emprunt_NC.print();
 	}
 	
-	public void valider(long cb) {
+	public void valider(long cb) throws Exception {
 		Emprunt e;
 		for(DVD dvd: panier) {
 			if(!bd.modifierStatutDVD(dvd.getIdentifiantDVD(), StatutDVD.Emprunte)) {
@@ -116,13 +127,17 @@ public class ModeleEmprunteur extends Modele{
 	
 	
 	//retourne la liste des films par genre ou tous les films si filtres = null
-	public String filtreGenreFilm(List<Genre> filtres) {
-		List<Film> filmsDeGenre = bd.chercherGenreFilm(filtres);
+	public List<Film> filtreGenreFilm(List<Genre> filtres) {
+		List<Film> filmsDeGenre = bd.chercherFilmParGenre(filtres);
+		
+		return filmsDeGenre;
+		/*
 		String result= "titre, r�sum�, genres, acteurs, r�alisateur, limite d'age\n";
 		for(Film f:filmsDeGenre) {
 			result+=f.print()+"\n";
 		}
 		return result;
+		*/
 	}
 	
 	/*
@@ -131,12 +146,12 @@ public class ModeleEmprunteur extends Modele{
 	 * 
 	 * */
 	
-	public void creationCompte(String nomAbonne, String prenomAbonne, List<Genre> restrictions, double solde, long carteBleue) throws Exception{
-		if(solde < 15) {
+	public void creationCompte(Abonne a) throws Exception{
+		if(a.getSolde() < 15) {
 			throw(new Exception("Vous devez mettre au moins 15 Euros sur la carte � sa cr�ation"));
 		}
-		Abonne a = new Abonne(nomAbonne, prenomAbonne, restrictions, solde, carteBleue);
-		if(!bd.chercherAbonne(a))
+		
+		if(!bd.CreerAbonne(a))
 			throw(new Exception("Erreur base de donn�e"));
 		return;
 	}
@@ -161,16 +176,19 @@ public class ModeleEmprunteur extends Modele{
 		}
 	}
 	
-	public String donnerListeEmprunts() {
+	public List<Emprunt> donnerListeEmprunts() throws Exception {
 		if(abonneActif == null) {
 			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
 		} else {
+			List<Emprunt> totalEmprunt = bd.chercherEmpruntsAbonne(abonneActif.getCarteAbonne());
+			return totalEmprunt;
+			/*
 			String result = "carte bleue emprunteur, num�ro d'abonn�, date d�but emprunt, date fin emprunt, identifiant dvd\n";
-			List<Emprunt> TotalEmprunt = bd.chercherEmprunts(abonneActif.getCarteAbonne());
 			for(Emprunt e : TotalEmprunt) {
 				result += e.print();
 			}
 			return result;
+			*/
 		}
 	}
 		
@@ -192,15 +210,19 @@ public class ModeleEmprunteur extends Modele{
 		}
 	}
 
-	public String donnerInformationsAbonne() throws Exception{
+	public Abonne donnerInformationsAbonne() throws Exception{
 		if(abonneActif == null) {
 			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
-		} else {		
+		} else {
+			return abonneActif;
+			/*
 			String result = "nom, pr�nom, restrictions, solde, numero d'abonn�, num�ro de carte bleue\n";
 			return result+abonneActif.print();
+			*/
 		}
 	}
 	
+
 	public String donnerSoldeAbonne() {	
 		return Double.toString(abonneActif.getSolde());
 	
@@ -220,12 +242,20 @@ public class ModeleEmprunteur extends Modele{
 		return;
 	}
 
-	public String afficherPanier() {
+	public List<Film> afficherPanier() {
+		List<Film> result = new ArrayList<Film>();
+		for(DVD dvd:panier) {
+			result.add(dvd.getFilm());
+		}
+		
+		return result;
+		/*
 		String result = "titre, r�sum�, genres, acteurs, r�alisateur, limite d'age\n";
 		for(DVD dvd : panier) {
 			result += dvd.getFilm().print();
 		}
 		return result;
+		*/
 	}
 	
 	public List<Film> filmDispos(){
