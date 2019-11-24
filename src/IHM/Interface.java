@@ -399,7 +399,7 @@ public class Interface {
 			//c cho
 			outroPage();
 			break;
-		case LISTE_RECOMANDATION:
+		/*case LISTE_RECOMANDATION:
 			System.out.println("Liste des recommandations ");
 			introPage();
 			System.out.println(m.modele_tech.donnerListeRecommandations() );
@@ -422,6 +422,7 @@ public class Interface {
 			System.out.println("id Compte : supression de ce compte");
 			outroPage();
 			break;
+			*/
 		case AUTHENTIFICATION_RENDU:
 			break;
 		case RECAP_RENDU_C:

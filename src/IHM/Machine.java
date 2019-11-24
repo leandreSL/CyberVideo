@@ -2,9 +2,10 @@ package IHM;
 
 import java.util.ArrayList;
 
+
 import NF.Abonne;
-import NF.ModeleEmprunteur;
 import NF.ModeleTechnicien;
+import NF.ModeleEmprunteur;
 
 public class Machine {
 	enum State {ACCEUIL_NC,CREATION_COMPTE,LOCATION_NC,RECAP_LOCATION_NC,CONNEXION_RECAP,AFFICHAGE_PANIER,CONNEXION,ACCEUIL_C,
