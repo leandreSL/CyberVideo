@@ -7,12 +7,15 @@ import java.util.concurrent.TimeUnit;
 
 import NF.gestionfichier.BD;
 
-public class ModeleEmprunteur extends Modele{	
+public class ModeleEmprunteur{	
 	private Abonne abonneActif;
 	private List<DVD> panier = new ArrayList<DVD>();
 	
-	protected ModeleEmprunteur() {
-		super();
+	private BD bd;
+	private static ModeleEmprunteur instance = null;
+	
+	public ModeleEmprunteur() {
+		bd = BD.getInstance();
 	}
 	
 	public static ModeleEmprunteur getInstance() {

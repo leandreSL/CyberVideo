@@ -4,10 +4,12 @@ import java.util.List;
 
 import NF.gestionfichier.BD;
 
-public class ModeleTechnicien extends Modele{
+public class ModeleTechnicien{
+	private BD bd;
+	private static ModeleTechnicien instance = null;
 	
-	protected ModeleTechnicien() {
-		super();
+	public ModeleTechnicien() {
+		bd = BD.getInstance();
 	}
 	
 	public static ModeleTechnicien getInstance() {
