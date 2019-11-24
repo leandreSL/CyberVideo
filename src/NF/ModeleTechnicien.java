@@ -10,29 +10,29 @@ public class ModeleTechnicien extends Modele{
 			List<String> acteurs, String realisateur, int limiteAge, String cheminAffiche) {
 		Film f = new Film(titre, genres, resume, acteurs, realisateur,limiteAge, cheminAffiche);
 		if (!bd.stockerFilm(f))
-			throw(new Exception("Erreur base de donnée"));
+			throw(new Exception("Erreur base de donnï¿½e"));
 		return;
 	}
 	
 	
 	public void supprimerFilm(String titre) {
 		if(bd.supprimerFilm(titre)) 
-			throw(new Exception("Erreur base de donnée"));
+			throw(new Exception("Erreur base de donnï¿½e"));
 		return;
 	}
 	
-	//ajoute un dvd Ã  l'automate - par défaut, le DVD est ajouté au magasin
+	//ajoute un dvd Ã  l'automate - par dï¿½faut, le DVD est ajoutï¿½ au magasin
 	public void ajouterDVD(int identifiantDVD, Film film) {
 		DVD dvd = new DVD(identifiantDVD, film);
 		if(!bd.stockerDVD(dvd))
-			throw(new Exception("Erreur base de donnée"));
+			throw(new Exception("Erreur base de donnï¿½e"));
 		return;
 	}
 	
 	//supprime un dvd de la liste
 	public void supprimerDVD(int idDvd) {
 		if(!bd.supprimerDVD(idDvd))
-			throw(new Exception("Erreur base de donnée"));
+			throw(new Exception("Erreur base de donnï¿½e"));
 		return;
 	}
 	
@@ -41,26 +41,26 @@ public class ModeleTechnicien extends Modele{
 	
 	public void changerEtatDVD(int idDVD, String etat) {
 		if(!bd.modifierStatutDVD(idDVD, StatutDVD.getByName(etat)))
-			throw(new Exception("Erreur base de donnée"));
+			throw(new Exception("Erreur base de donnï¿½e"));
 		return;
 	}
 	
 	public String donnerListeDVDs() {
-		String result = "numéro DVD, état, film, statut, recommandation\n";
+		String result = "numï¿½ro DVD, ï¿½tat, film, statut, recommandation\n";
 		for(DVD dvd : bd.chercherEnsembleDVDs())
 			result += dvd.toString() + "\n";
 		return result;		
 	}
 	
 	public String donnerListeFilms() {
-		String result = "titre, résumé, genres, acteurs, réalisateur, limite d'age\n";
+		String result = "titre, rï¿½sumï¿½, genres, acteurs, rï¿½alisateur, limite d'age\n";
 		for(Film f : bd.chercherEnsembleFilms())
 			result += f.toString() + "\n";
 		return result;		
 	}
 
 	public String donnerListeAbonnes() {
-		String result = "nom, prénom, restrictions, solde, numero d'abonné, numéro de carte bleue\n";
+		String result = "nom, prï¿½nom, restrictions, solde, numero d'abonnï¿½, numï¿½ro de carte bleue\n";
 		for(Abonne a : bd.chercherEnsembleAbonnes())
 			result += a.toString() + "\n";
 		return result;
@@ -68,7 +68,7 @@ public class ModeleTechnicien extends Modele{
 	
 	public String donnerListeRecommandations (){
 		String result = "";
-		for(String recommandation: bd.chercherEnsembleRecommandations())
+		for(String recommandation: bd.chercherRecommandations())
 			result += recommandation + "\n";
 		return result;		
 	}
@@ -85,7 +85,7 @@ public class ModeleTechnicien extends Modele{
 	
 	public void supprimerCompte(int idCarte) {
 		if(!bd.supprimerAbonne(idCarte)) {
-			throw(new Exception("Erreur base de donnée"));
+			throw(new Exception("Erreur base de donnï¿½e"));
 		}
 		
 		return;
