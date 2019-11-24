@@ -3,34 +3,13 @@ package NF;
 import java.util.List;
 
 public class Abonne{
-	String nomAbonne;
-	String prenomAbonne;
-	List<Genre> restrictions;
-	double solde;
-	int carteAbonne;
-	long carteBleue;
+	private String nomAbonne;
+	private String prenomAbonne;
+	private List<Genre> restrictions;
+	private double solde;
+	private int carteAbonne;
+	private long carteBleue;
 	
-	void recommanderFilm(Film F) {
-		
-	}
-
-	public Abonne(long cb, String nomAbonne, String prenomAbonne, List<Genre> restrictions, double solde) {
-		this.nomAbonne = nomAbonne;
-		this.prenomAbonne = prenomAbonne;
-		this.restrictions = restrictions;
-		this.solde = solde;
-		this.carteAbonne = carteAbonne;
-		this.carteBleue = carteBleue;
-	}
-	
-	public Abonne(String nomAbonne, String prenomAbonne, List<Genre> restrictions, double solde, long carteBleue) {
-		this.nomAbonne = nomAbonne;
-		this.prenomAbonne = prenomAbonne;
-		this.restrictions = restrictions;
-		this.solde = solde;
-		this.carteBleue = carteBleue;
-	}
-
 	public Abonne(String nomAbonne, String prenomAbonne, List<Genre> restrictions, double solde, int carteAbonne,
 			long carteBleue) {
 		this.nomAbonne = nomAbonne;
@@ -40,7 +19,6 @@ public class Abonne{
 		this.carteAbonne = carteAbonne;
 		this.carteBleue = carteBleue;
 	}
-	
 
 	public String getNomAbonne() {
 		return nomAbonne;
@@ -95,9 +73,14 @@ public class Abonne{
 	@Override
 	public String toString() {
 		String chaineRestrictions = String.join("`", Genre.toStringArray(restrictions));
+<<<<<<< HEAD
 		return nomAbonne + "|" + prenomAbonne + "|" + chaineRestrictions + "|" + solde + "|" + carteAbonne + "|" + carteBleue + "\n";
+=======
+		return nomAbonne + "|" + prenomAbonne + "|" + chaineRestrictions
+				+ "|" + solde +"|"+ carteAbonne + "|" + carteBleue + "|" + "\n";
+>>>>>>> b826e8a7267fae1c1b73ab6f683a8ffa84725fe8
 	}
-	
+
 	public String print() {
 		String chaineRestrictions = String.join("|", Genre.toStringArray(restrictions));;
 		return nomAbonne + " " + prenomAbonne + " " + chaineRestrictions

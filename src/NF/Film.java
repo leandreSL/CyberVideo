@@ -3,14 +3,14 @@ package NF;
 import java.util.List;
 
 public class Film {
-	String Titre;
-	List<Genre> genres;
-	String resume;
-	List<String> acteurs;
-	String realisateur;
-	int limiteAge;
-	String cheminAffiche;
-	int recommandation;
+	private String Titre;
+	private List<Genre> genres;
+	private String resume;
+	private List<String> acteurs;
+	private String realisateur;
+	private int limiteAge;
+	private String cheminAffiche;
+	private int recommandation;
 	
 	public Film(String titre, List<Genre> genres, String resume, List<String> acteurs, String realisateur, int limiteAge,
 			String cheminAffiche) {
