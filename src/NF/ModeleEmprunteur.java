@@ -165,13 +165,15 @@ public class ModeleEmprunteur{
 	 * 
 	 * */
 	
-	public void creationCompte(Abonne a) throws Exception{
+	public void creationCompte(Abonne a) throws NumberFormatException{
 		if(a.getSolde() < 15) {
-			throw(new Exception("Vous devez mettre au moins 15 Euros sur la carte � sa cr�ation"));
+			throw(new NumberFormatException("Vous devez mettre au moins 15 Euros sur la carte � sa cr�ation"));
 		}
 		
 		if(!bd.CreerAbonne(a))
-			throw(new Exception("Erreur base de donn�e"));
+			throw(new NumberFormatException("Erreur base de donn�e"));
+		abonneActif = a;
+		//bidouillage pour l'ihm
 		return;
 	}
 	
@@ -247,8 +249,8 @@ public class ModeleEmprunteur{
 	
 	}
 	
-	public String donnerNomAbonne() {	
-		return abonneActif.getNomAbonne();
+	public String donnerIdentificationAbonne() {	
+		return abonneActif.getNomAbonne() + " " + abonneActif.getPrenomAbonne();
 	}
 	
 	public long donnerCBAbonne() {

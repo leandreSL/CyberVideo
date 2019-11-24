@@ -19,11 +19,10 @@ public class Machine {
 
 	public String verifCompte(String nom, String prenom,double solde, long CB){
 		try {
-			//TODO : gestion des restrictions
 			Abonne a = new Abonne(nom,prenom,null,solde,CB);
 			modele_abo.creationCompte(a);
 		}catch (Exception e) {
-			return e.getMessage();
+			return "Erreur : " + e.getMessage(); 
 		}
 		return "Création de compte réussie";
 	}
@@ -62,6 +61,8 @@ public class Machine {
 			case "b":
 				current_etat = State.ACCEUIL_NC;
 				break;
+			case "V":
+				current_etat = State.ACCEUIL_C;
 			default:
 				//on demande dans l'ordre : nom | prenom | cb | et toute les infos necessaire a la creation du compte abonné, pour pas se faire chier on verifie juste les champs correspondant a une "clé" (s'il y en a)
 				//si tout les champs ont été renseigné et sont correct (on doit etre en mesure de savoir ou on en est dans le remplissage des champs):
@@ -97,6 +98,7 @@ public class Machine {
 			switch(action) {
 			//traitement
 			case "b":
+				modele_abo.viderPanier();
 				current_etat = State.LOCATION_NC;
 				break;
 			case "Co":
@@ -117,9 +119,7 @@ public class Machine {
 			case "b":
 				current_etat = State.RECAP_LOCATION_NC;
 				break;
-			case "CB":
-				//TODO:traitement de la CB : est ce que cette CB est deja associé a un emprunt ?
-				//affichage : la transaction a bien été enregistré ?
+			case "V":
 				current_etat = State.ACCEUIL_NC;
 				break;
 			default:

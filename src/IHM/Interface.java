@@ -30,11 +30,11 @@ public class Interface {
 	
 	public void affichageConnexion() {
 		System.out.println("Connexion : ");
-		introPage();
 		System.out.println("Entrer votre numéro de carte : ");
-		int num_carte_abo = sc.nextInt();
+		/*Scanner co = new Scanner(System.in);
+		int num_carte_abo = co.nextInt();
 		
-		System.out.println("V : Valider");
+		System.out.println("V : Valider");*/
 	}
 	
 	public void afficherPanier() {
@@ -46,9 +46,10 @@ public class Interface {
 	
 	public void affichageFilmsDispos() {
 		List<Film> films = m.modele_abo.filmDispos();
-		int i=0;
+		int i=1;
 		for (Film f : films ) {
 			System.out.println(Integer.toString(i) + " : " + f);
+			i++;
 		}
 	}
 	
@@ -100,9 +101,14 @@ public class Interface {
 				System.out.println("b : Retour Arriere");
 				break;
 			}
+			String test_creation_compte = m.verifCompte(nom, prenom,solde, cb);
+			System.out.println(test_creation_compte); //verification si il y a deja un abonne avec les meme infos, verif aussi du solde qui n'est pour l'instant pas gérer 
+			if (test_creation_compte.contains("Erreur")) {
+				System.out.println("b : Retour");
+			}else {
+				System.out.println("V : Valider");
+			}
 			
-			System.out.println(m.verifCompte(nom, prenom,solde, cb)); //verification si il y a deja un abonne avec les meme infos, verif aussi du solde qui n'est pour l'instant pas gérer 
-			System.out.println("V : Valider");
 			outroPage();
 			break;
 		case LOCATION_NC:
@@ -148,11 +154,11 @@ public class Interface {
 			break;
 		case RECAP_LOCATION_NC:
 			System.out.println("Recapitulatif Location (Non Connectee) : ");
-			introPage();
+			System.out.println("");
 			afficherPanier();
-			// TODO : variable Film qui contient le film choisi à l'étape précédente, affichage des infos du film
-			System.out.println("b : Retour Arriere");
-			System.out.println("V : Valider");
+			introPage();
+			System.out.println("b : Revenir à la location");
+			System.out.println("V : Valider (Vous allez être débiter après cette action)");
 			System.out.println("Co : Connexion");
 			outroPage();
 			break;
@@ -165,6 +171,8 @@ public class Interface {
 				System.out.println("b : Retour Arriere");
 				break;
 			}
+			System.out.println("------------");
+			System.out.println("Transaction réussite");
 			introPage();
 			System.out.println("V : Revenir à l'acceuil");
 			outroPage();
@@ -181,16 +189,15 @@ public class Interface {
 			// Variable du film selectionné en etant non connecté à enregistrer
 			introPage();
 			affichageConnexion();
-			outroPage();
+			//outroPage();
 			break;
 		case CONNEXION:
 			introPage();
 			affichageConnexion();
-			outroPage();
+			//outroPage();
 			break;
 		case ACCEUIL_C:
-			//TODO : savoir qui est connecté
-			// variable gloabal abonnee a mettre a jour lors de la connexion
+			System.out.println("Acceuil (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
 			introPage();
 			//TODO : afficher la pub etc...
 			System.out.println("D : Deconnexion");
@@ -199,7 +206,7 @@ public class Interface {
 			outroPage();
 			break;
 		case INFO_COMPTE:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
 			System.out.println("");
 			try {
 				System.out.println(m.modele_abo.donnerInformationsAbonne());
@@ -216,7 +223,7 @@ public class Interface {
 			outroPage();
 			break;
 		case LISTE_FILMS_LOUE :
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
 			//MANQUE FONCTION POUR AVOIR LES EMPRUNTS
 			introPage();
 			System.out.println("b : Retour Arriere");
@@ -225,7 +232,7 @@ public class Interface {
 			// need : fonction qui prend en paramètre un abonné et qui renvoie sa liste de films loues
 			break;
 		case HISTORIQUE_EMPRUNT:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
 			System.out.println("");
 			try {
 				System.out.println(m.modele_abo.donnerListeEmprunts());
@@ -238,7 +245,7 @@ public class Interface {
 			break;
 		
 		case RECHARGER_COMPTE:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
 			System.out.println("");
 			long cb_r;
 			try {
@@ -270,7 +277,7 @@ public class Interface {
 			outroPage();
 			break;
 		case LOCATION_C:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
 			affichageFilmsDispos();
 			
 			System.out.println("Rentrer le numéro du film ou son titre : ");
@@ -300,7 +307,7 @@ public class Interface {
 			outroPage();
 			break;
 		case AFFICHAGE_PANIER:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
 			System.out.println("");
 			afficherPanier();
 			introPage();
@@ -310,7 +317,7 @@ public class Interface {
 			outroPage();
 			break;
 		case RECHARGER_COMPTE_PANIER:
-			System.out.println("Rechargement Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
+			System.out.println("Rechargement Compte (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
 			System.out.println("");
 			long cb_rc;
 			try {
@@ -340,9 +347,11 @@ public class Interface {
 			//TODO
 			break;
 		case FIN_TRANSACTION_C:
-			System.out.println("Transacton (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
+			System.out.println("Transacton (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
 			try {
 				m.modele_abo.valider(m.modele_abo.donnerCBAbonne());
+				System.out.println("------------");
+				System.out.println("Transaction réussite");
 			}catch (Exception e) {
 				System.out.println(e.getMessage());
 				System.out.println("b : Retour Arriere");
@@ -399,7 +408,7 @@ public class Interface {
 			//c cho
 			outroPage();
 			break;
-		/*case LISTE_RECOMANDATION:
+		case LISTE_RECOMANDATION:
 			System.out.println("Liste des recommandations ");
 			introPage();
 			System.out.println(m.modele_tech.donnerListeRecommandations() );
@@ -422,7 +431,7 @@ public class Interface {
 			System.out.println("id Compte : supression de ce compte");
 			outroPage();
 			break;
-			*/
+			
 		case AUTHENTIFICATION_RENDU:
 			break;
 		case RECAP_RENDU_C:
@@ -435,6 +444,7 @@ public class Interface {
 	}
 	public void traitementSaisie() {
 		while(true) {
+			System.out.flush();
 			contenuPage();
 			
 			String str = sc.nextLine();

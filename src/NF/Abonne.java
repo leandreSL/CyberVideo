@@ -1,5 +1,6 @@
 package NF;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -24,7 +25,12 @@ public class Abonne{
 	public Abonne(String nomAbonne, String prenomAbonne, List<Genre> restrictions, double solde, long carteBleue) {
 		this.nomAbonne = nomAbonne;
 		this.prenomAbonne = prenomAbonne;
-		this.restrictions = restrictions;
+		if (restrictions == null) {
+			this.restrictions = new ArrayList<Genre>();
+		}else {
+			this.restrictions = restrictions;
+		}
+		
 		this.solde = solde;
 		this.carteBleue = carteBleue;
 		this.carteAbonne = new Random().nextInt(Integer.MAX_VALUE);
