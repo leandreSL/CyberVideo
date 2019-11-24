@@ -201,12 +201,14 @@ public class ModeleEmprunteur extends Modele{
 		}
 	}
 	
-	public String donnerSoldeAbonne() throws Exception{
-		if(abonneActif == null) {
-			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
-		} else {		
-			return Double.toString(abonneActif.getSolde());
-		}
+	public String donnerSoldeAbonne() {	
+		return Double.toString(abonneActif.getSolde());
+	
+	}
+	
+	public String donnerNomAbonne() {	
+		return abonneActif.getNomAbonne();
+		
 	}
 
 	public void recommanderFilm(String titre) throws Exception {
@@ -224,6 +226,11 @@ public class ModeleEmprunteur extends Modele{
 			result += dvd.getFilm().print();
 		}
 		return result;
+	}
+	
+	public List<Film> filmDispos(){
+		return bd.chercherEnsembleFilms();
+		
 	}
 	
 	private boolean demanderTransactionCb(long cb, double montant) {

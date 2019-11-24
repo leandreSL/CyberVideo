@@ -116,7 +116,7 @@ public class Interface {
 			outroPage();
 			break;
 		case INFO_COMPTE:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.abonneActif.getNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
 			System.out.println("");
 			try {
 				System.out.println(m.modele_abo.donnerInformationsAbonne());
@@ -133,7 +133,7 @@ public class Interface {
 			outroPage();
 			break;
 		case LISTE_FILMS_LOUE :
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.abonneActif.getNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
 			//MANQUE FONCTION POUR AVOIR LES EMPRUNTS
 			introPage();
 			System.out.println("b : Retour Arriere");
@@ -142,7 +142,7 @@ public class Interface {
 			// need : fonction qui prend en paramètre un abonné et qui renvoie sa liste de films loues
 			break;
 		case HISTORIQUE_EMPRUNT:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.abonneActif.getNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
 			System.out.println("");
 			System.out.println(m.modele_abo.donnerListeEmprunts());
 			introPage();
@@ -151,7 +151,7 @@ public class Interface {
 			break;
 		
 		case RECHARGER_COMPTE:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.abonneActif.getNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
 			introPage();
 			System.out.println("b : Retour Arriere");
 			//TODO : fonction qui traite le rechargement
@@ -161,7 +161,7 @@ public class Interface {
 			outroPage();
 			break;
 		case LOCATION_C:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.abonneActif.getNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
 			introPage();
 			System.out.println("b : Retour Arriere");
 			System.out.println("Re : Recommandation");
@@ -171,7 +171,7 @@ public class Interface {
 			outroPage();
 			break;
 		case AFFICHAGE_PANIER:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.abonneActif.getNomAbonne() + " ) : ");
+			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
 			System.out.println("");
 			System.out.println(m.modele_abo.afficherPanier());
 			introPage();
@@ -181,7 +181,7 @@ public class Interface {
 			outroPage();
 			break;
 		case RECHARGER_COMPTE_PANIER:
-			System.out.println("Rechargement Compte (Connecte en tant que : "+ m.modele_abo.abonneActif.getNomAbonne() + " ) : ");
+			System.out.println("Rechargement Compte (Connecte en tant que : "+ m.modele_abo.donnerNomAbonne() + " ) : ");
 			System.out.println("");
 			long cb_r;
 			try {
@@ -198,19 +198,12 @@ public class Interface {
 				System.out.println("Veuillez rentrer un montant valide");
 				break;
 			}
-			/*if (montant < 10) {
-				System.out.println("Veuillez rentrer un montant supérieur  ou égal à 10€");
-				break;
-			}*/
-            //il me semble que recharger carte fait les verification sur le montant donné et renvoie une exception
 			try {
 				m.modele_abo.rechargerCarte(cb_r, montant);
 			}catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
 			introPage();
-			//System.out.println(" rentrez un numéro de cb, puis le solde que vous désirez mettre sur votre compte, ensuite validez avec la commande ci dessous");
-			System.out.println("b : Retour Arriere");
 			System.out.println("V : Valider le choix");
 			outroPage();
 			break;
