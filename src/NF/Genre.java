@@ -9,10 +9,10 @@ public enum Genre {
 	DOCUMENTAIRE("Documentaire"),
 	FANTASTIQUE("Fantastique"),
 	HORREUR("Horreur"),
-//	Humoristique,
-//	Peplum,
-//	Policier,
-//	Sensation,
+	HUMOURISTIQUE("Humoristique"),
+	PEPLUM("Peplum"),
+	POLICIER("Policier"),
+	SENSATION("Sensation"),
 	WESTERN("western");
 	
 	private String nom;
@@ -32,6 +32,10 @@ public enum Genre {
 			case "Documentaire": return Genre.DOCUMENTAIRE;
 			case "Fantastique": return Genre.FANTASTIQUE;
 			case "Horreur": return Genre.HORREUR;
+			case "Humoristique": return Genre.HUMOURISTIQUE;
+			case "Peplum": return Genre.PEPLUM;
+			case "Policier": return Genre.POLICIER;
+			case "Sensation": return Genre.SENSATION;
 			case "western": return Genre.WESTERN;
 		}
 		return null;
