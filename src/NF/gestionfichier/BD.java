@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import NF.Abonne;
 import NF.DVD;
 import NF.Emprunt;
 import NF.Film;
 import NF.Genre;
+import NF.Recommandation;
 import NF.StatutDVD;
 
 public class BD {
@@ -36,6 +36,34 @@ public class BD {
 	private static final String cheminEmprunt = dossier + File.separator + "emprunt";
 	private static final String cheminNabo = dossier + File.separator + "nonabonne";
 	private static final String cheminAbo = dossier + File.separator + "abonne";
+	
+	private static final int champFILMtitre = 0;
+	private static final int champFILMgenre = 1;
+	private static final int champFILMresume = 2;
+	private static final int champFILMacteur = 3;
+	private static final int champFILMreal = 4;
+	private static final int champFILMlimage = 5;
+	private static final int champFILMaffiche = 6;
+	
+	private static final int champDVDid = 0;
+	private static final int champDVDetat = 1;
+	private static final int champDVDfilm = 2;
+	private static final int champDVDstatut = 3;
+	private static final int champDVDrecommendation = 4;
+	
+	private static final int champEMPRUNTcb = 0;
+	private static final int champEMPRUNTidabo = 1;
+	private static final int champEMPRUNTdateD = 2;
+	private static final int champEMPRUNTdateR = 3;
+	private static final int champEMPRUNTiddvd = 4;
+	
+	private static final int champABOnom = 0;
+	private static final int champABOprenom = 1;
+	private static final int champABOrestriction = 2;
+	private static final int champABOsolde = 3;
+	private static final int champABOidcarte = 4;
+	private static final int champABOcb = 5;
+
 	
 	private BD(){
 		
@@ -51,12 +79,12 @@ public class BD {
 	// - Fonction film
 	
 	public Film chercherFilmParNom(String nom) {
-		List<String> sFilm = chercherUnique(cheminFilm, nom, 0);
+		List<String> sFilm = chercherUnique(cheminFilm, nom, champFILMtitre);
 		return sFilm==null?null:strToFilm(sFilm);
 	}
 	
 	public List<Film> chercherEnsembleFilms(){
-		List<List<String>> paramFilm = chercherPlusieurs(cheminFilm, "", 0);
+		List<List<String>> paramFilm = chercherPlusieurs(cheminFilm, "", champFILMtitre);
 		List<Film> films = new ArrayList<Film>();
 		for( int i = 0; i < paramFilm.size(); i++) {
 			films.add( strToFilm(paramFilm.get(i)));
@@ -66,7 +94,7 @@ public class BD {
 	
 	public List<Film> chercherFilmParGenre(List<Genre> filtres) {
 		List<Film> films = new ArrayList<Film>();
-		List<List<String>> listeFilms = chercherPlusieurs(cheminFilm, filtres.get(0).getNom(), 1);
+		List<List<String>> listeFilms = chercherPlusieurs(cheminFilm, filtres.get(0).getNom(), champFILMgenre);
 		ListIterator<List<String>> iterFilms = listeFilms.listIterator();
 		while(iterFilms.hasNext()) {
 			List<String> sfilm = iterFilms.next();
@@ -84,14 +112,14 @@ public class BD {
 	}
 	
 	public boolean supprimerFilm(String titre){
-		return supprimer(cheminFilm, titre, 0);
+		return supprimer(cheminFilm, titre, champFILMtitre);
 	}
 	
 	public boolean stockerFilm(Film film) {
 		return stocker(cheminFilm, film.toString());
 	}
 	
-	public List<String> chercherRecommandations(){
+	public List<Recommandation> chercherRecommandations(){
 		return null;
 	}
 	
@@ -107,7 +135,7 @@ public class BD {
 	}
 	
 	public boolean supprimerDVD(int idDVD){
-		return supprimer(cheminDVD, idDVD+"", 0);
+		return supprimer(cheminDVD, idDVD+"", champDVDid);
 	}	
 	
 	public boolean modifierStatutDVD(int idDVD, StatutDVD emprunte) {
@@ -122,13 +150,13 @@ public class BD {
 	}
 	
 	public DVD chercherDVD(int idDVD) {
-		List<String> dvd = chercherUnique(cheminDVD, idDVD+"", 0);
+		List<String> dvd = chercherUnique(cheminDVD, idDVD+"", champDVDid);
 		return dvd==null?null:strToDVD(dvd);
 	}
 	
 	public DVD chercherDVD(String titre) {
-		List<List<String>> dvds = chercherPlusieurs(cheminDVD, titre, 1);
-		Optional<List<String>> dvdLibre = dvds.stream().filter( s -> s.get(2).equals(StatutDVD.EnAutomate.getNom())).findFirst();
+		List<List<String>> dvds = chercherPlusieurs(cheminDVD, titre, champDVDfilm);
+		Optional<List<String>> dvdLibre = dvds.stream().filter( s -> s.get(champDVDstatut).equals(StatutDVD.EnAutomate.getNom())).findFirst();
 		if(dvdLibre.isPresent()) {
 			return strToDVD(dvdLibre.get());
 		}else {
@@ -137,7 +165,7 @@ public class BD {
 	}
 	
 	public List<DVD> chercherEnsembleDVDs(){
-		List<List<String>> paramDVD = chercherPlusieurs(cheminDVD, "", 0);
+		List<List<String>> paramDVD = chercherPlusieurs(cheminDVD, "", champDVDid);
 		List<DVD> DVDs = new ArrayList<DVD>();
 		for( int i = 0; i < paramDVD.size(); i++) {
 			List<String> dvd = paramDVD.get(i);
@@ -154,8 +182,8 @@ public class BD {
 	
 	//retourne l'emprunt pour le dvd avec la date la plus récente
 	public Emprunt chercherEmpruntActuel(int idDVD){
-		List<List<String>> emprunts = chercherPlusieurs(cheminEmprunt, idDVD+"", 4);
-		Optional<List<String>> sansRetour = emprunts.stream().filter( s -> s.get(3).equals("")).findFirst();
+		List<List<String>> emprunts = chercherPlusieurs(cheminEmprunt, idDVD+"", champEMPRUNTiddvd);
+		Optional<List<String>> sansRetour = emprunts.stream().filter( s -> s.get(champEMPRUNTdateR).equals("")).findFirst();
 		if(sansRetour.isPresent()) {
 			return strToEmprunt(sansRetour.get());
 		}else {
@@ -169,7 +197,7 @@ public class BD {
 		Emprunt e = null;
 		if( (e = chercherEmpruntActuel(idDVD)) != null ) {
 			e.setDateRetour(dateRetour);
-			if( supprimer(cheminEmprunt, idDVD+"", 0) && creerEmprunt(e))
+			if( supprimer(cheminEmprunt, idDVD+"", champEMPRUNTiddvd) && creerEmprunt(e))
 				succes = true;
 		}
 		return succes;
@@ -185,7 +213,7 @@ public class BD {
 	}
 	//retourne tous les emprunts effectués par l'abonné
 	public List<Emprunt> chercherEmpruntsAbonne(int idCarte) {
-		List<List<String>> paramEmprunt = chercherPlusieurs(cheminEmprunt, idCarte+"", 1);
+		List<List<String>> paramEmprunt = chercherPlusieurs(cheminEmprunt, idCarte+"", champEMPRUNTidabo);
 		List<Emprunt> emprunts = new ArrayList<Emprunt>();
 		for( int i = 0; i < paramEmprunt.size(); i++) {
 			List<String> emprunt = paramEmprunt.get(i);
@@ -218,11 +246,11 @@ public class BD {
 		return supprimerAbonne(idCarte) && CreerAbonne(abo);
 	}
 	public Abonne chercherAbonne(int idCarte) {
-		List<String> sAbo = chercherUnique(cheminAbo, idCarte+"", 0);
+		List<String> sAbo = chercherUnique(cheminAbo, idCarte+"", champABOidcarte);
 		return strToAbo(sAbo);
 	}
 	public boolean supprimerAbonne(int idCarte) {
-		return supprimer(cheminAbo, idCarte+"", 0);
+		return supprimer(cheminAbo, idCarte+"", champABOidcarte);
 	}
 	
 	public List<Abonne> chercherEnsembleAbonnes() {
@@ -320,30 +348,30 @@ public class BD {
 	
 	private Film strToFilm(List<String> sfilm){
 		return new Film(
-				sfilm.get(0),
-				Genre.toGenreArray(sfilm.get(1).split("`")),
-				sfilm.get(2),
-				Arrays.asList(sfilm.get(3)), 
-				sfilm.get(4),
-				Integer.parseInt(sfilm.get(5)),
-				sfilm.get(6)
+				sfilm.get(champFILMtitre),
+				Genre.toGenreArray(sfilm.get(champFILMgenre).split("`")),
+				sfilm.get(champFILMresume),
+				Arrays.asList(sfilm.get(champFILMacteur)), 
+				sfilm.get(champFILMreal),
+				Integer.parseInt(sfilm.get(champFILMlimage)),
+				sfilm.get(champFILMaffiche)
 						);
 	}
 	
 	private DVD strToDVD(List<String> dvd) {
-		return new DVD(Integer.parseInt(dvd.get(0)), dvd.get(1), chercherFilmParNom(dvd.get(2)),
-				StatutDVD.getByName(dvd.get(3)), Integer.parseInt(dvd.get(4)));
+		return new DVD(Integer.parseInt(dvd.get(champDVDid)), dvd.get(champDVDetat), chercherFilmParNom(dvd.get(champDVDfilm)),
+				StatutDVD.getByName(dvd.get(champDVDstatut)), Integer.parseInt(dvd.get(champDVDrecommendation)));
 	}
 	
 	private Emprunt strToEmprunt(List<String> sEmp) {
-		return new Emprunt(Long.parseLong(sEmp.get(0)), Integer.parseInt(sEmp.get(1)),
-				parseDate(sEmp.get(2)), parseDate(sEmp.get(3)), chercherDVD(Integer.parseInt(sEmp.get(4))));
+		return new Emprunt(Long.parseLong(sEmp.get(champEMPRUNTcb)), Integer.parseInt(sEmp.get(champEMPRUNTidabo)),
+				parseDate(sEmp.get(champEMPRUNTdateD)), parseDate(sEmp.get(champEMPRUNTdateR)), chercherDVD(Integer.parseInt(sEmp.get(champEMPRUNTiddvd))));
 	}
 	
 	private Abonne strToAbo(List<String> sAbo) {
-		return new Abonne(sAbo.get(0), sAbo.get(1),
-				Genre.toGenreArray(sAbo.get(2).split("`")),
-				Double.parseDouble(sAbo.get(3)), Integer.parseInt(sAbo.get(4)), Long.parseLong(sAbo.get(5)));
+		return new Abonne(sAbo.get(champABOnom), sAbo.get(champABOprenom),
+				Genre.toGenreArray(sAbo.get(champABOrestriction).split("`")),
+				Double.parseDouble(sAbo.get(champABOsolde)), Integer.parseInt(sAbo.get(champABOidcarte)), Long.parseLong(sAbo.get(champABOcb)));
 	}
 	
 	private List<String> getLigneArray(String ligne) {
