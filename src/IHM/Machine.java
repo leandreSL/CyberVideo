@@ -9,7 +9,7 @@ import NF.ModeleTechnicien;
 public class Machine {
 	enum State {ACCEUIL_NC,CREATION_COMPTE,LOCATION_NC,RECAP_LOCATION_NC,CONNEXION_RECAP,AFFICHAGE_PANIER,CONNEXION,ACCEUIL_C,
 				INFO_COMPTE,RECHARGER_COMPTE,RECHARGER_COMPTE_PANIER,HISTORIQUE_EMPRUNT,LISTE_FILMS_LOUE,LOCATION_C,RECOMMANDATION_FILM,FIN_TRANSACTION_NC,
-				FIN_TRANSACTION_C,AUTHENTIFICATION_RENDU,RECAP_RENDU_NC,RECAP_RENDU_C,ACCEUIL_TECH,MAJ_DVD_AUTOMATE,LISTE_RECOMANDATION}
+				FIN_TRANSACTION_C,AUTHENTIFICATION_RENDU,RECAP_RENDU_NC,RECAP_RENDU_C,ACCEUIL_TECH,MAJ_DVD_AUTOMATE,LISTE_RECOMANDATION,STATS_TECH,SUPP_COMPTE,RENDU}
 
 	public State current_etat = State.ACCEUIL_NC;
 	
@@ -190,8 +190,8 @@ public class Machine {
 				current_etat = State.INFO_COMPTE;
 				break;
 			case "Ren":
-				// s'il n'y a aucun emprunt sur ce compte abboné on emepche le passage a l'etat suivant ou juste on passe et ca sera vide a l'affichage dans la recap du rendu et il devra obligatoirement faire back ?
-				current_etat= State.RECAP_RENDU_C;
+				//current_etat= State.RECAP_RENDU_C;
+                current_etat= State.RENDU;
 				break;
 			default:
 				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
@@ -215,7 +215,8 @@ public class Machine {
 				current_etat = State.RECHARGER_COMPTE;
 				break;
 			case "Ren":
-				current_etat = State.RECAP_RENDU_C;
+				//current_etat = State.RECAP_RENDU_C;
+				current_etat = State.RENDU;
 				break;break;
 			default:
 				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
@@ -236,6 +237,7 @@ public class Machine {
 			break;
 		
 		case RECHARGER_COMPTE:
+            int solde=0;
 			switch(action) {
 			//traitement
 			case "b":
@@ -243,11 +245,26 @@ public class Machine {
 				break;
 			//la je pense que c'est bien d'avoir une validation après qu'il ait rentré le solde
 			case "V":
-				current_etat = State.INFO_COMPTE;
+                try {
+                    modele_abo.rechargerCarte(long cb, new Double (solde));
+                    System.out.println("Rechargement de votre carte avec "+ toString(solde) + " € avec succès");
+                    current_etat = State.INFO_COMPTE;
+                }
+                catch (Exception e ) {
+                    System.out.println(e.getMessage());
+                }
 				break;
 			default:
-				//on fait rentrer une chaine de caractere composé de nombre uniquement (a tester sur la chaine rentré par l'utilisateur), puis si c'est une somme > 10 (ou 5, voir SRS), on crédite le compte de cette somme depuis la cb renseigné dans les infos du comptes de la personne connecté ( on fait une sorte de "demande de verification" a la banque ou osef ?)
-				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+            //on fait rentrer une chaine de caractere composé de nombre uniquement (a tester sur la chaine rentré par l'utilisateur),
+            //puis si c'est une somme > 10 (ou 5, voir SRS), on crédite le compte de cette somme depuis la cb renseigné dans les infos du comptes de la personne connecté ( on fait une sorte de "demande de verification" a la banque ou osef ?)
+                
+				try {
+					solde = Integer.parseInt(action);
+				}catch (NumberFormatException e) {
+					System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles ou rentrer un solde correct");
+					break;
+				}
+				//System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
 				break;
 			}
 			break;
@@ -294,17 +311,37 @@ public class Machine {
 			}
 			break;
 		case RECHARGER_COMPTE_PANIER:
+            int solde=0;
+            long cb=0;
 			switch(action) {
 			//traitement
 			case "b":
 				current_etat = State.AFFICHAGE_PANIER;
 				break;
-			/*case "V":
-				current_etat = State.AFFICHAGE_PANIER;
-				break;*/
+			case "V":
+                try {
+                    modele_abo.rechargerCarte(long cb, new Double (solde));
+                    System.out.println("Rechargement de votre carte avec "+ toString(solde) + " € avec succès");
+                    current_etat = State.FIN_TRANSACTION_C;
+                }
+                catch (Exception e ) {
+                    System.out.println(e.getMessage());
+                    //s'il y a une erreur on remet solde et cb a 0 pour forcer a re rentrer deux nouvelles 
+                    solde=0;
+                    cb=0;
+                }
+				break;
 			default:
-				//on fait rentrer une chaine de caractere composé de nombre uniquement (a tester sur la chaine rentré par l'utilisateur), puis si c'est une somme > 10 (ou 5, voir SRS), on crédite le compte de cette somme depuis la cb renseigné dans les infos du comptes de la personne connecté ( on fait une sorte de "demande de verification" a la banque ou osef ?)
-				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+            //on fait rentrer une chaine de caractere composé de nombre uniquement (a tester sur la chaine rentré par l'utilisateur),
+            //puis si c'est une somme > 10 (ou 5, voir SRS), on crédite le compte de cette somme depuis la cb renseigné dans les infos du comptes de la personne connecté ( on fait une sorte de "demande de verification" a la banque ou osef ?)
+                
+				try {
+					solde = Integer.parseInt(action);
+				}catch (NumberFormatException e) {
+					System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles ou rentrer un solde correct");
+					break;
+				}
+				//System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
 				break;
 			}
 			break;
@@ -326,16 +363,16 @@ public class Machine {
 			current_etat = State.ACCEUIL_C;
 			break;
 			
-		case AUTHENTIFICATION_RENDU	:
+		/*case AUTHENTIFICATION_RENDU	:
 			//ici l'utilisateur rentre un numéro de CB ou une carte abonné, si correct changement d'état
 			if (action=="b")
 				current_etat=State.ACCEUIL_NC;
 			else {
-				if (/*chaine rentré correspond a une carte abonné*/) {
+				if (chaine rentré correspond a une carte abonné) {
 					current_etat=State.RECAP_RENDU_C;
 					//mise a jour de l'abonné connecté sur la machine
 				}
-				else if (/*chaine rentré correspond a un cb avec un emprunt*/) {
+				else if (chaine rentré correspond a un cb avec un emprunt) {
 					current_etat=State.RECAP_RENDU_NC;
 					//mise a jour de la variable "non abonné entrain de rendre" -> besoin pour chercher emprunt correspondant
 				}
@@ -348,8 +385,8 @@ public class Machine {
 			if (action=="b")
 				current_etat=State.INFO_COMPTE;
 			else {
-				if (/*chaine rentré correspond a un id de DVD emprunté avec ce compte*/) {
-					if( /* le solde du compte est suffisant */ ) {
+				if (chaine rentré correspond a un id de DVD emprunté avec ce compte) {
+					if(  le solde du compte est suffisant ) {
 						System.out.println("Rendu effectué avec succès, vous avez été débité");
 						//TODO débiter le compte de l'abonné
 						current_etat=State.ACCEUIL_NC; //on a ignoré la gestion de problème qui peuvent survenir sur un DVD, changement de transition ici au cas ou on finit par l'implémenter
@@ -368,13 +405,33 @@ public class Machine {
 			if (action=="b")
 				current_etat=State.AUTHENTIFICATION_RENDU;
 			else {
-				if (/*chaine rentré correspond a un id de DVD emprunté avec cette carte*/) {
+				if (chaine rentré correspond a un id de DVD emprunté avec cette carte) {
 					System.out.println("Rendu effectué avec succès, vous avez été débité");
 					current_etat=State.ACCEUIL_NC; //on a ignoré la gestion de problème qui peuvent survenir sur un DVD, changement de transition ici au cas ou on finit par l'implémenter
 				}
 				else {
 					System.out.println("Rendu impossible, aucun emprunts enregistré sur cette carte pour le DVD renseigné");
 				}
+			}
+			break;*/
+        case RENDU :
+			if (action=="b")
+				current_etat=State.ACCEUIL_NC;
+			else {
+				try {
+					String rendu_dvd= modele_abo.rendreDVD(Integer.parseInt(action));
+				}
+				catch (Exception e) {
+					if (e.getMessage() == "pas assez d'argent sur la carte abonne"){
+						System.out.println("Solde du compte insuffisant, veuillez recharger");
+						current_etat=State.INFO_COMPTE;
+					}
+                    else 
+                        System.out.println(e.getMessage());
+                    break;
+				}
+				System.out.println(rendu_dvd);
+				current_etat=State.ACCEUIL_NC;
 			}
 			break;
 		case ACCEUIL_TECH:
@@ -388,6 +445,10 @@ public class Machine {
 			case "D":
 				current_etat=State.ACCEUIL_NC;
 				break;
+			case "St":
+				current_etat=State.STATS_TECH;
+			case "S":
+				current_etat=State.SUPP_COMPTE;
 			default:
 				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
 				break;
@@ -398,6 +459,27 @@ public class Machine {
 			break;
 		case LISTE_RECOMANDATION:
 			switch (action) {
+			case "Ok":
+				current_etat=State.ACCEUIL_TECH;
+				break;
+			default:
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;	
+			}
+			break;
+        case STATS_TECH:
+			switch(action) {
+			case "Ok":
+				current_etat=State.ACCEUIL_TECH;
+				break;
+			default:
+				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
+				break;	
+			}
+			break;
+		case SUPP_COMPTE:
+			//il faut avoir recup les compte qui sont en attente de suppression, puis appeler la fonction supprimerCompte(idcarte) en fonction de l'id selectionne		
+            switch(action) {
 			case "Ok":
 				current_etat=State.ACCEUIL_TECH;
 				break;

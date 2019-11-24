@@ -158,7 +158,8 @@ public class Interface {
 			System.out.println("b : Retour Arriere");
 			//TODO : fonction qui traite le rechargement
 			// need : fonction qui prend en paramètre une abonne et un int (rechargement) et qui met a jour le solde du compte (renvoie 0 ou 1 selon l'exec)
-			System.out.println("V : Valider le choix");
+			// fais dans machine (dis moi si ca te va )
+            System.out.println("V : Valider le choix");
 			outroPage();
 			break;
 		case LOCATION_C:
@@ -184,8 +185,6 @@ public class Interface {
 		case RECHARGER_COMPTE_PANIER:
 			System.out.println("Rechargement Compte (Connecte en tant que : "+ m.modele_abo.abonneActif.getNomAbonne() + " ) : ");
 			System.out.println("");
-			System.out.println("Veuillez rentrer votre CB : ");
-			Scanner input = new Scanner(System.in);
 			long cb_r;
 			try {
 				cb_r = Long.valueOf(input.nextLine());
@@ -201,18 +200,19 @@ public class Interface {
 				System.out.println("Veuillez rentrer un montant valide");
 				break;
 			}
-			if (montant < 10) {
+			/*if (montant < 10) {
 				System.out.println("Veuillez rentrer un montant supérieur  ou égal à 10€");
 				break;
-			}
+			}*/
+            //il me semble que recharger carte fait les verification sur le montant donné et renvoie une exception
 			try {
 				m.modele_abo.rechargerCarte(cb_r, montant);
 			}catch (Exception e) {
 				System.out.println(e.getMessage());
-			}
+			}*/
 			//A REVOIR PETIT PB AVEC VALIDER ET TOUT
 			introPage();
-			
+			System.out.println(" rentrez un numéro de cb, puis le solde que vous désirez mettre sur votre compte, ensuite validez avec la commande ci dessous");
 			System.out.println("b : Retour Arriere");
 			//TODO : fonction qui traite le rechargement
 			// Voir TODO rechargement
@@ -226,7 +226,7 @@ public class Interface {
 			
 			//TODO
 			break;
-		case AUTHENTIFICATION_RENDU	:
+		/*case AUTHENTIFICATION_RENDU	:
 			System.out.println("Authentification pour le rendu : ");
 			introPage();
 			System.out.println("b : Retour Arriere");
@@ -236,7 +236,7 @@ public class Interface {
 		case RECAP_RENDU_C:
 			System.out.println("Rendu DVD (Connecte en tant que : TODO) : ");
 			introPage();
-			/* afficher liste des DVD emprunté (id | titre | date emprunt | prix actuel a payer) */
+			 afficher liste des DVD emprunté (id | titre | date emprunt | prix actuel a payer) 
 			System.out.println("b : Retour Arriere");
 			System.out.println("Id DVD : Rendre le DVD correspondant");
 			outroPage();
@@ -244,9 +244,16 @@ public class Interface {
 		case RECAP_RENDU_NC:
 			System.out.println("Rendu DVD (Non connecte): ");
 			introPage();
-			/* afficher le DVD emprunté (id | titre | date emprunt | prix actuel a payer) */
+			 afficher le DVD emprunté (id | titre | date emprunt | prix actuel a payer) 
 			System.out.println("b : Retour Arriere");
 			System.out.println("Id DVD : Rendre le DVD correspondant");
+			outroPage();
+			break;*/
+        case RENDU:
+			System.out.println("Rendu de DVD: ");
+			introPage();
+			System.out.println("b : retour");
+			System.out.println("id DVD : rend le DVD voulu");
 			outroPage();
 			break;
 		case ACCEUIL_TECH:
@@ -266,7 +273,24 @@ public class Interface {
 		case LISTE_RECOMANDATION:
 			System.out.println("Liste des recommandations ");
 			introPage();
+			System.out.println(m.modele_tech.donnerListeRecommandations() );
 			System.out.println("Ok : Retour acceuil");
+			outroPage();
+			break;
+		case STATS_TECH:
+			System.out.println("Liste des recommandations ");
+			introPage();
+			System.out.println("Ok : Retour acceuil");
+			System.out.println("temps emprunts moyen : " + toString(m.modele_tech.donnerTempsEmpruntMoyen()));
+			System.out.println("nombre emprunts: " + toString(m.modele_tech.donnerNombreEmprunt()));
+			outroPage();
+			break;
+		case SUPP_COMPTE:
+			System.out.println("Liste des comptes en attente de suppression ");
+			introPage();
+			//affichage de la liste des comptes qui veulent etre supprime		
+            System.out.println("Ok : Retour acceuil");
+			System.out.println("id Compte : supression de ce compte");
 			outroPage();
 			break;
 		}

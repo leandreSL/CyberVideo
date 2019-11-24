@@ -200,7 +200,7 @@ public class ModeleEmprunteur {
 		if(abonneActif == null) {
 			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
 		} else if(montant<10) {
-			throw(new Exception("Vous devez reharger votre carte avec plus de 10 Euros"));
+			throw(new Exception("Vous devez recharger votre carte avec plus de 10 Euros"));
 		} else {
 			if(!demanderTransactionCb(cb, montant)) {
 				throw(new Exception("Erreur transaction cb"));
