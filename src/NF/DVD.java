@@ -1,11 +1,11 @@
 package NF;
 
 public class DVD {
-	int identifiantDVD;
-	String etat; //enum pour état
-	Film film;
-	StatutDVD statut;
-	Integer recommandation;
+	private int identifiantDVD;
+	private String etat; //enum pour état
+	private Film film;
+	private StatutDVD statut;
+	private Integer recommandation;
 	
 	public DVD(int identifiantDVD, Film film) {
 		this.identifiantDVD = identifiantDVD;
@@ -58,9 +58,10 @@ public class DVD {
 	
 	
 	public String toString() {
-		return identifiantDVD+"|"+film.getTitre()+"|"+etat+"|"+statut.getNom()+"|"+etat+"|"+recommandation+"\n";
+		return identifiantDVD+"|"+etat+"|"+film.getTitre()+"|"+statut.getNom()+"|"+recommandation+"\n";
 	}
 
+	
 	public String print() {
 		return identifiantDVD + " " + etat + " " + film.getTitre() + " " + statut
 				+ " " + recommandation;	

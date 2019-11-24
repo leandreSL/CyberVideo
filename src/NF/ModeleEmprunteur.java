@@ -7,27 +7,10 @@ import java.util.concurrent.TimeUnit;
 
 import NF.gestionfichier.BD;
 
-public class ModeleEmprunteur {
-	BD bd; 
-	
-	public Abonne abonneActif;
-	private static ModeleEmprunteur instance = null;
-	
-	DVD emprunt_NC;
-	
-	List<DVD> panier = new ArrayList<DVD>();
-	
-	
-	private ModeleEmprunteur() {
-		bd = BD.getInstance();
-	}
-	
-	public static ModeleEmprunteur getInstance() {
-		if(instance == null) {
-			instance = new ModeleEmprunteur();
-		}
-		return instance;
-	}
+public class ModeleEmprunteur extends Modele{	
+	private Abonne abonneActif;
+	private DVD emprunt_NC;
+	private List<DVD> panier = new ArrayList<DVD>();
 	
 	
 	/*
@@ -73,7 +56,6 @@ public class ModeleEmprunteur {
 		}		
 	}
 	
-	//TODO
 	//prendre le dvd
 	public void ajouterAuPanier(String titre, long cb) {
 		int nbEmpruntMax;
@@ -87,10 +69,7 @@ public class ModeleEmprunteur {
 			nbEmpruntMax = 3;
 			nbEmpruntActuels = bd.chercherNombreEmpruntsActuelsAbonne(abonneActif.getCarteAbonne());
 		}
-		
-		
-		
-		
+
 		if(panier.size() >=  nbEmpruntMax) {
 			throw(new Exception("Votre panier est plein"));
 		}
@@ -238,10 +217,6 @@ public class ModeleEmprunteur {
 		}
 		return result;
 	}
-	
-	
-	//TODO creation compte abonne
-	
 	
 	private boolean demanderTransactionCb(long cb, double montant) {
 		return true;

@@ -4,21 +4,7 @@ import java.util.List;
 
 import NF.gestionfichier.BD;
 
-public class ModeleTechnicien {
-	BD bd;
-	private static ModeleTechnicien instance = null;
-
-	private ModeleTechnicien() {
-		bd = BD.getInstance();
-	}
-	
-	public static ModeleTechnicien getInstance() {
-		if(instance == null) {
-			instance = new ModeleTechnicien();
-		}
-		return instance;
-	}
-	
+public class ModeleTechnicien extends Modele{
 	
 	public void ajouterFilm(String titre, List<Genre> genres, String resume, 
 			List<String> acteurs, String realisateur, int limiteAge, String cheminAffiche) {

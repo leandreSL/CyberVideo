@@ -5,23 +5,25 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Emprunt {
-	long cbEmprunteur;
-	int idAbonne;
-	Date dateEmprunt = new Date();
-	Date dateRetour;
-	DVD dvd;
+	private long cbEmprunteur;
+	private int idAbonne;
+	private Date dateEmprunt = new Date();
+	private Date dateRetour;
+	private DVD dvd;
 	
 	
 	public Emprunt(int idAbonne, DVD dvd, Date dateEmprunt) {
 		this.idAbonne = idAbonne;
 		this.dvd = dvd;
 		this.dateEmprunt = dateEmprunt;
+		this.cbEmprunteur = -1;
 	}
 	
 	public Emprunt(long cbEmprunteur, DVD dvd, Date dateEmprunt) {
 		this.cbEmprunteur = cbEmprunteur;
 		this.dvd = dvd;
 		this.dateEmprunt = dateEmprunt;
+		this.idAbonne = -1;
 	}
 	
 	public Emprunt(long cbEmprunteur, int idAbonne, Date dateEmprunt, Date dateRetour, DVD dvd) {
@@ -92,7 +94,7 @@ public class Emprunt {
 		if(dateRetour != null) {
 			dateR = dateFormat.format(dateRetour); 
 		} else {
-			dateR = "encore emprnté";
+			dateR = "encore emprunté";
 		}
 		return cbEmprunteur + " " + idAbonne + " " + dateD + " " + dateR + " " + dvd.getIdentifiantDVD();
 	}
