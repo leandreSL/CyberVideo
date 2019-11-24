@@ -48,12 +48,13 @@ public class ModeleTechnicien{
 	
 
 	
-	
+/*	
 	public void changerEtatDVD(int idDVD, String etat) throws Exception {
-		if(!bd.modifierStatutDVD(idDVD, StatutDVD.getByName(etat)))
+		if(!bd.modifierEtatDVD(idDVD, StatutDVD.getByName(etat)))
 			throw(new Exception("Erreur base de donn�e"));
 		return;
 	}
+*/
 	
 	public List<DVD> donnerListeDVDs() {
 		return bd.chercherEnsembleDVDs();
@@ -85,17 +86,6 @@ public class ModeleTechnicien{
 		*/
 	}
 	
-	public List<Recommandation> donnerListeRecommandations (){
-		return bd.chercherRecommandations();
-		/*
-		String result = "";
-		for(String recommandation: bd.chercherRecommandations())
-			result += recommandation + "\n";
-		return result;
-		*/
-	}
-
-	
 	public int donnerTempsEmpruntMoyen() {
 		return bd.chercherTempsEmpruntMoyen();
 	}
@@ -109,11 +99,6 @@ public class ModeleTechnicien{
 		if(!bd.supprimerAbonne(idCarte)) {
 			throw(new Exception("Erreur base de donn�e"));
 		}
-		
 		return;
 	}
-
-
-
-
 }
