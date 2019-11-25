@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import NF.Abonne;
 import NF.DVD;
+import NF.Emprunt;
 import NF.Film;
 import NF.Genre;
 import NF.ModeleEmprunteur;
@@ -58,9 +59,8 @@ class ModeleEmprunteurTest {
 		redacteur.write("4377|neuf|MonFilm1|enautomate|0" +System.getProperty("line.separator"));	
 		redacteur.close();
 		
-		redacteur = new BufferedWriter(new FileWriter("BDD"+ File.separator + "empunt"));
-		redacteur.write("-1|859577759|12/12/2019|14/12/2019|123"+ System.getProperty("line.separator"));
-		redacteur.write("394739825|-1|09/11/2012|05/11/2012|123"+ System.getProperty("line.separator"));
+		redacteur = new BufferedWriter(new FileWriter("BDD"+ File.separator + "emprunt"));
+		redacteur.write("-1|859577759|12/12/2019||123"+ System.getProperty("line.separator"));
 		redacteur.close();
 		redacteur.close();
 	}
@@ -113,7 +113,7 @@ class ModeleEmprunteurTest {
 	}
 
 	@Test
-	void testCreationCompte() {
+	void testCreationCompte() throws Exception {
 		assertThrows(Exception.class, ()-> {mE.creationCompte(new Abonne("prenom1", "nom1",  new ArrayList<Genre>(), 10.0, 12345, 394739826));});
 		mE.creationCompte(new Abonne("prenom1", "nom1",  new ArrayList<Genre>(), 20.0, 12345, 394739826));
 	}
@@ -130,18 +130,23 @@ class ModeleEmprunteurTest {
 	}
 
 	@Test
-	void testDonnerListeEmprunts() {
-		
+	void testDonnerListeEmprunts() throws Exception {
+		mE.connexion(859577759);
+		List<Emprunt> le = mE.donnerListeEmprunts();
+		assertEquals(1,le.size());
 	}
 
 	@Test
-	void testRechargerCarte() {
-		fail("Not yet implemented");
+	void testRechargerCarte() throws Exception {
+		mE.connexion(859577759);
+		mE.rechargerCarte(564, 10);
+		assertEquals(210, mE.donnerSoldeAbonne());
 	}
 
 	@Test
-	void testDonnerInformationsAbonne() {
-		fail("Not yet implemented");
+	void testDonnerInformationsAbonne() throws Exception {
+		mE.connexion(859577759);
+		assertEquals("Potter|Harry|horreur|200.0|859577759|394739825", mE.donnerInformationsAbonne());
 	}
 
 	@Test

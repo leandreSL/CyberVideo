@@ -86,7 +86,7 @@ public class ModeleEmprunteur{
 		if(panier.size() >=  nbEmpruntMax) {
 			throw(new Exception("Votre panier est plein"));
 		}
-		if((panier.size() + nbEmpruntActuels) >= nbEmpruntMax) {
+		if((panier.size() + nbEmpruntActuels) > nbEmpruntMax) {
 			throw(new Exception("Vous avez trop de DVDs non rendus avec cette carte"));
 		}
 		
