@@ -55,25 +55,12 @@ public class ModeleTechnicien{
 		return;
 	}
 */
-	
 	public List<DVD> donnerListeDVDs() {
 		return bd.chercherEnsembleDVDs();
-		/*
-		String result = "num�ro DVD, �tat, film, statut, recommandation\n";
-		for(DVD dvd : bd.chercherEnsembleDVDs())
-			result += dvd.toString() + "\n";
-		return result;
-		*/
 	}
 	
 	public List<Film> donnerListeFilms() {
 		return bd.chercherEnsembleFilms();
-		/*
-		String result = "titre, r�sum�, genres, acteurs, r�alisateur, limite d'age\n";
-		for(Film f : bd.chercherEnsembleFilms())
-			result += f.toString() + "\n";
-		return result;
-		*/
 	}
 	
 	public Film chercherFilm(String titre) {
@@ -81,18 +68,11 @@ public class ModeleTechnicien{
 	}
 	
 	public List<Film> donnerListeRecommandations(){
-		//TODO : renvoyer vraiment les recommendations
 		return bd.chercherEnsembleFilms();
 	}
 
 	public List<Abonne> donnerListeAbonnes() {
 		return bd.chercherEnsembleAbonnes();
-		/*
-		String result = "nom, pr�nom, restrictions, solde, numero d'abonn�, num�ro de carte bleue\n";
-		for(Abonne a : bd.chercherEnsembleAbonnes())
-			result += a.toString() + "\n";
-		return result;
-		*/
 	}
 	
 	public int donnerTempsEmpruntMoyen() {

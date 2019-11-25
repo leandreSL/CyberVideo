@@ -13,7 +13,16 @@ public enum Genre {
 	PEPLUM("peplum"),
 	POLICIER("policier"),
 	SENSATION("sensation"),
-	WESTERN("western");
+	WESTERN("western"),
+	COMMEDIE("comedie"),
+	DRAME("drame"),
+	ROMANCE("romance"),
+	ANIMATION("animation"),
+	HISTORIQUE("historique"),
+	GUERRE("guerre"),
+	BIOPIC("biopic"),
+	THRILLER("thriller");
+	
 	
 	private String nom;
 	
@@ -37,6 +46,15 @@ public enum Genre {
 			case "policier": return Genre.POLICIER;
 			case "sensation": return Genre.SENSATION;
 			case "western": return Genre.WESTERN;
+			case "comedie": return Genre.COMMEDIE;
+			case "drame": return Genre.DRAME;
+			case "romance": return Genre.ROMANCE;
+			case "animation": return Genre.ANIMATION;
+			case "historique": return Genre.HISTORIQUE;
+			case "guerre": return Genre.GUERRE;
+			case "biopic": return Genre.BIOPIC;
+			case "thriller": return Genre.THRILLER;
+			
 		}
 		return null;
 	}

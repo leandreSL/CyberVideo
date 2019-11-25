@@ -44,7 +44,7 @@ public class Interface {
 	}
 	
 	public void affichageFilmsDispos() {
-		List<Film> films = m.modele_abo.filmDispos();
+		List<Film> films = m.modele_abo.donnerListeFilms();
 		int i=1;
 		for (Film f : films ) {
 			if (m.modele_abo.existeDVDFilm(f)) {
