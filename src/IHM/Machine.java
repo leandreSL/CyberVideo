@@ -10,7 +10,7 @@ import NF.ModeleEmprunteur;
 public class Machine {
 	enum State {ACCEUIL_NC,CREATION_COMPTE,LOCATION_NC,RECAP_LOCATION_NC,CONNEXION_RECAP,AFFICHAGE_PANIER,CONNEXION,ACCEUIL_C,
 				INFO_COMPTE,RECHARGER_COMPTE,RECHARGER_COMPTE_PANIER,HISTORIQUE_EMPRUNT,LISTE_FILMS_LOUE,LOCATION_C,RECOMMANDATION_FILM,FIN_TRANSACTION_NC,
-				FIN_TRANSACTION_C,AUTHENTIFICATION_RENDU,RECAP_RENDU_NC,RECAP_RENDU_C,ACCEUIL_TECH,MAJ_DVD_AUTOMATE,LISTE_RECOMANDATION,STATS_TECH,SUPP_COMPTE,RENDU}
+				FIN_TRANSACTION_C,ACCEUIL_TECH,MAJ_DVD_AUTOMATE,LISTE_RECOMANDATION,STATS_TECH,RENDU}
 
 	public State current_etat = State.ACCEUIL_NC;
 	
@@ -47,7 +47,7 @@ public class Machine {
 				current_etat = State.CREATION_COMPTE;
 				break;
 			case "Ren":
-				current_etat = State.AUTHENTIFICATION_RENDU;
+				current_etat = State.RENDU;
 				break;
 			default:
 				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
@@ -333,57 +333,6 @@ public class Machine {
 			current_etat = State.ACCEUIL_C;
 			break;
 			
-		/*case AUTHENTIFICATION_RENDU	:
-			//ici l'utilisateur rentre un numéro de CB ou une carte abonné, si correct changement d'état
-			if (action=="b")
-				current_etat=State.ACCEUIL_NC;
-			else {
-				if (chaine rentré correspond a une carte abonné) {
-					current_etat=State.RECAP_RENDU_C;
-					//mise a jour de l'abonné connecté sur la machine
-				}
-				else if (chaine rentré correspond a un cb avec un emprunt) {
-					current_etat=State.RECAP_RENDU_NC;
-					//mise a jour de la variable "non abonné entrain de rendre" -> besoin pour chercher emprunt correspondant
-				}
-				else {
-					System.out.println("Rendu impossible, aucun emprunts enregistré sur cette carte, ou erreur lors de la saisie pour s'identifier");
-				}
-			}
-			break;
-		case RECAP_RENDU_C:
-			if (action=="b")
-				current_etat=State.INFO_COMPTE;
-			else {
-				if (chaine rentré correspond a un id de DVD emprunté avec ce compte) {
-					if(  le solde du compte est suffisant ) {
-						System.out.println("Rendu effectué avec succès, vous avez été débité");
-						//TODO débiter le compte de l'abonné
-						current_etat=State.ACCEUIL_NC; //on a ignoré la gestion de problème qui peuvent survenir sur un DVD, changement de transition ici au cas ou on finit par l'implémenter
-					}
-					else {
-						System.out.println("Solde du compte insuffisant, veuillez recharger");
-						current_etat=State.INFO_COMPTE;
-					}
-				}
-				else {
-					System.out.println("Rendu impossible, aucun emprunts enregistré sur ce compte pour le DVD renseigné");
-				}
-			}
-			break;
-		case RECAP_RENDU_NC:
-			if (action=="b")
-				current_etat=State.AUTHENTIFICATION_RENDU;
-			else {
-				if (chaine rentré correspond a un id de DVD emprunté avec cette carte) {
-					System.out.println("Rendu effectué avec succès, vous avez été débité");
-					current_etat=State.ACCEUIL_NC; //on a ignoré la gestion de problème qui peuvent survenir sur un DVD, changement de transition ici au cas ou on finit par l'implémenter
-				}
-				else {
-					System.out.println("Rendu impossible, aucun emprunts enregistré sur cette carte pour le DVD renseigné");
-				}
-			}
-			break;*/
         case RENDU :
         	double prix;
 			if (action=="b")
@@ -418,15 +367,13 @@ public class Machine {
 				break;
 			case "St":
 				current_etat=State.STATS_TECH;
-			case "S":
-				current_etat=State.SUPP_COMPTE;
 			default:
 				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
 				break;
 			}
 			break;
 		case MAJ_DVD_AUTOMATE:
-			// aled lélé
+			current_etat=State.ACCEUIL_TECH;
 			break;
 		case LISTE_RECOMANDATION:
 			switch (action) {
@@ -440,17 +387,6 @@ public class Machine {
 			break;
         case STATS_TECH:
 			switch(action) {
-			case "Ok":
-				current_etat=State.ACCEUIL_TECH;
-				break;
-			default:
-				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
-				break;	
-			}
-			break;
-		case SUPP_COMPTE:
-			//il faut avoir recup les compte qui sont en attente de suppression, puis appeler la fonction supprimerCompte(idcarte) en fonction de l'id selectionne		
-            switch(action) {
 			case "Ok":
 				current_etat=State.ACCEUIL_TECH;
 				break;

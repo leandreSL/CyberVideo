@@ -72,7 +72,7 @@ public class Interface {
 			//TODO : afficher la pub etc...
 			System.out.println("Co : Connexion");
 			System.out.println("L : Location Film");
-			System.out.println("R : Rendu Film");
+			System.out.println("Ren : Rendu Film");
 			System.out.println("Cr : Creation Compte");
 			outroPage();
 			break;
@@ -203,6 +203,7 @@ public class Interface {
 			System.out.println("D : Deconnexion");
 			System.out.println("L : Location Film");
 			System.out.println("I : Informations Compte");
+			System.out.println("Ren : Rendu");
 			outroPage();
 			break;
 		case INFO_COMPTE:
@@ -363,29 +364,6 @@ public class Interface {
 			
 			break;
 
-		/*case AUTHENTIFICATION_RENDU	:
-			System.out.println("Authentification pour le rendu : ");
-			introPage();
-			System.out.println("b : Retour Arriere");
-			System.out.println("Numéro carte bancaire/ Carte abonné : S'authentifier");
-			outroPage();
-			break;
-		case RECAP_RENDU_C:
-			System.out.println("Rendu DVD (Connecte en tant que : TODO) : ");
-			introPage();
-			 afficher liste des DVD emprunté (id | titre | date emprunt | prix actuel a payer) 
-			System.out.println("b : Retour Arriere");
-			System.out.println("Id DVD : Rendre le DVD correspondant");
-			outroPage();
-			break;
-		case RECAP_RENDU_NC:
-			System.out.println("Rendu DVD (Non connecte): ");
-			introPage();
-			 afficher le DVD emprunté (id | titre | date emprunt | prix actuel a payer) 
-			System.out.println("b : Retour Arriere");
-			System.out.println("Id DVD : Rendre le DVD correspondant");
-			outroPage();
-			break;*/
         case RENDU:
 			System.out.println("Rendu de DVD: ");
 			introPage();
@@ -411,7 +389,7 @@ public class Interface {
 		case LISTE_RECOMANDATION:
 			System.out.println("Liste des recommandations ");
 			introPage();
-			System.out.println(m.modele_tech.donnerListeRecommandations() );
+			//System.out.println(m.modele_tech.donnerListeRecommandations() );
 			System.out.println("Ok : Retour acceuil");
 			outroPage();
 			break;
@@ -423,21 +401,7 @@ public class Interface {
 			System.out.println("nombre emprunts: " + Integer.toString(m.modele_tech.donnerNombreEmprunt()));
 			outroPage();
 			break;
-		case SUPP_COMPTE:
-			System.out.println("Liste des comptes en attente de suppression ");
-			introPage();
-			//affichage de la liste des comptes qui veulent etre supprime		
-            System.out.println("Ok : Retour acceuil");
-			System.out.println("id Compte : supression de ce compte");
-			outroPage();
-			break;
 			
-		case AUTHENTIFICATION_RENDU:
-			break;
-		case RECAP_RENDU_C:
-			break;
-		case RECAP_RENDU_NC:
-			break;
 		default:
 			break;
 		}
