@@ -57,11 +57,12 @@ class ModeleEmprunteurTest {
 		redacteur = new BufferedWriter(new FileWriter("BDD"+ File.separator + "dvd"));
 		redacteur.write("4402|neuf|MonFilm2|enautomate|0" +System.getProperty("line.separator"));
 		redacteur.write("4377|neuf|MonFilm1|enautomate|0" +System.getProperty("line.separator"));	
+		redacteur.write("4387|neuf|MonFilm1|emprunte|0" +System.getProperty("line.separator"));	
 		redacteur.close();
 		
 		redacteur = new BufferedWriter(new FileWriter("BDD"+ File.separator + "emprunt"));
 		redacteur.write("-1|859577759|12/12/2019||123"+ System.getProperty("line.separator"));
-		redacteur.close();
+		redacteur.write("1111|-1|23/11/2019||4387"+ System.getProperty("line.separator"));
 		redacteur.close();
 	}
 	
@@ -72,8 +73,8 @@ class ModeleEmprunteurTest {
 	}
 	
 	@Test
-	void testRendreDVD() {
-		fail("Not yet implemented");
+	void testRendreDVD() throws Exception {
+		mE.rendreDVD(4387);
 	}
 
 	@Test
@@ -140,48 +141,66 @@ class ModeleEmprunteurTest {
 	void testRechargerCarte() throws Exception {
 		mE.connexion(859577759);
 		mE.rechargerCarte(564, 10);
-		assertEquals(210, mE.donnerSoldeAbonne());
+		assertEquals(210.0, mE.donnerSoldeAbonne());
 	}
 
 	@Test
 	void testDonnerInformationsAbonne() throws Exception {
 		mE.connexion(859577759);
-		assertEquals("Potter|Harry|horreur|200.0|859577759|394739825", mE.donnerInformationsAbonne());
+		assertEquals("Potter|Harry|horreur|200.0|859577759|394739825\n", mE.donnerInformationsAbonne().toString());
 	}
 
 	@Test
 	void testDonnerSoldeAbonne() {
-		fail("Not yet implemented");
+		mE.connexion(859577759);
+		assertEquals(200.0, mE.donnerSoldeAbonne());
 	}
 
 	@Test
-	void testDonnerNomAbonne() {
-		fail("Not yet implemented");
+	void testDonnerIdentificationAbonne() {
+		mE.connexion(859577759);
+		assertEquals("Potter Harry", mE.donnerIdentificationAbonne());	
 	}
 
 	@Test
 	void testDonnerCBAbonne() {
-		fail("Not yet implemented");
+		mE.connexion(859577759);
+		assertEquals(394739825, mE.donnerCBAbonne());		
 	}
 
 	@Test
-	void testRecommanderFilm() {
-		fail("Not yet implemented");
+	void testRecommanderFilm() throws Exception {
+		mE.connexion(859577759);
+		mE.recommanderFilm("MonFilm1");
 	}
 
 	@Test
-	void testViderPanier() {
-		fail("Not yet implemented");
+	void testViderPanier() throws Exception {
+		mE.ajouterAuPanier("MonFilm1", 2354);
+		mE.viderPanier();
+		mE.ajouterAuPanier("MonFilm2", 2354);
 	}
 
 	@Test
-	void testAfficherPanier() {
+	void testAfficherPanier() throws Exception {
+		List<Genre> lg = new ArrayList<Genre>();
+		lg.add(Genre.getByName("action"));
+		lg.add(Genre.getByName("fantastique"));
+		List<Film> lf =  new ArrayList<Film>();
 		
+		List<String> la = new ArrayList<String>();
+		la.add("acteur1");
+		la.add("acteur2");
+		
+		Film fexpected = new Film("MonFilm2",lg,"Ceci est mon résumé deux",la,"Real2",3,"affiche.jpg");
+		
+		lf.add(fexpected);
+		mE.ajouterAuPanier("MonFilm2", 2354);
+		assertEquals(lf, mE.afficherPanier());
 	}
 
 	@Test
-	void testFilmDispos() {
-		fail("Not yet implemented");
+	void testDonnerListeFilms() {
+		assertEquals(2, mE.donnerListeFilms().size());
 	}
-
 }

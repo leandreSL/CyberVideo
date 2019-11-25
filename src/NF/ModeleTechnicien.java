@@ -55,7 +55,6 @@ public class ModeleTechnicien{
 		return;
 	}
 */
-	
 	public List<DVD> donnerListeDVDs() {
 		return bd.chercherEnsembleDVDs();
 		/*

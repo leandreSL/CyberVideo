@@ -292,7 +292,7 @@ public class ModeleEmprunteur{
 		*/
 	}
 	
-	public List<Film> filmDispos(){
+	public List<Film> donnerListeFilms(){
 		return bd.chercherEnsembleFilms();
 	}
 	
