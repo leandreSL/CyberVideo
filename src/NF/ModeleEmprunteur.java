@@ -306,4 +306,10 @@ public class ModeleEmprunteur{
 	private boolean demanderTransactionCb(long cb, double montant) {
 		return true;
 	}
+
+	public boolean estConnecte() {
+		if(abonneActif != null)
+			return true;
+		return false;
+	}
 }
