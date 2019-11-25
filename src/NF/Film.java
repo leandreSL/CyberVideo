@@ -130,7 +130,6 @@ public class Film {
 				return false;
 		} else if (!acteurs.equals(other.acteurs))
 			return false;
-		System.out.println("test");
 
 		if (cheminAffiche == null) {
 			if (other.cheminAffiche != null)
@@ -138,7 +137,6 @@ public class Film {
 		} else if (!cheminAffiche.equals(other.cheminAffiche))
 			return false;
 		if (genres == null) {
-			System.out.println("test");
 			if (other.genres != null)
 				return false;
 		} else if (!genres.equals(other.genres))

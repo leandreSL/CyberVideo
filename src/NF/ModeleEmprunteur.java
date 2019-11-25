@@ -31,8 +31,7 @@ public class ModeleEmprunteur{
 	 * 
 	 * */	
 	
-	//TODO gestion retard/gele carte
-	//TODO gestion etat(� voir en dernier)
+
 	//remettre le dvd dans l'automate
 	public double rendreDVD(int idDVD) throws Exception {
 		Emprunt emprunt = bd.chercherEmpruntActuel(idDVD);
@@ -51,7 +50,6 @@ public class ModeleEmprunteur{
 					throw(new Exception("Erreur base de donn�e"));
 				}
 				return prix;
-				//return "dvd rendu, "+prix+" euros ont �t� d�bit�s";
 			}	
 		}
 		else {
@@ -155,13 +153,6 @@ public class ModeleEmprunteur{
 		List<Film> filmsDeGenre = bd.chercherFilmParGenre(filtres);
 		
 		return filmsDeGenre;
-		/*
-		String result= "titre, r�sum�, genres, acteurs, r�alisateur, limite d'age\n";
-		for(Film f:filmsDeGenre) {
-			result+=f.print()+"\n";
-		}
-		return result;
-		*/
 	}
 	
 	/*
@@ -178,7 +169,6 @@ public class ModeleEmprunteur{
 		if(!bd.CreerAbonne(a))
 			throw(new NumberFormatException("Erreur base de donn�e"));
 		abonneActif = a;
-		//bidouillage pour l'ihm
 		return;
 	}
 	
@@ -208,13 +198,6 @@ public class ModeleEmprunteur{
 		} else {
 			List<Emprunt> totalEmprunt = bd.chercherEmpruntsAbonne(abonneActif.getCarteAbonne());
 			return totalEmprunt;
-			/*
-			String result = "carte bleue emprunteur, num�ro d'abonn�, date d�but emprunt, date fin emprunt, identifiant dvd\n";
-			for(Emprunt e : TotalEmprunt) {
-				result += e.print();
-			}
-			return result;
-			*/
 		}
 	}
 		
