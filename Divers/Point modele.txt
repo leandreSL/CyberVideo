@@ -8,3 +8,10 @@ dans chaque fonction on regade dans le détail les méthodes de telle ou telle cla
 de quoi on a besoin : beaucoup de choses 
 on fait le point en regardant la classe INTERFACE et MACHINE de la partie IHM et on décortique au maximum, si pas le temps de tout voir ensemble , documenter la partie ihm a fond pour spécifier de quoi on a besoin
 pour que la personne qui se chargera d'écrire les fonctions "bas niveaux" associé sache quoi faire 
+
+
+
+TODO
+
+(rajouter idFilm)
+
