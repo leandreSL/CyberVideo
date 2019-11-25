@@ -6,3 +6,8 @@
 /Genre.class
 /Automate.class
 /StatutFilm.class
+/Emprunt.class
+/ModeleEmprunteur.class
+/ModeleTechnicien.class
+/Recommandation.class
+/StatutDVD.class

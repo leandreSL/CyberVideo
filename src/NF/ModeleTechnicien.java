@@ -75,6 +75,11 @@ public class ModeleTechnicien{
 		return result;
 		*/
 	}
+	
+	public List<Film> donnerListeRecommandations(){
+		//TODO : renvoyer vraiment les recommendations
+		return bd.chercherEnsembleFilms();
+	}
 
 	public List<Abonne> donnerListeAbonnes() {
 		return bd.chercherEnsembleAbonnes();
