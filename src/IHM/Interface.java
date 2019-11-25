@@ -11,7 +11,7 @@ import NF.Film;
 public class Interface {
 	Machine m;
 	Scanner sc = new Scanner(System.in);
-	
+	String entree;
 	
 	public Interface() {
 		m = new Machine();
@@ -31,10 +31,7 @@ public class Interface {
 	public void affichageConnexion() {
 		System.out.println("Connexion : ");
 		System.out.println("Entrer votre numéro de carte : ");
-		/*Scanner co = new Scanner(System.in);
-		int num_carte_abo = co.nextInt();
-		
-		System.out.println("V : Valider");*/
+		envoyerEntree();
 	}
 	
 	public void afficherPanier() {
@@ -69,6 +66,11 @@ public class Interface {
 	    }
 	}
 	
+	public void envoyerEntree() {
+		entree = sc.nextLine();
+		m.handle(entree);
+	}
+	
 	public void contenuPage() {
 		long cb_loc_nc = 0;
 		switch(m.current_etat) {
@@ -81,6 +83,7 @@ public class Interface {
 			System.out.println("Ren : Rendu Film");
 			System.out.println("Cr : Creation Compte");
 			outroPage();
+			envoyerEntree();
 			break;
 		case CREATION_COMPTE:
 			System.out.println("Creation Compte : ");
@@ -114,8 +117,8 @@ public class Interface {
 			}else {
 				System.out.println("V : Valider");
 			}
-			
 			outroPage();
+			envoyerEntree();
 			break;
 		case LOCATION_NC:
 			System.out.println("Location (Non Connectee) : ");
@@ -125,7 +128,6 @@ public class Interface {
 				cb_loc_nc = Long.valueOf(sc.nextLine());
 			}catch (NumberFormatException e) {
 				System.out.println("Veuillez rentrer un numéro de CB correct");
-				System.out.println("b : Retour Arriere");
 				break;
 			}
 			affichageFilmsDispos();
@@ -143,9 +145,7 @@ public class Interface {
 				try {
 					m.modele_abo.ajouterAuPanier(film_choisi_nc, cb_loc_nc);
 				} catch (Exception e) {
-					
 					System.out.println(e.getMessage());
-					System.out.println("b : Retour Arriere");
 					break;
 				}
 			}
@@ -154,6 +154,7 @@ public class Interface {
 			System.out.println("b : Retour Arriere");
 			System.out.println("V : Valider le choix");
 			outroPage();
+			envoyerEntree();
 			//TODO : fonction d'affichage de liste DVD :
 			// Need : fonction BDD qui renvoie une ArrayList de Films qu'on va parcourir et afficher les infos liés a chaque film (fct toString de Film)
 			
@@ -167,6 +168,7 @@ public class Interface {
 			System.out.println("V : Valider (Vous allez être débiter après cette action)");
 			System.out.println("Co : Connexion");
 			outroPage();
+			envoyerEntree();
 			break;
 		case FIN_TRANSACTION_NC:
 			System.out.println("Transacton (Non Connectee) : ");
@@ -174,7 +176,6 @@ public class Interface {
 				m.modele_abo.valider(cb_loc_nc);
 			}catch (Exception e) {
 				System.out.println(e.getMessage());
-				System.out.println("b : Retour Arriere");
 				break;
 			}
 			System.out.println("------------");
@@ -182,35 +183,23 @@ public class Interface {
 			introPage();
 			System.out.println("V : Revenir à l'acceuil");
 			outroPage();
-			//TODO : fonction de saisie de la CB
-			//TODO : mise a jour de la bdd avec la location du film selectionné (donc 1 dvd en moins etc)
-			// Need : fonction de maj pour mettre a jour la liste des dvds dispo
+			envoyerEntree();
 			break;
 			
-		//POUR LUES 2 CAS DE CONNEXION :
-			// need : fonction qui cherche dans la bdd un abonne par rapport à son num carte et renvoie une instance d'abonne
-			// ensuite faire : abonne_courant = *nomFonctionGetAbonne(num_carte)*
 		case CONNEXION_RECAP:
-			//TODO : même affichage que connexion
-			// Variable du film selectionné en etant non connecté à enregistrer
-			introPage();
-			affichageConnexion();
-			//outroPage();
-			break;
 		case CONNEXION:
 			introPage();
 			affichageConnexion();
-			//outroPage();
 			break;
 		case ACCEUIL_C:
 			System.out.println("Acceuil (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
 			introPage();
-			//TODO : afficher la pub etc...
 			System.out.println("D : Deconnexion");
 			System.out.println("L : Location Film");
 			System.out.println("I : Informations Compte");
 			System.out.println("Ren : Rendu");
 			outroPage();
+			envoyerEntree();
 			break;
 		case INFO_COMPTE:
 			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
@@ -229,15 +218,15 @@ public class Interface {
 			System.out.println("Ren : Rendre un DVD");
 			System.out.println("b : Retour à l'acceuil");
 			outroPage();
+			envoyerEntree();
 			break;
 		case LISTE_FILMS_LOUE :
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
+			System.out.println("Liste des films loues (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
 			//MANQUE FONCTION POUR AVOIR LES EMPRUNTS
 			introPage();
 			System.out.println("b : Retour Arriere");
 			outroPage();
-			//TODO : affichage de la liste des films loués
-			// need : fonction qui prend en paramètre un abonné et qui renvoie sa liste de films loues
+			envoyerEntree();
 			break;
 		case HISTORIQUE_EMPRUNT:
 			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
@@ -246,10 +235,12 @@ public class Interface {
 				System.out.println(m.modele_abo.donnerListeEmprunts());
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
+				break;
 			}
 			introPage();
 			System.out.println("b : Retour Arriere");
 			outroPage();
+			envoyerEntree();
 			break;
 		
 		case RECHARGER_COMPTE:
@@ -283,9 +274,10 @@ public class Interface {
 			// fais dans machine (dis moi si ca te va )
             System.out.println("V : Valider le choix");
 			outroPage();
+			envoyerEntree();
 			break;
 		case LOCATION_C:
-			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
+			System.out.println("Location (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
 			affichageFilmsDispos();
 			
 			System.out.println("Rentrer le titre du film ou l'action souhaitée : ");
@@ -299,7 +291,7 @@ public class Interface {
 					break;
 				}
 			}else {
-				if (film_choisi == "Vi") {
+				if (film_choisi.contains("Vi")) {
 					m.modele_abo.viderPanier();
 					System.out.println("Votre panier est vide");
 					break;
@@ -318,6 +310,7 @@ public class Interface {
 			System.out.println("b : Retour Arriere");
 			System.out.println("Re : Recommandation");
 			outroPage();
+			envoyerEntree();
 			break;
 		case AFFICHAGE_PANIER:
 			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
@@ -328,6 +321,7 @@ public class Interface {
 			System.out.println("Rec : Recharger compte");
 			System.out.println("V : Valider le choix");
 			outroPage();
+			envoyerEntree();
 			break;
 		case RECHARGER_COMPTE_PANIER:
 			System.out.println("Rechargement Compte (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
@@ -351,10 +345,12 @@ public class Interface {
 				m.modele_abo.rechargerCarte(cb_r, montant_rc);
 			}catch (Exception e) {
 				System.out.println(e.getMessage());
+				break;
 			}
 			introPage();
 			System.out.println("V : Valider le choix");
 			outroPage();
+			envoyerEntree();
 			break;
 		case RECOMMANDATION_FILM:
 			//TODO
@@ -367,13 +363,12 @@ public class Interface {
 				System.out.println("Transaction réussite");
 			}catch (Exception e) {
 				System.out.println(e.getMessage());
-				System.out.println("b : Retour Arriere");
 				break;
 			}
 			introPage();
 			System.out.println("V : Revenir à l'acceuil");
 			outroPage();
-			
+			envoyerEntree();
 			break;
 
         case RENDU:
@@ -382,6 +377,7 @@ public class Interface {
 			System.out.println("b : retour");
 			System.out.println("id DVD : rend le DVD voulu");
 			outroPage();
+			envoyerEntree();
 			break;
 		case ACCEUIL_TECH:
 			System.out.println("Acceuil Technicien: ");
@@ -390,6 +386,7 @@ public class Interface {
 			System.out.println("Maj : Mettre a jour les DVD dans l'automate");
 			System.out.println("Re : Voir les recommandations");
 			outroPage();
+			envoyerEntree();
 			break;
 		case MAJ_DVD_AUTOMATE:
 			System.out.println("Mise a jour DVD automate ");
@@ -404,6 +401,7 @@ public class Interface {
 			//System.out.println(m.modele_tech.donnerListeRecommandations() );
 			System.out.println("Ok : Retour acceuil");
 			outroPage();
+			envoyerEntree();
 			break;
 		case STATS_TECH:
 			System.out.println("Liste des recommandations ");
@@ -412,6 +410,7 @@ public class Interface {
 			System.out.println("temps emprunts moyen : " + Integer.toString(m.modele_tech.donnerTempsEmpruntMoyen()));
 			System.out.println("nombre emprunts: " + Integer.toString(m.modele_tech.donnerNombreEmprunt()));
 			outroPage();
+			envoyerEntree();
 			break;
 			
 		default:
@@ -423,8 +422,7 @@ public class Interface {
 			System.out.flush();
 			contenuPage();
 			
-			String str = sc.nextLine();
-			m.handle(str);
+			
 		}
 	}
 }
