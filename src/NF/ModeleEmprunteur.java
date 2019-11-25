@@ -183,13 +183,13 @@ public class ModeleEmprunteur{
 	}
 	
 	
-	public void connexion(int idCarte) throws Exception {
+	public void connexion(int idCarte) throws NumberFormatException {
 		Abonne abonne = bd.chercherAbonne(idCarte);
 		if(abonne != null) {
 			abonneActif = abonne;
 			return;
 		} else {
-			throw(new Exception("Vous �tes d�j� connect�s"));
+			throw(new NumberFormatException("Vous �tes d�j� connect�s"));
 		}
 	}
 	
@@ -229,6 +229,7 @@ public class ModeleEmprunteur{
 				throw(new Exception("Erreur transaction cb"));
 			}
 			double solde = abonneActif.getSolde()+montant;
+			abonneActif.setSolde(solde);
 			if(!bd.modifierSoldeAbonne(abonneActif.getCarteAbonne(), solde)){
 				throw(new Exception("Erreur base de donnee"));
 			}
