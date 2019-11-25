@@ -172,9 +172,11 @@ public class Machine {
 						current_etat= State.ACCEUIL_TECH;
 					}
 					
-				}catch (Exception e) {
+				}catch (NumberFormatException e) {
 					System.out.println(e.getMessage());
 					break;
+				}catch (NullPointerException p) {
+					System.out.println("Problème de numéro de carte, veuillez reessayer");
 				}
 				break;
 			}
