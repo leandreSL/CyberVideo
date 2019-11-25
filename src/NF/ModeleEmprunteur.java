@@ -230,7 +230,7 @@ public class ModeleEmprunteur{
 			}
 			double solde = abonneActif.getSolde()+montant;
 			if(!bd.modifierSoldeAbonne(abonneActif.getCarteAbonne(), solde)){
-				throw(new Exception("Erreur base de donn�e"));
+				throw(new Exception("Erreur base de donnee"));
 			}
 			return;
 		}
