@@ -10,5 +10,5 @@ src/NF/gestionfichier/testsbd/
 .settings
 
 #ignore database
-BDD/dvd
-BDD/film
+#BDD/dvd
+#BDD/film
