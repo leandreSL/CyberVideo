@@ -54,6 +54,7 @@ public class Interface {
 			i++;
 		}
 		System.out.println("Vi : Vider le panier");
+		System.out.println("Back : Revenir à l'acceuil");
 	}
 	
 	public boolean isInteger( String input ) {
@@ -142,6 +143,10 @@ public class Interface {
 					break;
 				}
 			}else {
+				if(film_choisi_nc.contains("Back")) {
+					m.handle("b");
+					break;
+				}
 				try {
 					m.modele_abo.ajouterAuPanier(film_choisi_nc, cb_loc_nc);
 				} catch (Exception e) {
@@ -294,6 +299,10 @@ public class Interface {
 				if (film_choisi.contains("Vi")) {
 					m.modele_abo.viderPanier();
 					System.out.println("Votre panier est vide");
+					break;
+				}
+				if(film_choisi.contains("Back")) {
+					m.handle("b");
 					break;
 				}
 				try {

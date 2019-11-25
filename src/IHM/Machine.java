@@ -30,7 +30,6 @@ public class Machine {
 	
 	
 	
-	
 	public void handle(String action) {
 		switch(this.current_etat) {
 		case ACCEUIL_NC:
@@ -245,7 +244,6 @@ public class Machine {
 			break;
 		
 		case RECHARGER_COMPTE:
-            int solde=0;
 			switch(action) {
 			//traitement
 			case "b":
