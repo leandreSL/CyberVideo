@@ -1,5 +1,6 @@
 package IHM;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,6 +8,7 @@ import IHM.Machine.State;
 import NF.Abonne;
 import NF.DVD;
 import NF.Film;
+import NF.Genre;
 
 public class Interface {
 	Machine m;
@@ -70,6 +72,13 @@ public class Interface {
 	public void envoyerEntree() {
 		entree = sc.nextLine();
 		m.handle(entree);
+	}
+	
+	public void affichageDVDs() {
+		List<DVD> dvds = m.modele_tech.donnerListeDVDs();
+		for (DVD d : dvds) {
+			System.out.println(d);
+		}
 	}
 	
 	public void contenuPage() {
@@ -401,8 +410,86 @@ public class Interface {
 		case MAJ_DVD_AUTOMATE:
 			System.out.println("Mise a jour DVD automate ");
 			introPage();
-			//aled lélé
-			//c cho
+			affichageDVDs();
+			System.out.println("+ : Ajouter DVD");
+			System.out.println("- : Supprimer DVD");
+			System.out.println("b : Retour");
+			System.out.println("Action : ");
+			Scanner maj_dvd = new Scanner(System.in);
+			String choix = maj_dvd.nextLine();
+			switch(choix) {
+			case "+":
+				System.out.println("ID du DVD à créer : ");
+				String id_str_ajout = maj_dvd.nextLine();
+				int id_dvd_ajout;
+				try {
+					id_dvd_ajout = Integer.valueOf(id_str_ajout);
+				}catch(NumberFormatException e) {
+					System.out.println("Veuillez rentrer un id correct");
+					break;
+				}
+				System.out.println("Titre du film associé : ");
+				String titre_film = maj_dvd.nextLine();
+				Film f = m.modele_tech.chercherFilm(titre_film);
+				if (f==null) {
+					System.out.println("Film introuvable dans la base, création du film ...");
+					System.out.println("Résumé du film : ");
+					String resume = maj_dvd.nextLine();
+					System.out.println("Réalisateur (1 seul) : ");
+					String real = maj_dvd.nextLine();
+					System.out.println("Limite d'age");
+					String limite_str = maj_dvd.nextLine();
+					int limite_age;
+					try {
+						limite_age = Integer.valueOf(limite_str);
+					}catch (NumberFormatException e) {
+						System.out.println("Rentrer une limite correcte");
+						break;
+					}
+					ArrayList genres = new ArrayList<Genre>();
+					Genre genre = Genre.ACTION ;
+					genres.add(genre);
+					ArrayList<String> acteurs = new ArrayList<>();
+					String acteur = "arnold schwarzenegger";
+					acteurs.add(acteur);
+					Film new_f = new Film(titre_film,genres,resume,acteurs,real,limite_age,"affiche.png");
+					DVD d = new DVD(id_dvd_ajout,f);
+					try {
+						m.modele_tech.ajouterDVD(d);
+					}catch (Exception e){
+						System.out.println(e.getMessage());
+					}
+				}else {
+					DVD d = new DVD(id_dvd_ajout,f);
+					try {
+						m.modele_tech.ajouterDVD(d);
+					}catch (Exception e){
+						System.out.println(e.getMessage());
+					}
+				}
+				
+				break;
+			case "-":
+				System.out.println("ID du DVD à supprimer : ");
+				String id_str = maj_dvd.nextLine();
+				int id_dvd;
+				try {
+					id_dvd = Integer.valueOf(id_str);
+				}catch(NumberFormatException e) {
+					System.out.println("Veuillez rentrer un id correct");
+					break;
+				}
+				try {
+					m.modele_tech.supprimerDVD(id_dvd);
+					System.out.println("V : Valider le choix ");
+				}catch(Exception e) {
+					System.out.println(e.getMessage());
+					break;
+				}
+				break;
+			case "b":
+				break;
+			}
 			outroPage();
 			break;
 		case LISTE_RECOMANDATION:

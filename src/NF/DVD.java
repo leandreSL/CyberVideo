@@ -10,7 +10,7 @@ public class DVD {
 	public DVD(int identifiantDVD, Film film) {
 		this.identifiantDVD = identifiantDVD;
 		this.film = film;
-		this.statut = StatutDVD.EnMagasin;
+		this.statut = StatutDVD.EnAutomate;
 		this.etat = "neuf";
 		this.recommandation = 0;
 		

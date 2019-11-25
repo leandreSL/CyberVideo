@@ -267,7 +267,7 @@ public class ModeleEmprunteur{
 		if(abonneActif == null) {
 			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
 		} else if(!bd.recommanderFilm(titre)){
-			throw(new Exception("Erreur base de donn�e"));
+			throw(new Exception("Erreur base de donnee"));
 		}
 		return;
 	}

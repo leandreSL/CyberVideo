@@ -76,6 +76,10 @@ public class ModeleTechnicien{
 		*/
 	}
 	
+	public Film chercherFilm(String titre) {
+		return bd.chercherFilmParNom(titre);
+	}
+	
 	public List<Film> donnerListeRecommandations(){
 		//TODO : renvoyer vraiment les recommendations
 		return bd.chercherEnsembleFilms();
