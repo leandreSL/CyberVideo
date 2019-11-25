@@ -1,0 +1,25 @@
+4858|neuf|MonFilm1|enautomate|0
+4402|neuf|MonFilm1|enautomate|0
+4377|neuf|MonFilm1|enautomate|0
+8427|neuf|MonFilm1|emprunte|0
+1941|neuf|MonFilm1|emprunte|0
+12000|neuf|MonFilm2|emprunte|0
+2|neuf|Forrest Gump|enautomate|0
+3|neuf|Forrest Gump|enautomate|0
+4|neuf|La ligne verte|enautomate|0
+5|neuf|Your Name|enautomate|0
+6|neuf|Green Book : Sur les routes du sud|enautomate|0
+7|neuf|Green Book : Sur les routes du sud|enautomate|0
+8|neuf|La liste de Schindler|enautomate|0
+9|neuf|12 hommes en colère|enautomate|0
+10|neuf|12 hommes en colère|enautomate|0
+11|neuf|Coco|enautomate|0
+12|neuf|Bohemian Rhapsody|enautomate|0
+13|neuf|Bohemian Rhapsody|enautomate|0
+14|neuf|Le parrain|enautomate|0
+15|neuf|Le parrain|enautomate|0
+16|neuf|The Dark Knight, Le Chevalier Noir|enautomate|0
+17|neuf|The Dark Knight, Le Chevalier Noir|enautomate|0
+18|neuf|The Dark Knight, Le Chevalier Noir|enautomate|0
+19|neuf|Django Unchained|enautomate|0
+20|neuf|Les évadés|enautomate|0
