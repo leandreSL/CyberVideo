@@ -193,7 +193,6 @@ public class Interface {
 			
 		case CONNEXION_RECAP:
 		case CONNEXION:
-			introPage();
 			affichageConnexion();
 			break;
 		case ACCEUIL_C:
@@ -251,9 +250,11 @@ public class Interface {
 		case RECHARGER_COMPTE:
 			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
 			System.out.println("");
+			System.out.println("Rentrer votre numéro de CB : ");
 			long cb_r;
+			Scanner recharger = new Scanner(System.in);
 			try {
-				cb_r = Long.valueOf(sc.nextLine());
+				cb_r = Long.valueOf(recharger.nextLine());
 			}catch (NumberFormatException e) {
 				System.out.println("Veuillez rentrer un numéro de carte valide");
 				break;
@@ -261,7 +262,7 @@ public class Interface {
 			System.out.println("Montant à recharger (supérieur ou égal à 10€) : ");
 			int montant=0;
 			try {
-				montant = sc.nextInt();
+				montant = recharger.nextInt();
 			}catch (NumberFormatException e) {
 				System.out.println("Veuillez rentrer un montant valide");
 				break;

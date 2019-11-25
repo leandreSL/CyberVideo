@@ -277,6 +277,7 @@ public class BD {
 	}
 	public boolean modifierSoldeAbonne(int idCarte, double solde) {
 		Abonne abo = chercherAbonne(idCarte);
+		abo.setSolde(solde);
 		return supprimerAbonne(idCarte) && CreerAbonne(abo);
 	}
 	public Abonne chercherAbonne(int idCarte) {
