@@ -43,8 +43,10 @@ public enum Genre {
 	
 	public static List<String> toStringArray(List<Genre> genres) {
 		List<String> stringGenres = new ArrayList<String>();
-		for(Genre genre : genres) {
-			stringGenres.add(genre.getNom());
+		if (!genres.contains(null)) {
+			for(Genre genre : genres) {
+				stringGenres.add(genre.getNom());
+			}
 		}
 		return stringGenres;
 	}

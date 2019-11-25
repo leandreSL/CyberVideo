@@ -91,7 +91,12 @@ public class ModeleEmprunteur{
 		}
 		
 		DVD dvd = bd.chercherDVD(titre);
-		panier.add(dvd);
+		if (dvd == null) {
+			throw(new Exception("Aucun DVD pour ce film n'est disponible, allez en boutique pour plus de précisions"));
+		}else {
+			panier.add(dvd);
+		}
+		
 		return;
 		
 		
@@ -231,9 +236,9 @@ public class ModeleEmprunteur{
 		}
 	}
 
-	public Abonne donnerInformationsAbonne() throws Exception{
+	public Abonne donnerInformationsAbonne() throws NumberFormatException{
 		if(abonneActif == null) {
-			throw(new Exception("Vous devez avoir un compte abonne pour utiliser cette fonction"));
+			throw(new NumberFormatException("Vous devez avoir un compte abonne pour utiliser cette fonction"));
 		} else {
 			return abonneActif;
 			/*
@@ -288,7 +293,14 @@ public class ModeleEmprunteur{
 	
 	public List<Film> filmDispos(){
 		return bd.chercherEnsembleFilms();
-		
+	}
+	
+	public Boolean existeDVDFilm(Film f) {
+		if (bd.chercherDVD(f.getTitre())==null) {
+			return false;
+		}else {
+			return true;
+		}
 	}
 	
 	private boolean demanderTransactionCb(long cb, double montant) {

@@ -223,6 +223,9 @@ public class Machine {
 				//current_etat = State.RECAP_RENDU_C;
 				current_etat = State.RENDU;
 				break;
+			case "b":
+				current_etat = State.ACCEUIL_C;
+				break;
 			default:
 				System.out.println("Entrée incorrecte, veuillez respecter les commandes disponibles");
 				break;

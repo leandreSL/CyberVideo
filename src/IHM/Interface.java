@@ -48,9 +48,15 @@ public class Interface {
 		List<Film> films = m.modele_abo.filmDispos();
 		int i=1;
 		for (Film f : films ) {
-			System.out.println(Integer.toString(i) + " : " + f);
+			if (m.modele_abo.existeDVDFilm(f)) {
+				System.out.println(Integer.toString(i) + " : " + f);
+			}else {
+				System.out.println(Integer.toString(i) + " : " + f + " (Aucun DVD disponible pour ce film, voir en boutique)");
+				System.out.println("");
+			}
 			i++;
 		}
+		System.out.println("Vi : Vider le panier");
 	}
 	
 	public boolean isInteger( String input ) {
@@ -123,7 +129,7 @@ public class Interface {
 				break;
 			}
 			affichageFilmsDispos();
-			System.out.println("Rentrer le numéro du film ou son titre : ");
+			System.out.println("Rentrer le titre du film ou l'action souhaitée : ");
 			String film_choisi_nc = sc.nextLine();
 			if (isInteger(film_choisi_nc)) {
 				int idDVD = Integer.valueOf(film_choisi_nc);
@@ -211,7 +217,7 @@ public class Interface {
 			System.out.println("");
 			try {
 				System.out.println(m.modele_abo.donnerInformationsAbonne());
-			} catch (Exception e) {
+			} catch (NumberFormatException e) {
 				System.out.println(e.getMessage());
 			}
 			System.out.println("");
@@ -221,6 +227,7 @@ public class Interface {
 			System.out.println("Li : Liste des filsm loués");
 			System.out.println("Rec : Recharger Compte");
 			System.out.println("Ren : Rendre un DVD");
+			System.out.println("b : Retour à l'acceuil");
 			outroPage();
 			break;
 		case LISTE_FILMS_LOUE :
@@ -281,7 +288,7 @@ public class Interface {
 			System.out.println("Informations Compte (Connecte en tant que : "+ m.modele_abo.donnerIdentificationAbonne() + " ) : ");
 			affichageFilmsDispos();
 			
-			System.out.println("Rentrer le numéro du film ou son titre : ");
+			System.out.println("Rentrer le titre du film ou l'action souhaitée : ");
 			String film_choisi = sc.nextLine();
 			if (isInteger(film_choisi)) {
 				int idDVD = Integer.valueOf(film_choisi);
@@ -292,6 +299,11 @@ public class Interface {
 					break;
 				}
 			}else {
+				if (film_choisi == "Vi") {
+					m.modele_abo.viderPanier();
+					System.out.println("Votre panier est vide");
+					break;
+				}
 				try {
 					m.modele_abo.ajouterAuPanier(film_choisi, m.modele_abo.donnerCBAbonne());
 				} catch (Exception e) {
